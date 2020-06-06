@@ -49,7 +49,7 @@
                                             </router-link>
                                         </div>
                                          <div class="col-lg-12">
-                                            <router-link to="/admin/partner" class="btn btn-outline-dark btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                            <router-link to="/customer/receiver" class="btn btn-outline-dark btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                                 <i class="fas fa-handshake"></i> &#160; Danh sách người nhận
                                             </router-link>
                                         </div>
@@ -69,13 +69,13 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-lg-12">
-                                            <router-link to="/admin/transation" class="btn btn-outline-dark btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseOne">
+                                            <router-link to="/customer/transation-inside" class="btn btn-outline-dark btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseOne">
                                                 <i class="fas fa-exchange-alt"></i> &#160; Chuyển khoảng nội bộ
                                             </router-link>
                                         </div>
 
                                         <div class="col-lg-12">
-                                            <router-link to="/admin/customer" class="btn btn-outline-dark btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseOne">
+                                            <router-link to="/customer/transation-outside" class="btn btn-outline-dark btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseOne">
                                                 <i class="fas fa-strikethrough"></i> &#160; Chuyển khoảng liên ngân hàng
                                             </router-link>
                                         </div>
@@ -95,7 +95,7 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-lg-12">
-                                            <router-link to="/admin/customer" class="btn btn-outline-dark btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseOne">
+                                            <router-link to="/customer/dept" class="btn btn-outline-dark btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseOne">
                                                 <i class="fas fa-chart-pie"></i> &#160; Xem danh sách nợ
                                             </router-link>
                                         </div>
@@ -115,17 +115,17 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-lg-12">
-                                            <router-link to="/admin/customer" class="btn btn-outline-dark btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseOne">
+                                            <router-link to="/customer/history-receive" class="btn btn-outline-dark btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseFive" aria-expanded="true" aria-controls="collapseOne">
                                                 <i class="fas fa-arrow-alt-circle-left"></i> &#160; Lịch sử nhận tiền
                                             </router-link>
                                         </div>
                                          <div class="col-lg-12">
-                                            <router-link to="/admin/customer" class="btn btn-outline-dark btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseOne">
+                                            <router-link to="/customer/history-send" class="btn btn-outline-dark btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseFive" aria-expanded="true" aria-controls="collapseOne">
                                                 <i class="fas fa-paper-plane"></i> &#160; Lịch sử chuyển tiền
                                             </router-link>
                                         </div>
                                            <div class="col-lg-12">
-                                            <router-link to="/admin/customer" class="btn btn-outline-dark btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseOne">
+                                            <router-link to="/customer/history-dept" class="btn btn-outline-dark btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseFive" aria-expanded="true" aria-controls="collapseOne">
                                                 <i class="far fa-credit-card"></i> &#160; Lịch sử thanh toán nợ
                                             </router-link>
                                         </div>

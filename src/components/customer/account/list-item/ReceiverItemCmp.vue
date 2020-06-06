@@ -7,20 +7,13 @@
         </p>
     </td>
     <td style="vertical-align: middle" class="text-center">
-      <p>50.000.000</p>
+      <p>La Thoại</p>
     </td>
-    <td style="vertical-align: middle" class="text-center">23/03/2019</td>
     <td class="text-center text-wrap" style="vertical-align: middle">
-      <p>23/03/2020</p>
+      <p>Ngân hàng CPTM Sacombank</p>
     </td>
     <td class="text-center" style="vertical-align: middle">
-      <p>5.6%</p>
-    </td>
-    <td class="text-center" style="vertical-align: middle">
-      <span>2.800.000</span>
-    </td>
-     <td class="text-center" style="vertical-align: middle">
-      <span>52.800.000</span>
+      <span class="btn btn-outline-danger">Nội bộ</span>
     </td>
     <td class="text-center" style="vertical-align: middle">
       <div class="dropdown">
@@ -52,7 +45,7 @@ p {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 150px;
+  max-width: 300px;
   margin-bottom: 0px;
 }
 

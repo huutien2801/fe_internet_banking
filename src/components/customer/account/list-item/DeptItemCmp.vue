@@ -3,25 +3,23 @@
     <th scope="row text-center" style="vertical-align: middle">1</th>
     <td style="vertical-align: middle" class="text-center">
         <p>
-            970012847289
+            La Thoại
         </p>
     </td>
     <td style="vertical-align: middle" class="text-center">
-      <p>50.000.000</p>
+      <p>970012847289</p>
     </td>
-    <td style="vertical-align: middle" class="text-center">23/03/2019</td>
+    <td style="vertical-align: middle" class="text-center">50,000,000</td>
     <td class="text-center text-wrap" style="vertical-align: middle">
-      <p>23/03/2020</p>
+        <span class="btn btn-outline-danger">
+            NHẮC
+        </span>
     </td>
     <td class="text-center" style="vertical-align: middle">
-      <p>5.6%</p>
+      <p>Trả nợ đi bạn ơi</p>
     </td>
-    <td class="text-center" style="vertical-align: middle">
-      <span>2.800.000</span>
-    </td>
-     <td class="text-center" style="vertical-align: middle">
-      <span>52.800.000</span>
-    </td>
+ 
+ 
     <td class="text-center" style="vertical-align: middle">
       <div class="dropdown">
         <button
