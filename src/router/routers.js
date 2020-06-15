@@ -4,6 +4,8 @@ import VueRouter from 'vue-router'
 //Component
 import Home from '../components/dashboard/Home'
 
+//Auth
+import LoginCmp from '../components/auth/LoginCmp'
 
 //Admin
 import DashboardAdminCmp from "../components/admin/DashboardAdminCmp"
@@ -89,6 +91,9 @@ let routes = [
             },
         ]
     },
+    {
+        path: "/login", component: LoginCmp,
+    }
 ]
 
 let router = new VueRouter({
