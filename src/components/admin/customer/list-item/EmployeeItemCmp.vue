@@ -1,19 +1,19 @@
 <template>
   <tr>
     <th scope="row text-center" style="vertical-align: middle">1</th>
-    <td style="vertical-align: middle" class="text-center">La Thoại</td>
+    <td style="vertical-align: middle" class="text-center">{{employeeObj.full_name}}</td>
     <td style="vertical-align: middle" class="text-center">
-      <p>lathoai1234@gmail.com</p>
+      <p>{{employeeObj.email}}</p>
     </td>
-    <td style="vertical-align: middle" class="text-center">23/03/1998</td>
+    <td style="vertical-align: middle" class="text-center">{{employeeObj.dob}}</td>
     <td class="text-center text-wrap" style="vertical-align: middle">
-      <p>P5 Quận 10 Tp Hồ Chí Minh</p>
+      <p>{{employeeObj.address}}</p>
     </td>
     <td class="text-center" style="vertical-align: middle">
-      <p>021321321</p>
+      <p>{{employeeObj.phone}}</p>
     </td>
     <td class="text-center" style="vertical-align: middle">
-      <span>22/10/2019</span>
+      <span>{{employeeObj.created_date}}</span>
     </td>
     <td class="text-center" style="vertical-align: middle">
       <div class="dropdown">
@@ -37,7 +37,13 @@
 </template>
 
 <script>
-export default {};
+export default {
+  props:{
+    employeeObj: Object
+  },
+  mounted: function(){
+  }
+};
 </script>
 
 <style scoped>

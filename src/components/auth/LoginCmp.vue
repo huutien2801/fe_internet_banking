@@ -6,7 +6,7 @@
         <div class="row">
             <div class="container">
                 <div class="col-lg-12 text-center">
-                    <img src="" style="height:100px;cursor:pointer" alt v-on:click="this.onGoToHomePage" />
+                    <img src style="height:100px;cursor:pointer" alt v-on:click="this.onGoToHomePage" />
                 </div>
                 <div class="col-lg-12 form-login">
                     <div class="row">
@@ -49,8 +49,10 @@
                         </div>
                         <div class="col-lg-12 text-center captcha-container" style="margin-top:20px">
                             <vue-recaptcha ref="recaptcha" @verify="onVerify" @expired="onExpired" :sitekey="this.sitekey" :loadRecaptchaScript="true"></vue-recaptcha>
-                            <span v-if="this.isWrongCatcha" class="captcha-error"> <i class="fas fa-exclamation"></i> Captcha không đúng</span>
-                             <!--<button @click="resetRecaptcha"> Reset ReCAPTCHA </button>-->
+                            <span v-if="this.isWrongCatcha" class="captcha-error">
+                                <i class="fas fa-exclamation"></i> Captcha không đúng
+                            </span>
+                            <!--<button @click="resetRecaptcha"> Reset ReCAPTCHA </button>-->
                         </div>
                         <div class="col-12 text-center" style="z-index:2;position:relative;margin-top:15px">
                             <span class="title">bạn chưa có tài khoản?</span>
@@ -77,7 +79,8 @@
 </template>
 
 <script>
-import VueRecaptcha from 'vue-recaptcha';
+import VueRecaptcha from "vue-recaptcha";
+import store from "../../store/modules/auth";
 export default {
     name: "login-comp",
     data() {
@@ -90,69 +93,76 @@ export default {
             isEmptyEmail: false,
             isEmptyUsername: false,
             contentError: "",
-            sitekey: '6LczFKUZAAAAADB93_2XnrqUEoTTjAr7-8k8P3M6',
-            secretkey: '6LczFKUZAAAAAO8YHVRNOkz3H7B5uIFPWYGzFRWm',
+            sitekey: "6LczFKUZAAAAADB93_2XnrqUEoTTjAr7-8k8P3M6",
+            secretkey: "6LczFKUZAAAAAO8YHVRNOkz3H7B5uIFPWYGzFRWm",
             responseCaptcha: "",
             isWrongCatcha: false
         };
     },
     methods: {
-         onLogin() {
-            if(this.responseCaptcha == ""){
-                this.isWrongCatcha = true
-            }else{
-                this.isWrongCatcha = false
+        onLogin: async function () {
+            if (this.responseCaptcha == "") {
+                this.isWrongCatcha = true;
+            } else {
+                this.isWrongCatcha = false;
             }
-            // let email = this.email;
-            // let password = this.password;
 
-            // let bodyLogin = {
-            //     email: email,
-            //     password: password,
-            //     roleName: "EMPLOYEE"
-            // };
+            let email = this.email;
+            let password = this.password;
 
-            // this.isEmptyEmail = bodyLogin.email == "" ? true : false;
-            // this.isEmptyPwd = bodyLogin.password == "" ? true : false;
-            // if (this.isEmptyEmail || this.isEmptyPwd) {
-            //     this.contentError =
-            //         "Bạn vẫn chưa điền đủ thông tin. Vui lòng điền đầy đủ nội dung đăng ký !";
-            //     $("#error-alert").toast("show");
-            //     return;
-            // }
+            let bodyLogin = {
+                email: email,
+                password: password
+            };
 
-            // this.onValidateEmailValue(email);
-            // this.onValidatePasswordValue(password);
-            // if (this.isWrongFormatEmail) {
-            //     this.contentError =
-            //         "Email nhập vào của bạn không hợp lệ. Vui lòng thay đổi email và thử lại !";
-            //     $("#error-alert").toast("show");
-            //     return;
-            // }
+            this.isEmptyEmail = bodyLogin.email == "" ? true : false;
+            this.isEmptyPwd = bodyLogin.password == "" ? true : false;
+            if (this.isEmptyEmail || this.isEmptyPwd) {
+                this.contentError =
+                    "Bạn vẫn chưa điền đủ thông tin. Vui lòng điền đầy đủ nội dung đăng ký !";
+                $("#error-alert").toast("show");
+                return;
+            }
 
-            // if (this.isWrongFormatPwd) {
-            //     this.contentError =
-            //         "Mật khẩu của bạn không hợp lê. Vui lòng thay đổi email và thử lại!";
-            //     $("#error-alert").toast("show");
-            //     return;
-            // }
+            this.onValidateEmailValue(email);
+            this.onValidatePasswordValue(password);
+            if (this.isWrongFormatEmail) {
+                this.contentError =
+                    "Email nhập vào của bạn không hợp lệ. Vui lòng thay đổi email và thử lại !";
+                $("#error-alert").toast("show");
+                return;
+            }
 
-            // const res = await this.$store.dispatch("auth/login", bodyLogin);
-            // if (res.status == "OK") {
-            //     alert("Đăng nhập thành công!");
-            //     this.$router.push("/");
-            // } else {
-            //     if (res.errorCode == "PASSWORD_NOT_MATCH") {
-            //         alert("Mật khẩu không chính xác!");
-            //     } else if (res.errorCode == "INVALID_EMAIL") {
-            //         alert("Email vẫn chưa được đăng ký")
-            //     } else {
-            //         alert("Đã xảy ra lỗi. Vui lòng thử lại sau")
-            //     }
-            // }
-            
+            if (this.isWrongFormatPwd) {
+                this.contentError =
+                    "Mật khẩu của bạn không hợp lê. Vui lòng thay đổi email và thử lại!";
+                $("#error-alert").toast("show");
+                return;
+            }
+
+            const res = await this.$store.dispatch("auth/login", bodyLogin);
+            if (res.status == "OK") {
+                alert("Đăng nhập thành công!");
+                switch (res.data.role_code) {
+                    case "ADMIN":
+                        this.$router.push("/admin");
+                        break;
+                        this.$router.push("/");
+                    default:
+                        break;
+                }
+
+            } else {
+                if (res.errorCode == "PASSWORD_NOT_MATCH") {
+                    alert("Mật khẩu không chính xác!");
+                } else if (res.errorCode == "INVALID_EMAIL") {
+                    alert("Email vẫn chưa được đăng ký");
+                } else {
+                    alert("Đã xảy ra lỗi. Vui lòng thử lại sau");
+                }
+            }
+
             // this.$refs.recaptcha.execute()
-        
         },
         onGoToRegisterPage() {
             this.$router.push("/register");
@@ -177,7 +187,7 @@ export default {
                 this.isWrongFormatPwd = false;
             } else {
                 this.isEmptyPwd = false;
-                this.isWrongFormatPwd = e.target.value.length < 8 ? true : false;
+                this.isWrongFormatPwd = e.target.value.length < 6 ? true : false;
             }
         },
         onValidateUsername(e) {
@@ -193,19 +203,19 @@ export default {
             this.isWrongFormatEmail = !isRight;
         },
         onValidatePasswordValue(pwd) {
-            this.isWrongFormatPwd = pwd.length < 8 ? true : false;
+            this.isWrongFormatPwd = pwd.length < 6 ? true : false;
         },
         onSubmit: function () {
-            this.$refs.invisibleRecaptcha.execute()
+            this.$refs.invisibleRecaptcha.execute();
         },
         onVerify: function (response) {
-            this.responseCaptcha = response
+            this.responseCaptcha = response;
         },
         onExpired: function () {
-            console.log('Expired')
+            console.log("Expired");
         },
         resetRecaptcha() {
-            this.$refs.recaptcha.reset() // Direct call reset method
+            this.$refs.recaptcha.reset(); // Direct call reset method
         }
     },
     components: {
@@ -228,8 +238,8 @@ export default {
     font-size: 12px !important;
 }
 
-.captcha-error{
-     text-transform: initial !important;
+.captcha-error {
+    text-transform: initial !important;
     color: red !important;
     font-size: 12px !important;
 }
@@ -240,16 +250,14 @@ export default {
 }
 
 .left {
-
     background-position: center;
 }
 
-.captcha-container > div > div{
+.captcha-container>div>div {
     width: 100% !important;
 }
 
 .right {
-
     background-position: center;
 }
 

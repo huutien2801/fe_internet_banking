@@ -45,13 +45,8 @@
                     <th class="text-center" scope="col">Thao tác</th>
                 </tr>
             </thead>
-            <tbody>
-                <EmployeeItemCmp />
-                <EmployeeItemCmp />
-                <EmployeeItemCmp />
-                <EmployeeItemCmp />
-                <EmployeeItemCmp />
-                <EmployeeItemCmp />
+            <tbody >
+                <EmployeeItemCmp v-for="employee in listEmployee" :key="employee" :employeeObj="employee"/>
             </tbody>
         </table>
     </div>
@@ -79,7 +74,7 @@
                                         Username
                                         <span style="color:red">(*)</span>
                                     </label>
-                                    <input type="text" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                    <input v-model="username" type="text" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                                 </div>
                             </div>
 
@@ -89,7 +84,7 @@
                                         Password
                                         <span style="color:red">(*)</span>
                                     </label>
-                                    <input type="text" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                    <input v-model="password" type="password" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -98,18 +93,35 @@
                                         Email
                                         <span style="color:red">(*)</span>
                                     </label>
-                                    <input type="text" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                    <input v-model="email" type="email" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                                 </div>
                             </div>
 
-                          
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="txt-user-name">
                                         Số điện thoại
                                         <span style="color:red">(*)</span>
                                     </label>
-                                    <input type="text" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                    <input v-model="phone" type="text" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="txt-user-name">
+                                        CMND
+                                        <span style="color:red">(*)</span>
+                                    </label>
+                                    <input v-model="identityNumber" type="text" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="txt-user-name">
+                                        Họ và tên
+                                        <span style="color:red">(*)</span>
+                                    </label>
+                                    <input v-model="fullName" type="text" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -118,31 +130,22 @@
                                         Ngày sinh
                                         <span style="color:red">(*)</span>
                                     </label>
-                                    <datepicker :language="vi" :bootstrap-styling="true">
+                                    <datepicker @selected="onGetDOB" v-model="dob" :language="vi" :bootstrap-styling="true">
                                     </datepicker>
                                 </div>
                             </div>
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label for="txt-user-name">
-                                        Thời gian bắt đầu
-                                        <span style="color:red">(*)</span>
-                                    </label>
-                                    <datepicker :language="vi" :bootstrap-styling="true">
-                                    </datepicker>
-                                </div>
-                            </div>
-                              <div class="col-lg-12">
+
+                            <div class="col-lg-12">
                                 <div class="form-group">
                                     <label for="txt-user-name">
                                         Địa chỉ
                                         <span style="color:red">(*)</span>
                                     </label>
-                                    <input type="text" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                    <input v-model="address" type="text" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                                 </div>
                             </div>
                             <div class="col-lg-12">
-                                <button class="btn btn-outline-success">
+                                <button class="btn btn-outline-success" @click="onCreateEmployee">
                                     <i class="far fa-save"></i>
                                     Lưu
                                 </button>
@@ -164,6 +167,7 @@ import Multiselect from "vue-multiselect";
 import Paginate from "vuejs-paginate";
 import Datepicker from 'vuejs-datepicker';
 import EmployeeItemCmp from "./list-item/EmployeeItemCmp";
+import store from "../../../store/modules/user_role"
 export default {
     data: function () {
         return {
@@ -187,7 +191,16 @@ export default {
                     text: "Mới nhất"
                 }
             ],
-            index: 1
+            index: 1,
+            listEmployee: [],
+            username: "",
+            email: "",
+            password: "",
+            fullName: "",
+            phone: "",
+            identityNumber: "",
+            address: "",
+            dob: ""
         };
     },
     methods: {
@@ -203,7 +216,54 @@ export default {
                 id,
                 text
             } = obj;
+        },
+        onGetDOB: function (date) {
+            this.dob = date;
+        },
+        onCreateEmployee: async function () {
+            let body = {
+                username: this.username,
+                password: this.password,
+                email: this.email,
+                fullName: this.fullName,
+                phone: this.phone,
+                identityNumber: this.identityNumber,
+                address: this.address,
+                dob: this.dob,
+                role_code: "EMPLOYEE"
+            }
+            console.log(this.$store)
+            const res = await this.$store.dispatch("userRole/createUserRole", body);
+            console.log(res)
+            // if (res.status == "OK") {
+            //     alert("Đăng nhập thành công!");
+            //     switch (res.data.role_code) {
+            //         case "ADMIN":
+            //             this.$router.push("/admin");
+            //             break;
+            //             this.$router.push("/");
+            //         default:
+            //             break;
+            //     }
+
+            // } else {
+            //     if (res.errorCode == "PASSWORD_NOT_MATCH") {
+            //         alert("Mật khẩu không chính xác!");
+            //     } else if (res.errorCode == "INVALID_EMAIL") {
+            //         alert("Email vẫn chưa được đăng ký");
+            //     } else {
+            //         alert("Đã xảy ra lỗi. Vui lòng thử lại sau");
+            //     }
+            // }
         }
+    },
+    mounted: async function () {
+        let payload = {
+            roleCode: "EMPLOYEE"
+        }
+        const res = await this.$store.dispatch("userRole/getUserRole", payload);
+        this.listEmployee = res.data.users
+        console.log(res)
     },
     components: {
         Multiselect,
