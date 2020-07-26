@@ -22,7 +22,7 @@
             <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 20px">
                 <multiselect v-model="sortValue" :options="sortOptions" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo thời gian" label="text" track-by="id" :preselect-first="false" @select="onSelectCategoryJob($event)" @remove="onRemoveGender($event)" />
             </div>
-            
+
         </div>
     </div>
 
@@ -33,120 +33,21 @@
                     <th scope="col">STT</th>
                     <th scope="col" class="text-center">Mã đối tác</th>
                     <th scope="col" class="text-center">Tên đối tác</th>
-                    <th scope="col" class="text-center">Địa chỉ</th>
                     <th class="text-center" scope="col">Ngày liên kết</th>
                     <th class="text-center" scope="col">Thao tác</th>
                 </tr>
             </thead>
             <tbody>
-                <PartnerItemCmp />
-                <PartnerItemCmp />
-                <PartnerItemCmp />
-                <PartnerItemCmp />
-                <PartnerItemCmp />
+                <PartnerItemCmp v-for="(partner,index) in listPartner" :key="partner._id" :indexCount="index" :partnerObj="partner" />
             </tbody>
         </table>
     </div>
 
     <div class="col-12 text-center" style="margin-top:20px">
-        <paginate :page-count="5" :prev-text="'&#8249;'" :next-text="'&#8250;'" :first-last-button="true" :last-button-text="'&#187;'" :first-button-text="'&#171;'" :container-class="'pagination'" :page-class="'page-item'" :page-link-class="'page-link'" :next-link-class="'page-link'" :prev-link-class="'page-link'" :click-handler="onPaginationClick" :hide-prev-next="true" v-model="index"></paginate>
+        <paginate :page-count="lastIndex" :prev-text="'&#8249;'" :next-text="'&#8250;'" :first-last-button="true" :last-button-text="'&#187;'" :first-button-text="'&#171;'" :container-class="'pagination'" :page-class="'page-item'" :page-link-class="'page-link'" :next-link-class="'page-link'" :prev-link-class="'page-link'" :click-handler="onPaginationClick" :hide-prev-next="true" v-model="index">
+        </paginate>
     </div>
 
-    <!-- Modal thêm nhân viên -->
-    <div class="modal fade" id="addEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">THÊM NHÂN VIÊN</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="accordion" id="accordionExample">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label for="txt-user-name">
-                                        Username
-                                        <span style="color:red">(*)</span>
-                                    </label>
-                                    <input type="text" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
-                                </div>
-                            </div>
-
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label for="txt-user-name">
-                                        Password
-                                        <span style="color:red">(*)</span>
-                                    </label>
-                                    <input type="text" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label for="txt-user-name">
-                                        Email
-                                        <span style="color:red">(*)</span>
-                                    </label>
-                                    <input type="text" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
-                                </div>
-                            </div>
-
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label for="txt-user-name">
-                                        Số điện thoại
-                                        <span style="color:red">(*)</span>
-                                    </label>
-                                    <input type="text" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label for="txt-user-name">
-                                        Ngày sinh
-                                        <span style="color:red">(*)</span>
-                                    </label>
-                                    <datepicker :language="vi" :bootstrap-styling="true">
-                                    </datepicker>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label for="txt-user-name">
-                                        Thời gian bắt đầu
-                                        <span style="color:red">(*)</span>
-                                    </label>
-                                    <datepicker :language="vi" :bootstrap-styling="true">
-                                    </datepicker>
-                                </div>
-                            </div>
-                            <div class="col-lg-12">
-                                <div class="form-group">
-                                    <label for="txt-user-name">
-                                        Địa chỉ
-                                        <span style="color:red">(*)</span>
-                                    </label>
-                                    <input type="text" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
-                                </div>
-                            </div>
-                            <div class="col-lg-12">
-                                <button class="btn btn-outline-success">
-                                    <i class="far fa-save"></i>
-                                    Lưu
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Đóng</button>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 </template>
 
@@ -179,7 +80,11 @@ export default {
                     text: "Mới nhất"
                 }
             ],
-            index: 1
+            index: 1,
+            limit: 2,
+            lastIndex: 0,
+            totalPartner: 0,
+            listPartner: [],
         };
     },
     methods: {
@@ -195,7 +100,50 @@ export default {
                 id,
                 text
             } = obj;
+        },
+        onPaginationClick: async function (pageNumber) {
+            let payload = {
+                limit: this.limit,
+                offset: (this.index - 1) * this.limit,
+            }
+            let q = {}
+            payload.q = q
+
+            const res = await this.$store.dispatch("userRole/getPartner", payload);
+
+            if (res && !res.error) {
+
+                this.listPartner = res.data.partners;
+                this.totalPartner = res.data.total;
+                if (res.data.total % this.limit == 0) {
+                    this.lastIndex = res.data.total / this.limit;
+                } else {
+                    this.lastIndex = parseInt(res.data.total / this.limit) + 1;
+                }
+            }
+        },
+    },
+    mounted: async function () {
+        let payload = {
+            limit: this.limit,
+            offset: (this.index - 1) * this.limit,
         }
+        let q = {}
+        payload.q = q
+
+        const res = await this.$store.dispatch("userRole/getPartner", payload);
+
+        if (res && !res.error) {
+
+            this.listPartner = res.data.partners;
+            this.totalPartner = res.data.total;
+            if (res.data.total % this.limit == 0) {
+                this.lastIndex = res.data.total / this.limit;
+            } else {
+                this.lastIndex = parseInt(res.data.total / this.limit) + 1;
+            }
+        }
+
     },
     components: {
         Multiselect,

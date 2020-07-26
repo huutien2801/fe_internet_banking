@@ -9,10 +9,36 @@ export function createUserRole(data){
     })
 }
 
-export function getUserRole(roleCode){
-    let url = `/get-info?roleCode=${roleCode}`
+export function getUserRole(q,limit,offset){
+    let url = `/get-info?q=${q}&limit=${limit}&offset=${offset}`
     return userRoleRequest({
         url: url,
         method: 'get'
     })
 }
+
+export function updateUserRole(userId,data){
+    let url = `/update?userId=${userId}`
+    return userRoleRequest({
+        url: url,
+        method: 'put',
+        data
+    })
+}
+
+export function deleteUserRole(userId){
+    let url = `/delete?userId=${userId}`
+    return userRoleRequest({
+        url: url,
+        method: 'delete'
+    })
+}
+
+export function getPartner(q,limit,offset){
+    let url = `/get-partner?q=${q}&limit=${limit}&offset=${offset}`
+    return userRoleRequest({
+        url: url,
+        method: 'get'
+    })
+}
+

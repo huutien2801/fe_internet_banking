@@ -1,4 +1,11 @@
-import { createUserRole,getUserRole } from "../../api/user_role_api"
+import {
+    createUserRole,
+    getUserRole,
+    updateUserRole,
+    deleteUserRole,
+    getPartner
+}
+    from "../../api/user_role_api"
 
 const state = {
 
@@ -18,7 +25,6 @@ const actions = {
             createUserRole(payload)
                 .then((response) => {
                     let res = {}
-                    console.log(response)
                     // if (response && !response.error) {
                     //     // khi BE trả ra 200 sẽ nhảy vào đây
                     //     res = {
@@ -35,14 +41,46 @@ const actions = {
                 })
         })
     },
-
-    getUserRole({ commit }, payload) {
+    updateUserRole({ commit }, payload) {
         return new Promise((resolve, reject) => {
-            getUserRole(payload.roleCode)
+            updateUserRole(payload.userId, payload.body)
                 .then((response) => {
                     let res = {}
-                    console.log(response)
-              
+                    resolve(response)
+                }).catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    deleteUserRole({ commit }, payload) {
+        return new Promise((resolve, reject) => {
+            deleteUserRole(payload.userId)
+                .then((response) => {
+                    let res = {}
+                    resolve(response)
+                }).catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    getUserRole({ commit }, payload) {
+        return new Promise((resolve, reject) => {
+            getUserRole(JSON.stringify(payload.q), payload.limit, payload.offset)
+                .then((response) => {
+                    let res = {}
+
+                    resolve(response)
+                }).catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    getPartner({ commit }, payload) {
+        return new Promise((resolve, reject) => {
+            getPartner(JSON.stringify(payload.q), payload.limit, payload.offset)
+                .then((response) => {
+                    let res = {}
+
                     resolve(response)
                 }).catch(err => {
                     reject(err)

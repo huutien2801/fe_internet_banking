@@ -35,7 +35,6 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th scope="col">STT</th>
                     <th scope="col" class="text-center">Tên nhân viên</th>
                     <th scope="col" class="text-center">Email</th>
                     <th scope="col" class="text-center">Ngày sinh</th>
@@ -45,14 +44,15 @@
                     <th class="text-center" scope="col">Thao tác</th>
                 </tr>
             </thead>
-            <tbody >
-                <EmployeeItemCmp v-for="employee in listEmployee" :key="employee" :employeeObj="employee"/>
+            <tbody>
+                <EmployeeItemCmp v-on:onCompleteUpdate="onCompleteUpdateUser" v-for="employee in listEmployee" :key="employee.email" :employeeObj="employee" />
             </tbody>
         </table>
     </div>
 
     <div class="col-12 text-center" style="margin-top:20px">
-        <paginate :page-count="5" :prev-text="'&#8249;'" :next-text="'&#8250;'" :first-last-button="true" :last-button-text="'&#187;'" :first-button-text="'&#171;'" :container-class="'pagination'" :page-class="'page-item'" :page-link-class="'page-link'" :next-link-class="'page-link'" :prev-link-class="'page-link'" :click-handler="onPaginationClick" :hide-prev-next="true" v-model="index"></paginate>
+        <paginate :page-count="lastIndex" :prev-text="'&#8249;'" :next-text="'&#8250;'" :first-last-button="true" :last-button-text="'&#187;'" :first-button-text="'&#171;'" :container-class="'pagination'" :page-class="'page-item'" :page-link-class="'page-link'" :next-link-class="'page-link'" :prev-link-class="'page-link'" :click-handler="onPaginationClick" :hide-prev-next="true" v-model="index">
+        </paginate>
     </div>
 
     <!-- Modal thêm nhân viên -->
@@ -191,7 +191,6 @@ export default {
                     text: "Mới nhất"
                 }
             ],
-            index: 1,
             listEmployee: [],
             username: "",
             email: "",
@@ -200,7 +199,11 @@ export default {
             phone: "",
             identityNumber: "",
             address: "",
-            dob: ""
+            dob: "",
+            index: 1,
+            limit: 5,
+            lastIndex: 0,
+            totalEmployee: 0
         };
     },
     methods: {
@@ -221,6 +224,7 @@ export default {
             this.dob = date;
         },
         onCreateEmployee: async function () {
+
             let body = {
                 username: this.username,
                 password: this.password,
@@ -232,38 +236,110 @@ export default {
                 dob: this.dob,
                 role_code: "EMPLOYEE"
             }
-            console.log(this.$store)
-            const res = await this.$store.dispatch("userRole/createUserRole", body);
-            console.log(res)
-            // if (res.status == "OK") {
-            //     alert("Đăng nhập thành công!");
-            //     switch (res.data.role_code) {
-            //         case "ADMIN":
-            //             this.$router.push("/admin");
-            //             break;
-            //             this.$router.push("/");
-            //         default:
-            //             break;
-            //     }
 
-            // } else {
-            //     if (res.errorCode == "PASSWORD_NOT_MATCH") {
-            //         alert("Mật khẩu không chính xác!");
-            //     } else if (res.errorCode == "INVALID_EMAIL") {
-            //         alert("Email vẫn chưa được đăng ký");
-            //     } else {
-            //         alert("Đã xảy ra lỗi. Vui lòng thử lại sau");
-            //     }
-            // }
+            const resCreateUser = await this.$store.dispatch("userRole/createUserRole", body);
+
+            if (resCreateUser && !resCreateUser.error) {
+                // khi BE trả ra 200 sẽ nhảy vào đây
+                alert("Thêm nhân viên thành công")
+                let modalAdd = document.getElementById("addEmployeeModal")
+                $(modalAdd).modal("hide")
+
+                let payload = {
+                    limit: this.limit,
+                    offset: (this.index - 1) * this.limit,
+                }
+                let q = {}
+                q.roleCode = "EMPLOYEE"
+                payload.q = q
+
+                const res = await this.$store.dispatch("userRole/getUserRole", payload);
+
+                if (res && !res.error) {
+
+                    this.listEmployee = res.data.users;
+                    this.totalEmployee = res.data.total;
+
+                    if (res.data.total % this.limit == 0) {
+                        this.lastIndex = res.data.total / this.limit;
+                    } else {
+                        this.lastIndex = parseInt(res.data.total / this.limit) + 1;
+                    }
+                }
+            } else {
+                alert("Có lỗi xảy ra.Vui lòng thử lại sau")
+            }
+        },
+        onPaginationClick: async function (pageNumber) {
+            let payload = {
+                limit: this.limit,
+                offset: (this.index - 1) * this.limit,
+            }
+            let q = {}
+            q.roleCode = "EMPLOYEE"
+            payload.q = q
+
+            const res = await this.$store.dispatch("userRole/getUserRole", payload);
+
+            if (res && !res.error) {
+
+                this.listEmployee = res.data.users;
+                this.totalEmployee = res.data.total;
+
+                if (res.data.total % this.limit == 0) {
+                    this.lastIndex = res.data.total / this.limit;
+                } else {
+                    this.lastIndex = parseInt(res.data.total / this.limit) + 1;
+                }
+            }
+        },
+        onCompleteUpdateUser: async function () {
+            let payload = {
+                limit: this.limit,
+                offset: (this.index - 1) * this.limit,
+            }
+            let q = {}
+            q.roleCode = "EMPLOYEE"
+            payload.q = q
+
+            const res = await this.$store.dispatch("userRole/getUserRole", payload);
+
+            if (res && !res.error) {
+
+                this.listEmployee = res.data.users;
+                this.totalEmployee = res.data.total;
+
+                if (res.data.total % this.limit == 0) {
+                    this.lastIndex = res.data.total / this.limit;
+                } else {
+                    this.lastIndex = parseInt(res.data.total / this.limit) + 1;
+                }
+            }
         }
     },
     mounted: async function () {
         let payload = {
-            roleCode: "EMPLOYEE"
+            limit: this.limit,
+            offset: (this.index - 1) * this.limit,
         }
+        let q = {}
+        q.roleCode = "EMPLOYEE"
+        payload.q = q
+
         const res = await this.$store.dispatch("userRole/getUserRole", payload);
-        this.listEmployee = res.data.users
-        console.log(res)
+
+        if (res && !res.error) {
+
+            this.listEmployee = res.data.users;
+            this.totalEmployee = res.data.total;
+
+            if (res.data.total % this.limit == 0) {
+                this.lastIndex = res.data.total / this.limit;
+            } else {
+                this.lastIndex = parseInt(res.data.total / this.limit) + 1;
+            }
+        }
+        console.log(this.lastIndex)
     },
     components: {
         Multiselect,

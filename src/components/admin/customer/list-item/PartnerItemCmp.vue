@@ -1,15 +1,12 @@
 <template>
 <tr>
-    <th scope="row text-center" style="vertical-align: middle">1</th>
-    <td style="vertical-align: middle" class="text-center">VBBank</td>
+    <th scope="row text-center" style="vertical-align: middle">{{indexCount + 1}}</th>
+    <td style="vertical-align: middle" class="text-center">{{partnerObj.partner_code}}</td>
     <td style="vertical-align: middle" class="text-center">
-        <p>Ngân hàng ngoại thương</p>
-    </td>
-    <td style="vertical-align: middle" class="text-center">
-        <p>P5 Quận 10 Tp Hồ Chí Minh</p>
+        <p>{{partnerObj.partner_name}}</p>
     </td>
     <td class="text-center text-wrap" style="vertical-align: middle">
-        <p>23/01/2019</p>
+        <p>{{partnerObj.created_at | moment("DD/MM/YYYY")}}</p>
     </td>
     <td class="text-center" style="vertical-align: middle">
         <div class="dropdown">
@@ -26,7 +23,15 @@
 </template>
 
 <script>
-export default {};
+export default {
+    props: {
+        partnerObj: Object,
+        indexCount: Int8Array,
+    },
+    mounted(){
+        console.log(this.partnerObj)
+    }
+};
 </script>
 
 <style scoped>

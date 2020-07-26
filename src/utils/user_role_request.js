@@ -2,7 +2,7 @@ import axios from 'axios'
 
 // create an axios instance
 const userRoleService = axios.create({
-    baseURL: 'http://localhost:5000/api/v1/user-role',
+    baseURL: 'https://ibs-api.herokuapp.com/api/v1/user-role',
     // baseURL: 'http://35.223.196.250:8080/api/v1/auth',// url = base url + request url
     timeout: 15000 // request timeout
 })
