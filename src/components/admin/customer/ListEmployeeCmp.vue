@@ -35,12 +35,13 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th scope="col" class="text-center">Tên nhân viên</th>
+                    <th scope="col" class="text-center">Họ tên</th>
                     <th scope="col" class="text-center">Email</th>
-                    <th scope="col" class="text-center">Ngày sinh</th>
-                    <th class="text-center" scope="col">Địa chỉ</th>
+                    <th class="text-center" scope="col">Năm sinh</th>
                     <th class="text-center" scope="col">Số điện thoại</th>
+                    <th class="text-center" scope="col">CMND</th>
                     <th class="text-center" scope="col">Ngày bắt đầu</th>
+                    <th class="text-center" scope="col">Địa chỉ</th>
                     <th class="text-center" scope="col">Thao tác</th>
                 </tr>
             </thead>

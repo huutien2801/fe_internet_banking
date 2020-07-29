@@ -6,13 +6,16 @@
     </td>
     <td style="vertical-align: middle" class="text-center">{{employeeObj.dob | moment("DD/MM/YYYY")}}</td>
     <td class="text-center text-wrap" :title="employeeObj.address" style="vertical-align: middle">
-        <p>{{employeeObj.address}}</p>
-    </td>
-    <td class="text-center" style="vertical-align: middle">
         <p>{{employeeObj.phone}}</p>
     </td>
     <td class="text-center" style="vertical-align: middle">
+        <p>{{employeeObj.identity_number}}</p>
+    </td>
+    <td class="text-center" style="vertical-align: middle">
         <span>{{employeeObj.created_date | moment("DD/MM/YYYY")}}</span>
+    </td>
+     <td class="text-center text-wrap" :title="employeeObj.address" style="vertical-align: middle">
+        <p>{{employeeObj.address}}</p>
     </td>
     <td class="text-center" style="vertical-align: middle">
         <div class="dropdown">

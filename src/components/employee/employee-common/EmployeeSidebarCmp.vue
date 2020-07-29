@@ -92,17 +92,17 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-lg-12">
-                                            <router-link to="#" class="btn btn-outline-dark btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseOne">
+                                            <router-link to="/employee/receive-transaction-customer" class="btn btn-outline-dark btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseOne">
                                                 <i class="fas fa-chart-pie"></i> &#160; Giao dịch nhận tiền
                                             </router-link>
                                         </div>
                                         <div class="col-lg-12">
-                                            <router-link to="#" class="btn btn-outline-dark btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseOne">
+                                            <router-link to="/employee/send-transaction-customer" class="btn btn-outline-dark btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseOne">
                                                 <i class="fas fa-chart-pie"></i> &#160; Giao dịch chuyển khoảng
                                             </router-link>
                                         </div>
                                         <div class="col-lg-12">
-                                            <router-link to="#" class="btn btn-outline-dark btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseOne">
+                                            <router-link to="/employee/dept-transaction-customer" class="btn btn-outline-dark btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseOne">
                                                 <i class="fas fa-chart-pie"></i> &#160; Giao dịch thanh toán nợ
                                             </router-link>
                                         </div>

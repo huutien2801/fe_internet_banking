@@ -30,6 +30,9 @@ import DashboardEmployeeCmp from '../components/employee/DashboardEmployeeCmp'
 import EmployeeProfileCmp from '../components/employee/account/EmployeeProfileCmp'
 import ListCustomerCmp from '../components/employee/account/ListCustomerCmp'
 import ChangeBalanceCustomerCmp from '../components/employee/account/ChangeBalanceCustomerCmp'
+import ReceiveTransactionCustomerCmp from '../components/employee/account/ReceiveTransactionCustomerCmp'
+import SendTransactionCustomerCmp from '../components/employee/account/SendTransactionCustomerCmp'
+import DeptTransactionCustomerCmp from '../components/employee/account/DeptTransactionCustomerCmp'
 Vue.use(VueRouter)
 
 
@@ -56,9 +59,9 @@ let routes = [
         ]
     },
     {
-        path:"/employee",
+        path: "/employee",
         component: DashboardEmployeeCmp,
-        children:[
+        children: [
             {
                 path: "/employee/profile",
                 component: EmployeeProfileCmp
@@ -70,6 +73,18 @@ let routes = [
             {
                 path: "/employee/change-balance-customer",
                 component: ChangeBalanceCustomerCmp
+            },
+            {
+                path: "/employee/receive-transaction-customer",
+                component: ReceiveTransactionCustomerCmp
+            },
+            {
+                path: "/employee/send-transaction-customer",
+                component: SendTransactionCustomerCmp
+            },
+            {
+                path: "/employee/dept-transaction-customer",
+                component: DeptTransactionCustomerCmp
             },
         ]
     },

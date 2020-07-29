@@ -35,25 +35,24 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th scope="col">STT</th>
-                            <th scope="col" class="text-center">Mã KH</th>
                             <th scope="col" class="text-center">Họ tên</th>
                             <th scope="col" class="text-center">Email</th>
                             <th class="text-center" scope="col">Năm sinh</th>
                             <th class="text-center" scope="col">Số điện thoại</th>
                             <th class="text-center" scope="col">CMND</th>
-                            <th class="text-center" scope="col">Ngày cấp</th>
+                            <th class="text-center" scope="col">Ngày bắt đầu</th>
                             <th class="text-center" scope="col">Địa chỉ</th>
                             <th class="text-center" scope="col">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <CustomerItemCmp />
+                        <EmployeeItemCmp v-on:onCompleteUpdate="onCompleteUpdateUser" v-for="customer in listCustomer" :key="customer.email" :employeeObj="customer" />
                     </tbody>
                 </table>
             </div>
             <div class="col-12 text-center" style="margin-top:20px">
-                <paginate :page-count="5" :prev-text="'&#8249;'" :next-text="'&#8250;'" :first-last-button="true" :last-button-text="'&#187;'" :first-button-text="'&#171;'" :container-class="'pagination'" :page-class="'page-item'" :page-link-class="'page-link'" :next-link-class="'page-link'" :prev-link-class="'page-link'" :click-handler="onPaginationClick" :hide-prev-next="true" v-model="index"></paginate>
+                <paginate :page-count="lastIndex" :prev-text="'&#8249;'" :next-text="'&#8250;'" :first-last-button="true" :last-button-text="'&#187;'" :first-button-text="'&#171;'" :container-class="'pagination'" :page-class="'page-item'" :page-link-class="'page-link'" :next-link-class="'page-link'" :prev-link-class="'page-link'" :click-handler="onPaginationClick" :hide-prev-next="true" v-model="index">
+        </paginate>
             </div>
         </div>
     </div>
@@ -170,6 +169,7 @@ import Multiselect from "vue-multiselect";
 import Paginate from "vuejs-paginate";
 import Datepicker from "vuejs-datepicker";
 import CustomerItemCmp from './list-item/CustomerItemCmp'
+import EmployeeItemCmp from '../../admin/customer/list-item/EmployeeItemCmp'
 export default {
     data: function () {
         return {
@@ -227,6 +227,40 @@ export default {
         },
         onCreateCustomer: async function () {
 
+            if (this.username == '') {
+                alert("Bạn chưa điền thông tin username")
+                return
+            }
+            if (this.password == '') {
+                alert("Bạn chưa nhập password")
+                return
+            }
+            if (this.email == '') {
+                alert("Bạn chưa nhập email")
+                return
+            }
+            if (this.fullName == '') {
+                alert("Bạn chưa nhập đầy đủ họ và tên")
+                return
+            }
+            if (this.phone == '') {
+                alert("Bạn chưa nhập số điện thoại")
+                return
+            }
+            if (this.identityNumber == '') {
+                alert("Bạn chưa nhập chứng minh nhân dân")
+                return
+            }
+            if (this.address == '') {
+                alert("Bạn chưa nhập địa chỉ")
+                return
+            }
+
+            if (this.dob == '') {
+                alert("Bạn chưa nhập ngày tháng năm sinh")
+                return
+            }
+
             let body = {
                 username: this.username,
                 password: this.password,
@@ -243,7 +277,7 @@ export default {
 
             if (resCreateUser && !resCreateUser.error) {
                 // khi BE trả ra 200 sẽ nhảy vào đây
-                alert("Thêm nhân viên thành công")
+                alert("Thêm khách hàng thành công")
                 let modalAdd = document.getElementById("addCustomerModal")
                 $(modalAdd).modal("hide")
 
@@ -346,6 +380,7 @@ export default {
         Multiselect,
         Paginate,
         CustomerItemCmp,
+        EmployeeItemCmp,
         Datepicker
     }
 };
