@@ -57,10 +57,10 @@
               aria-expanded="false"
             >
               <i class="far fa-user"></i>
-              XIN CHÀO! HỬU TIỀN
+              XIN CHÀO! {{username}}
             </router-link>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <router-link class="dropdown-item" to="/">Đăng xuất</router-link>
+              <router-link class="dropdown-item" to="/logout">Đăng xuất</router-link>
               <router-link class="dropdown-item" to="/admin">Xem thông tin</router-link>
             </div>
           </li>
@@ -83,13 +83,16 @@
 export default {
   name: "header-comp",
   props: {
-    username: String
+    username: {
+      type: String,
+      default: 'GUEST'
+    }
   },
   data() {
     return {
       text: "Hello Header"
     };
-  }
+  },
 };
 </script>
 

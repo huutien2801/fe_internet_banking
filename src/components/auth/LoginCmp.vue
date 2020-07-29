@@ -147,8 +147,9 @@ export default {
                     case "ADMIN":
                         this.$router.push("/admin");
                         break;
-                        this.$router.push("/");
+                        
                     default:
+                        this.$router.push("/");
                         break;
                 }
 
@@ -216,6 +217,12 @@ export default {
         },
         resetRecaptcha() {
             this.$refs.recaptcha.reset(); // Direct call reset method
+        }
+    },
+    mounted: function () {
+        let user = window.localStorage.getItem("USER")
+        if (user){
+            this.$router.push("/");
         }
     },
     components: {
