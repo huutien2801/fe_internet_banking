@@ -6,6 +6,7 @@ import Home from '../components/dashboard/Home'
 
 //Auth
 import LoginCmp from '../components/auth/LoginCmp'
+import LogoutCmp from '../components/auth/LogoutCmp'
 
 //Admin
 import DashboardAdminCmp from "../components/admin/DashboardAdminCmp"
@@ -93,6 +94,9 @@ let routes = [
     },
     {
         path: "/login", component: LoginCmp,
+    },
+    {
+        path: "/logout", component: LogoutCmp,
     }
 ]
 
