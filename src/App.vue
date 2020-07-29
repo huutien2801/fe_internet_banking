@@ -51,6 +51,7 @@ export default {
 body {
   font-family: "Montserrat", sans-serif !important;
   transition: all 0.5s;
+   overflow-x: hidden;
 }
 
 .btn-scroll {
@@ -75,5 +76,28 @@ body {
   width: 100%;
   z-index: 20;
   left: 30%;
+}
+
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: rgb(40, 146, 76);
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #b30000;
 }
 </style>

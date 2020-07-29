@@ -30,7 +30,7 @@
                         <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 20px">
                             <multiselect v-model="sortValue" :options="sortOptions" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo thời gian" label="text" track-by="id" :preselect-first="false" @select="onSelectCategoryJob($event)" @remove="onRemoveGender($event)" />
                         </div>
-                      
+
                     </div>
                 </div>
                 <div class="col-lg-12 table-responsive-md">
@@ -40,16 +40,16 @@
                                 <th scope="col" class="text-center">STT</th>
                                 <th scope="col" class="text-center">Số TK</th>
                                 <th scope="col" class="text-center">Họ tên</th>
-                                <th scope="col" class="text-center">Ngân hàng</th>
                                 <th class="text-center" scope="col">Số tiền</th>
-                                <th class="text-center" scope="col">Ngày thanh toán</th>
+                                <th class="text-center" scope="col">Loại</th>
                                 <th class="text-center" scope="col">Nội dung</th>
-                                <th class="text-center" scope="col">Thao tác</th>
+                                <th class="text-center" scope="col">Trạng thái</th>
+                                <th class="text-center" scope="col">Ngày thanh toán</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <HistoryReceiveItemCmp />
-                            <HistoryReceiveItemCmp />
+                            <HistoryDeptItemCmp />
+                            <HistoryDeptItemCmp />
                         </tbody>
                     </table>
                 </div>
@@ -68,6 +68,7 @@ import Multiselect from "vue-multiselect";
 import Paginate from "vuejs-paginate";
 import Datepicker from "vuejs-datepicker";
 import HistoryReceiveItemCmp from './list-item/HistoryReceiveItemCmp'
+import HistoryDeptItemCmp from './list-item/HistoryDeptItemCmp'
 export default {
     data: function () {
         return {
@@ -113,7 +114,8 @@ export default {
         Multiselect,
         Paginate,
         Datepicker,
-        HistoryReceiveItemCmp
+        HistoryReceiveItemCmp,
+        HistoryDeptItemCmp
     }
 };
 </script>

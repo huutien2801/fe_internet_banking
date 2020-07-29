@@ -24,6 +24,15 @@ import ListHistoryDeptCmp from '../components/customer/account/ListHistoryDeptCm
 import CustomerProfile from '../components/customer/account/CustomerProfile'
 import TransationInsideCmp from '../components/customer/account/TransationInsideCmp'
 import TransationOutsideCmp from '../components/customer/account/TransationOutsideCmp'
+
+//Employee
+import DashboardEmployeeCmp from '../components/employee/DashboardEmployeeCmp'
+import EmployeeProfileCmp from '../components/employee/account/EmployeeProfileCmp'
+import ListCustomerCmp from '../components/employee/account/ListCustomerCmp'
+import ChangeBalanceCustomerCmp from '../components/employee/account/ChangeBalanceCustomerCmp'
+import ReceiveTransactionCustomerCmp from '../components/employee/account/ReceiveTransactionCustomerCmp'
+import SendTransactionCustomerCmp from '../components/employee/account/SendTransactionCustomerCmp'
+import DeptTransactionCustomerCmp from '../components/employee/account/DeptTransactionCustomerCmp'
 Vue.use(VueRouter)
 
 
@@ -46,6 +55,36 @@ let routes = [
             {
                 path: "/admin/transation",
                 component: ListTransactionCmp
+            },
+        ]
+    },
+    {
+        path: "/employee",
+        component: DashboardEmployeeCmp,
+        children: [
+            {
+                path: "/employee/profile",
+                component: EmployeeProfileCmp
+            },
+            {
+                path: "/employee/manage-customer",
+                component: ListCustomerCmp
+            },
+            {
+                path: "/employee/change-balance-customer",
+                component: ChangeBalanceCustomerCmp
+            },
+            {
+                path: "/employee/receive-transaction-customer",
+                component: ReceiveTransactionCustomerCmp
+            },
+            {
+                path: "/employee/send-transaction-customer",
+                component: SendTransactionCustomerCmp
+            },
+            {
+                path: "/employee/dept-transaction-customer",
+                component: DeptTransactionCustomerCmp
             },
         ]
     },

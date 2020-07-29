@@ -48,6 +48,7 @@
                                 <th scope="col" class="text-center">Số tiền nợ</th>
                                 <th class="text-center" scope="col">Loại nhắc nợ</th>
                                 <th class="text-center" scope="col">Nội dung</th>
+                                  <th class="text-center" scope="col">Trạng thái</th>
                                 <th class="text-center" scope="col">Thao tác</th>
                             </tr>
                         </thead>

@@ -1,67 +1,68 @@
 <template>
-<div class="row">
+<div class="row" style="margin-right:5px">
     <div class="col-lg-12">
-        <div class="row">
+        <div class="row container-account">
             <div class="col-lg-1" style="padding-right:0px">
-                <i class="fas fa-users icon-title"></i>
+                <i class="fas fa-user-circle icon-title"></i>
             </div>
             <div class="col-lg-11" style="padding-left:0px">
                 <div class="header-title">
-                    <span class="main-title">Danh sách nhân viên</span>
-                    <span class="sub-title">(Danh sách những nhân viên làm việc cho hệ thống ngân hàng 3TBank)</span>
+                    <span class="main-title">Danh sách tài khoản khách hàng</span>
+                    <span class="sub-title">(Danh sách những tài khoản khách hàng đang sử dụng của 3TBank)</span>
                 </div>
             </div>
         </div>
     </div>
-
     <div class="col-lg-12" style="margin-top:20px">
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 20px">
-                <multiselect v-model="statusValue" :options="statusOptions" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo trạng thái" label="text" track-by="id" :preselect-first="false" @select="onSelectCategoryJob($event)" @remove="onRemoveGender($event)" />
+        <div class="row container-account" style="padding-top:20px">
+            <div class="col-lg-12" style="margin-top: 20px">
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 20px">
+                        <multiselect v-model="statusValue" :options="statusOptions" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo trạng thái" label="text" track-by="id" :preselect-first="false" @select="onSelectCategoryJob($event)" @remove="onRemoveGender($event)" />
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 20px">
+                        <multiselect v-model="sortValue" :options="sortOptions" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo thời gian" label="text" track-by="id" :preselect-first="false" @select="onSelectCategoryJob($event)" @remove="onRemoveGender($event)" />
+                    </div>
+                    <div class="col-lg-6 text-right">
+                        <button class="btn btn-outline-info" data-toggle="modal" data-target="#addCustomerModal">
+                            <i class="fas fa-plus-circle"></i>
+                            Thêm tài khoản khách hàng
+                        </button>
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 20px">
-                <multiselect v-model="sortValue" :options="sortOptions" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo thời gian" label="text" track-by="id" :preselect-first="false" @select="onSelectCategoryJob($event)" @remove="onRemoveGender($event)" />
+            <div class="col-lg-12 table-responsive-md">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="text-center">Họ tên</th>
+                            <th scope="col" class="text-center">Email</th>
+                            <th class="text-center" scope="col">Năm sinh</th>
+                            <th class="text-center" scope="col">Số điện thoại</th>
+                            <th class="text-center" scope="col">CMND</th>
+                            <th class="text-center" scope="col">Ngày bắt đầu</th>
+                            <th class="text-center" scope="col">Địa chỉ</th>
+                            <th class="text-center" scope="col">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <EmployeeItemCmp v-on:onCompleteUpdate="onCompleteUpdateUser" v-for="customer in listCustomer" :key="customer.email" :employeeObj="customer" />
+                    </tbody>
+                </table>
             </div>
-            <div class="col-lg-6 text-right">
-                <button class="btn btn-outline-info" data-toggle="modal" data-target="#addEmployeeModal">
-                    <i class="fas fa-plus-circle"></i>
-                    Thêm nhân viên
-                </button>
+            <div class="col-12 text-center" style="margin-top:20px">
+                <paginate :page-count="lastIndex" :prev-text="'&#8249;'" :next-text="'&#8250;'" :first-last-button="true" :last-button-text="'&#187;'" :first-button-text="'&#171;'" :container-class="'pagination'" :page-class="'page-item'" :page-link-class="'page-link'" :next-link-class="'page-link'" :prev-link-class="'page-link'" :click-handler="onPaginationClick" :hide-prev-next="true" v-model="index">
+        </paginate>
             </div>
         </div>
     </div>
-
-    <div class="col-lg-12 table-responsive-md">
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th scope="col" class="text-center">Họ tên</th>
-                    <th scope="col" class="text-center">Email</th>
-                    <th class="text-center" scope="col">Năm sinh</th>
-                    <th class="text-center" scope="col">Số điện thoại</th>
-                    <th class="text-center" scope="col">CMND</th>
-                    <th class="text-center" scope="col">Ngày bắt đầu</th>
-                    <th class="text-center" scope="col">Địa chỉ</th>
-                    <th class="text-center" scope="col">Thao tác</th>
-                </tr>
-            </thead>
-            <tbody>
-                <EmployeeItemCmp v-on:onCompleteUpdate="onCompleteUpdateUser" v-for="employee in listEmployee" :key="employee.email" :employeeObj="employee" />
-            </tbody>
-        </table>
-    </div>
-
-    <div class="col-12 text-center" style="margin-top:20px">
-        <paginate :page-count="lastIndex" :prev-text="'&#8249;'" :next-text="'&#8250;'" :first-last-button="true" :last-button-text="'&#187;'" :first-button-text="'&#171;'" :container-class="'pagination'" :page-class="'page-item'" :page-link-class="'page-link'" :next-link-class="'page-link'" :prev-link-class="'page-link'" :click-handler="onPaginationClick" :hide-prev-next="true" v-model="index">
-        </paginate>
-    </div>
-
+    <!-- Modal thêm tài khoản tiết kiệm -->
     <!-- Modal thêm nhân viên -->
-    <div class="modal fade" id="addEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addCustomerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">THÊM NHÂN VIÊN</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">THÊM TÀI KHOẢN KHÁCH HÀNG</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -125,7 +126,7 @@
                                     <input v-model="fullName" type="text" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                                 </div>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-12">
                                 <div class="form-group">
                                     <label for="txt-user-name">
                                         Ngày sinh
@@ -146,7 +147,7 @@
                                 </div>
                             </div>
                             <div class="col-lg-12">
-                                <button class="btn btn-outline-success" @click="onCreateEmployee">
+                                <button class="btn btn-outline-success" @click="onCreateCustomer">
                                     <i class="far fa-save"></i>
                                     Lưu
                                 </button>
@@ -166,9 +167,9 @@
 <script>
 import Multiselect from "vue-multiselect";
 import Paginate from "vuejs-paginate";
-import Datepicker from 'vuejs-datepicker';
-import EmployeeItemCmp from "./list-item/EmployeeItemCmp";
-import store from "../../../store/modules/user_role"
+import Datepicker from "vuejs-datepicker";
+import CustomerItemCmp from './list-item/CustomerItemCmp'
+import EmployeeItemCmp from '../../admin/customer/list-item/EmployeeItemCmp'
 export default {
     data: function () {
         return {
@@ -192,7 +193,7 @@ export default {
                     text: "Mới nhất"
                 }
             ],
-            listEmployee: [],
+            listCustomer: [],
             username: "",
             email: "",
             password: "",
@@ -204,7 +205,7 @@ export default {
             index: 1,
             limit: 5,
             lastIndex: 0,
-            totalEmployee: 0
+            totalCustomer: 0
         };
     },
     methods: {
@@ -224,7 +225,41 @@ export default {
         onGetDOB: function (date) {
             this.dob = date;
         },
-        onCreateEmployee: async function () {
+        onCreateCustomer: async function () {
+
+            if (this.username == '') {
+                alert("Bạn chưa điền thông tin username")
+                return
+            }
+            if (this.password == '') {
+                alert("Bạn chưa nhập password")
+                return
+            }
+            if (this.email == '') {
+                alert("Bạn chưa nhập email")
+                return
+            }
+            if (this.fullName == '') {
+                alert("Bạn chưa nhập đầy đủ họ và tên")
+                return
+            }
+            if (this.phone == '') {
+                alert("Bạn chưa nhập số điện thoại")
+                return
+            }
+            if (this.identityNumber == '') {
+                alert("Bạn chưa nhập chứng minh nhân dân")
+                return
+            }
+            if (this.address == '') {
+                alert("Bạn chưa nhập địa chỉ")
+                return
+            }
+
+            if (this.dob == '') {
+                alert("Bạn chưa nhập ngày tháng năm sinh")
+                return
+            }
 
             let body = {
                 username: this.username,
@@ -235,15 +270,15 @@ export default {
                 identityNumber: this.identityNumber,
                 address: this.address,
                 dob: this.dob,
-                role_code: "EMPLOYEE"
+                role_code: "CUSTOMER"
             }
 
             const resCreateUser = await this.$store.dispatch("userRole/createUserRole", body);
 
             if (resCreateUser && !resCreateUser.error) {
                 // khi BE trả ra 200 sẽ nhảy vào đây
-                alert("Thêm nhân viên thành công")
-                let modalAdd = document.getElementById("addEmployeeModal")
+                alert("Thêm khách hàng thành công")
+                let modalAdd = document.getElementById("addCustomerModal")
                 $(modalAdd).modal("hide")
 
                 let payload = {
@@ -251,15 +286,15 @@ export default {
                     offset: (this.index - 1) * this.limit,
                 }
                 let q = {}
-                q.roleCode = "EMPLOYEE"
+                q.roleCode = "CUSTOMER"
                 payload.q = q
 
                 const res = await this.$store.dispatch("userRole/getUserRole", payload);
 
                 if (res && !res.error) {
 
-                    this.listEmployee = res.data.users;
-                    this.totalEmployee = res.data.total;
+                    this.listCustomer = res.data.users;
+                    this.totalCustomer = res.data.total;
 
                     if (res.data.total % this.limit == 0) {
                         this.lastIndex = res.data.total / this.limit;
@@ -277,15 +312,15 @@ export default {
                 offset: (this.index - 1) * this.limit,
             }
             let q = {}
-            q.roleCode = "EMPLOYEE"
+            q.roleCode = "CUSTOMER"
             payload.q = q
 
             const res = await this.$store.dispatch("userRole/getUserRole", payload);
 
             if (res && !res.error) {
 
-                this.listEmployee = res.data.users;
-                this.totalEmployee = res.data.total;
+                this.listCustomer = res.data.users;
+                this.totalCustomer = res.data.total;
 
                 if (res.data.total % this.limit == 0) {
                     this.lastIndex = res.data.total / this.limit;
@@ -300,15 +335,15 @@ export default {
                 offset: (this.index - 1) * this.limit,
             }
             let q = {}
-            q.roleCode = "EMPLOYEE"
+            q.roleCode = "CUSTOMER"
             payload.q = q
 
             const res = await this.$store.dispatch("userRole/getUserRole", payload);
 
             if (res && !res.error) {
 
-                this.listEmployee = res.data.users;
-                this.totalEmployee = res.data.total;
+                this.listCustomer = res.data.users;
+                this.totalCustomer = res.data.total;
 
                 if (res.data.total % this.limit == 0) {
                     this.lastIndex = res.data.total / this.limit;
@@ -324,15 +359,15 @@ export default {
             offset: (this.index - 1) * this.limit,
         }
         let q = {}
-        q.roleCode = "EMPLOYEE"
+        q.roleCode = "CUSTOMER"
         payload.q = q
 
         const res = await this.$store.dispatch("userRole/getUserRole", payload);
 
         if (res && !res.error) {
 
-            this.listEmployee = res.data.users;
-            this.totalEmployee = res.data.total;
+            this.listCustomer = res.data.users;
+            this.totalCustomer = res.data.total;
 
             if (res.data.total % this.limit == 0) {
                 this.lastIndex = res.data.total / this.limit;
@@ -340,11 +375,11 @@ export default {
                 this.lastIndex = parseInt(res.data.total / this.limit) + 1;
             }
         }
-        console.log(this.lastIndex)
     },
     components: {
         Multiselect,
         Paginate,
+        CustomerItemCmp,
         EmployeeItemCmp,
         Datepicker
     }
@@ -352,6 +387,13 @@ export default {
 </script>
 
 <style scoped>
+.container-account {
+    box-shadow: 1px 0px 10px 1px #ebebeb;
+    padding-top: 10px;
+    border-radius: 5px;
+    padding-bottom: 10px;
+}
+
 .header-title {
     display: inline-flex;
     flex-direction: column;
@@ -363,6 +405,7 @@ export default {
 
 .main-title {
     font-size: 20px;
+    text-transform: uppercase;
 }
 
 .sub-title {
