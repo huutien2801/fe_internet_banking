@@ -147,7 +147,12 @@ export default {
                     case "ADMIN":
                         this.$router.push("/admin");
                         break;
-                        
+                    case "EMPLOYEE":
+                        this.$router.push("/employee");
+                        break;
+                    case "CUSTOMER":
+                        this.$router.push("/customer");
+                        break;
                     default:
                         this.$router.push("/");
                         break;
@@ -221,7 +226,7 @@ export default {
     },
     mounted: function () {
         let user = window.localStorage.getItem("USER")
-        if (user){
+        if (user) {
             this.$router.push("/");
         }
     },

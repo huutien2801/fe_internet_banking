@@ -1,7 +1,7 @@
 import { login } from "../../api/auth_api"
 
 const state = {
-
+    isLoadingRedirect: false,
 }
 
 const getters = {
@@ -9,7 +9,9 @@ const getters = {
 }
 
 const mutations = {
-
+    LOADING_REDIRECT: (state, loadingPage) => {
+        state.isLoadingRedirect = loadingPage.isLoadingRedirect
+    },
 }
 let LOCAL_STORED_OBJ_EXPIRED_VALUE = 60 * 60 * 1000;
 const actions = {
