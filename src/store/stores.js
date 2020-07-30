@@ -13,6 +13,7 @@ import getters from "./gettters";
 import authModule from "./modules/auth"
 import userRoleModule from "./modules/user_role"
 import userModule from './modules/user'
+import exchangeMoneyModule from './modules/exchange_money'
 
 export default new Vuex.Store({
     // state,
@@ -22,6 +23,7 @@ export default new Vuex.Store({
     modules: {
         auth: authModule,
         userRole: userRoleModule,
-        user: userModule
+        user: userModule,
+        exchangeMoney: exchangeMoneyModule
     }
 });

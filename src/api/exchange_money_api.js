@@ -1,4 +1,4 @@
-import ExchangeMoneyRequest from "../utils/exchange_money_request"
+import ExchangeMoneyRequest from "../utils/exchange_money.request"
 
 export function getAllById(q,limit,offset){
     let url = `/history?q=${q}&limit=${limit}&offset=${offset}`

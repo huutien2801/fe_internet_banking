@@ -4,7 +4,8 @@ import {
     updateUserRole,
     deleteUserRole,
     getPartner,
-    changePassword
+    changePassword,
+    getUserInfoByBankAccount
 }
 from "../../api/user_role_api"
 
@@ -80,6 +81,17 @@ const actions = {
                 .then((response) => {
                     let res = {}
 
+                    resolve(response)
+                }).catch(err => {
+                    reject(err)
+                })
+        })
+    },
+
+    getUserInfoByBankAccount({ commit }, payload) {
+        return new Promise((resolve, reject) => {
+            getUserInfoByBankAccount(JSON.stringify(payload.q))
+                .then((response) => {
                     resolve(response)
                 }).catch(err => {
                     reject(err)

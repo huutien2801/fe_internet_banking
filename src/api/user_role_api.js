@@ -17,6 +17,14 @@ export function getUserRole(q,limit,offset){
     })
 }
 
+export function getUserInfoByBankAccount(q){
+    let url = `/get-info-user-by?q=${q}`
+    return userRoleRequest({
+        url: url,
+        method: 'get'
+    })
+}
+
 export function updateUserRole(userId,data){
     let url = `/update?userId=${userId}`
     return userRoleRequest({

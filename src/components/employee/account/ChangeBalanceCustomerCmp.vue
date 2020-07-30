@@ -28,7 +28,7 @@
                                 Số tài khoản
                                 <span style="color:red">(*)</span>
                             </label>
-                            <input type="number" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                            <input type="number" v-model="bankAccount" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                         </div>
                     </div>
                     <div class="col-lg-6">
@@ -37,11 +37,11 @@
                                 Tên đăng nhập
                                 <span style="color:red">(*)</span>
                             </label>
-                            <input type="text" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                            <input type="text" v-model="username" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                         </div>
                     </div>
                     <div class="col-lg-12">
-                        <button class="btn btn-primary">
+                        <button class="btn btn-primary" @click="onGetCustomerInfo">
                             LẤY THÔNG TIN
                         </button>
                     </div>
@@ -50,7 +50,8 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-12" style="margin-top:20px">
+
+    <div class="col-lg-12" v-if="isShown == false" style="margin-top:20px">
         <div class="row container-account" style="padding-top:20px">
             <div class="col-lg-12" style="border-bottom: 1px solid #ebebeb">
                 <h5>THÔNG TIN TÀI KHOẢN</h5>
@@ -158,12 +159,22 @@
                                         Nhập số tiền muốn nạp
                                         <span style="color:red">(*)</span>
                                     </label>
-                                    <input type="number" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                    <currency-input class="ipt-balance" v-model="balance" v-currency="{
+    currency: {
+        suffix:' VNĐ'
+    },
+    valueAsInteger: false,
+    distractionFree: true,
+    precision: 1,
+    autoDecimalMode: true,
+    valueRange: { min: 0 },
+    allowNegative: false
+  }" />
                                 </div>
                             </div>
-                      
+
                             <div class="col-lg-12">
-                                <button class="btn btn-outline-success">
+                                <button class="btn btn-outline-success" @click="onChangeBalanceCustomer">
                                     <i class="far fa-save"></i>
                                     NẠP
                                 </button>
@@ -187,42 +198,80 @@ import Datepicker from "vuejs-datepicker";
 export default {
     data: function () {
         return {
-            statusValue: [],
-            statusOptions: [{
-                    id: "ACTIVE",
-                    text: "Đang tuyển"
-                },
-                {
-                    id: "EXPIRED",
-                    text: "Đã hết hạn"
-                }
-            ],
-            sortValue: [],
-            sortOptions: [{
-                    id: "ASC",
-                    text: "Cũ nhất"
-                },
-                {
-                    id: "DESC",
-                    text: "Mới nhất"
-                }
-            ],
-            index: 1
+            bankAccount: '',
+            username: '',
+            isShown: false,
+            customerInfo: {},
+            balance: 0
         };
     },
     methods: {
-        onSelectCategoryJob: function (obj) {
-            let {
-                id,
-                text
-            } = obj;
-            console.log(text);
+        onGetCustomerInfo: async function () {
+            if (this.bankAccount == '') {
+                alert("Chưa nhập số tài khoản")
+                return
+            }
+
+            if (this.username == '') {
+                alert("Chưa nhập tên đăng nhập của khách hàng")
+                return
+            }
+
+            let payload = {
+                q: {
+                    account_number: this.bankAccount,
+                    username: this.username
+                }
+            }
+
+            let respCustomerInfo = await this.$store.dispatch("userRole/getUserInfoByBankAccount", payload)
+
+            if (respCustomerInfo && !respCustomerInfo.error) {
+                console.log(respCustomerInfo)
+            }
         },
-        onRemoveGender: function (obj) {
-            let {
-                id,
-                text
-            } = obj;
+        getFeeType: function () {
+            let feeTypeOpts = [{
+                    id: 'RECEIVER',
+                    text: "Người nhận trả tiền"
+                },
+                {
+                    id: 'SENDER',
+                    text: "Người gửi trả tiền"
+                }
+            ]
+            return feeTypeOpts
+        },
+        onChangeBalanceCustomer: async function(){
+            let payload = {}
+
+            if(this.bankAccount == ''){
+                alert("Thiếu thông tin tài khoản")
+                return
+            }
+            if(this.username == ''){
+                alert("Thiếu thông tin tên đăng nhập")
+                return
+            }
+            if(this.balance == 0){
+                alert("Chưa nhập số tiền muốn nạp")
+                return
+            }
+
+            let body = {
+                accountNumber: this.bankAccount,
+                username: this.username,
+                money: this.balance,
+                featype: "RECEIVER"
+            }
+
+            payload.body = body
+            let respChangeBalance = await this.$store.dispatch("exchangeMoney/depositMoney", payload)
+            if(respChangeBalance && !respChangeBalance.error){
+                alert("Nạp tiền vào tài khoản thành công. Bạn vui lòng kiểm tra lại số dư")
+            }else{
+                alert("Hệ thống đã xảy ra lỗi. Bạn vui lòng thử lại sau")
+            }
         }
     },
     components: {
@@ -234,6 +283,12 @@ export default {
 </script>
 
 <style scoped>
+.ipt-balance {
+    display: block;
+    padding: 5px;
+    border-radius: 5px;
+}
+
 .container-account {
     box-shadow: 1px 0px 10px 1px #ebebeb;
     padding-top: 10px;
