@@ -42,3 +42,13 @@ export function getPartner(q,limit,offset){
     })
 }
 
+export function changePassword(body){
+    console.log(body)
+    let url = `/change-password`
+    return userRoleRequest({
+        url: url,
+        method: 'post',
+        body
+    })
+}
+

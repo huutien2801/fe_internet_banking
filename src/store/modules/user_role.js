@@ -3,9 +3,10 @@ import {
     getUserRole,
     updateUserRole,
     deleteUserRole,
-    getPartner
+    getPartner,
+    changePassword
 }
-    from "../../api/user_role_api"
+from "../../api/user_role_api"
 
 const state = {
 
@@ -35,6 +36,16 @@ const actions = {
                     //     res.errorCode = "REQUEST_TIMEOUT"
                     //     res.status = "ERROR"
                     // }
+                    resolve(response)
+                }).catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    changePassword({ commit }, payload) {
+        return new Promise((resolve, reject) => {
+            changePassword(payload.body)
+                .then((response) => {
                     resolve(response)
                 }).catch(err => {
                     reject(err)

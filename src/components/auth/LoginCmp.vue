@@ -27,11 +27,17 @@
                         </div>
                         <div class="col-lg-12">
                             <form>
-                                <div class="form-group">
-                                    <label for="email">Email</label>
+                                <!--<div class="form-group">
+                                    <label for="email">Username</label>
                                     <input type="email" v-model="email" class="form-control" v-bind:class="{ 'border-error': isWrongFormatEmail || isEmptyEmail }" id="email" v-on:keydown.tab="onValidateEmail($event)" v-on:input="onValidateEmail($event)" required aria-describedby="emailHelp" />
                                     <span v-if="isWrongFormatEmail" class="error-text">Email của bạn không hợp lệ</span>
                                     <span v-if="isEmptyEmail" class="error-text">Không được bỏ trống ô này. Bạn vui lòng điền vào</span>
+                                </div>-->
+
+                                <div class="form-group">
+                                    <label for="email">Username</label>
+                                    <input type="text" v-model="username" class="form-control" v-bind:class="{ 'border-error': isWrongFormatEmail || isEmptyEmail }" id="email" v-on:keydown.tab="onValidateEmail($event)" v-on:input="onValidateEmail($event)" required aria-describedby="emailHelp" />
+
                                 </div>
                                 <div class="form-group">
                                     <label for="password">Mật khẩu</label>
@@ -42,7 +48,7 @@
                             </form>
                         </div>
                         <div class="col-lg-6 offset-6 text-right">
-                            <router-link class="nav-link" style="padding-right:0px;padding-top:0px;padding-bottom:15px;font-size:14px" to="/">Quên mật khẩu?</router-link>
+                            <button class=" btn-forgot-pwd text-right" style="padding-right:0px;padding-top:0px;padding-bottom:15px;font-size:14px" data-toggle="modal" data-target="#forgotPassword">Quên mật khẩu?</button>
                         </div>
                         <div class="col-lg-12">
                             <button type="submit" v-on:click="this.onLogin" style="width:100%" class="btn btn-outline-dark">Đăng nhập</button>
@@ -54,12 +60,7 @@
                             </span>
                             <!--<button @click="resetRecaptcha"> Reset ReCAPTCHA </button>-->
                         </div>
-                        <div class="col-12 text-center" style="z-index:2;position:relative;margin-top:15px">
-                            <span class="title">bạn chưa có tài khoản?</span>
-                        </div>
-                        <div class="col-lg-12" style="margin-top:15px">
-                            <button type="submit" v-on:click="this.onGoToRegisterPage" style="width:100%" class="btn btn-outline-info">Đăng ký nhanh</button>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -75,6 +76,43 @@
         </div>
         <div class="toast-body">{{this.contentError}}</div>
     </div>
+
+    <div class="modal fade " id="forgotPassword" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">CẬP NHẬT MẬT KHẨU</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="accordion" id="accordionExample">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label for="txt-user-name">
+                                        Email
+                                        <span style="color:red">(*)</span>
+                                    </label>
+                                    <input type="email" v-model="email" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <button class="btn btn-outline-success" @click="onForgotPassword">
+                                    <i class="far fa-save"></i>
+                                    Lấy lại mật khẩu
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </template>
 
@@ -87,6 +125,7 @@ export default {
         return {
             email: "",
             password: "",
+            username: "",
             isWrongFormatEmail: false,
             isWrongFormatPwd: false,
             isEmptyPwd: false,
@@ -107,31 +146,35 @@ export default {
                 this.isWrongCatcha = false;
             }
 
-            let email = this.email;
+            if(this.isWrongCatcha == true){
+                alert("Captcha bị sai. Vui lòng thực hiện lại")
+                return
+            }
+            // let email = this.email;
             let password = this.password;
 
             let bodyLogin = {
-                email: email,
+                username: this.username,
                 password: password
             };
 
-            this.isEmptyEmail = bodyLogin.email == "" ? true : false;
+            // this.isEmptyEmail = bodyLogin.email == "" ? true : false;
             this.isEmptyPwd = bodyLogin.password == "" ? true : false;
-            if (this.isEmptyEmail || this.isEmptyPwd) {
+            if (this.username == '' || this.isEmptyPwd) {
                 this.contentError =
                     "Bạn vẫn chưa điền đủ thông tin. Vui lòng điền đầy đủ nội dung đăng ký !";
                 $("#error-alert").toast("show");
                 return;
             }
 
-            this.onValidateEmailValue(email);
+            // this.onValidateEmailValue(email);
             this.onValidatePasswordValue(password);
-            if (this.isWrongFormatEmail) {
-                this.contentError =
-                    "Email nhập vào của bạn không hợp lệ. Vui lòng thay đổi email và thử lại !";
-                $("#error-alert").toast("show");
-                return;
-            }
+            // if (this.isWrongFormatEmail) {
+            //     this.contentError =
+            //         "Email nhập vào của bạn không hợp lệ. Vui lòng thay đổi email và thử lại !";
+            //     $("#error-alert").toast("show");
+            //     return;
+            // }
 
             if (this.isWrongFormatPwd) {
                 this.contentError =
@@ -222,6 +265,9 @@ export default {
         },
         resetRecaptcha() {
             this.$refs.recaptcha.reset(); // Direct call reset method
+        },
+        onForgotPassword(){
+
         }
     },
     mounted: function () {
@@ -237,6 +283,11 @@ export default {
 </script>
 
 <style>
+.btn-forgot-pwd {
+    background: transparent;
+    border: none;
+}
+
 #error-alert {
     position: fixed;
     top: 10px;

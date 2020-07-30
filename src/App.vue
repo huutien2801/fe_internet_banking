@@ -33,30 +33,30 @@ export default {
         Loading
     },
     created() {
-        window.addEventListener("scroll", this.handleScroll);
+        // window.addEventListener("scroll", this.handleScroll);
     },
     methods: {
         onScrollTop() {
             window.scrollTo(0, 0);
         },
         handleScroll() {
-            let header = document.getElementById("myHeader");
-            let btnScroll = document.getElementById("btn-scroll-top");
-            // let listButton = document.getElementById("list-button")
-            if (window.scrollY > 200) {
-                header.classList.add("sticky");
-            } else {
-                header.classList.remove("sticky");
-            }
-            if (window.scrollY > 500) {
-                // btnScroll.style.display = "block";
-                btnScroll.style.opacity = "1";
-                // listButton.classList.add("sticky-list-button");
-            } else {
-                // btnScroll.style.display = "none";
-                btnScroll.style.opacity = "0";
-                //  listButton.classList.remove("sticky-list-button");
-            }
+            // let header = document.getElementById("myHeader");
+            // let btnScroll = document.getElementById("btn-scroll-top");
+            // // let listButton = document.getElementById("list-button")
+            // if (window.scrollY > 200) {
+            //     header.classList.add("sticky");
+            // } else {
+            //     header.classList.remove("sticky");
+            // }
+            // if (window.scrollY > 500) {
+            //     // btnScroll.style.display = "block";
+            //     btnScroll.style.opacity = "1";
+            //     // listButton.classList.add("sticky-list-button");
+            // } else {
+            //     // btnScroll.style.display = "none";
+            //     btnScroll.style.opacity = "0";
+            //     //  listButton.classList.remove("sticky-list-button");
+            // }
         }
     },
     watch: {

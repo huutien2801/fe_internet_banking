@@ -2,11 +2,8 @@
 <div class="container user-sidebar">
     <div class="row">
         <div class="col-lg-12">
-            <span class="user-info" style="font-size:20px;color: orange">Hửu Tiền - Customer</span>
-            <span class="user-info">22 tuổi</span>
-            <div class="progress" style="margin-top:10px">
-                <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 50%">75%</div>
-            </div>
+            <span class="user-info" style="font-size:20px;color: orange">Nhân viên - {{user.full_name}} </span>
+            <span class="user-info">{{user.dob | moment("DD/MM/YYYY")}}</span>
         </div>
         <div class="col-lg-12 thumbnail">
             <div class="thumb">
@@ -123,7 +120,8 @@ export default {
     data: function () {
         return {
             imgAva: "https://images.complex.com/images/fl_lossy,q_auto/knaro2lesld9cfvpdbmp/steve-jobs-wearing-new-balance-991",
-            title: "Hello"
+            title: "Hello",
+             user: {}
         };
     },
     methods: {
@@ -133,6 +131,12 @@ export default {
         },
         onChooseFile: function (e) {
             this.imgAva = URL.createObjectURL(e.target.files[0]);
+        }
+    },
+    mounted: function () {
+        let userSt = JSON.parse(window.localStorage.getItem("USER"));
+        if (userSt) {
+            this.user = userSt.USER;
         }
     }
 };

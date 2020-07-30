@@ -1,8 +1,8 @@
-import UserRequest from "../utils/user_request"
+import userRequest from "../utils/user.request"
 
 export function rechargeMoneyInAccount(data){
     let url = `/change-balance`
-    return UserRequest({
+    return userRequest({
         url: url,
         method: 'post',
         data
@@ -11,9 +11,17 @@ export function rechargeMoneyInAccount(data){
 
 export function getInfoUser(){
     let url = ``
-    return UserRequest({
+    return userRequest({
         url: url,
         method: 'get'
+    })
+}
+
+export function getMe(){
+    let url = `/profile`
+    return userRequest({
+        url: url,
+        method: 'get',
     })
 }
 

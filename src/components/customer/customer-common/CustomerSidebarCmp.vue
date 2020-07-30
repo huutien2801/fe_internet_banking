@@ -2,8 +2,8 @@
 <div class="container user-sidebar">
     <div class="row">
         <div class="col-lg-12">
-            <span class="user-info" style="font-size:20px;color: orange">Hửu Tiền - Customer</span>
-            <span class="user-info">22 tuổi</span>
+            <span class="user-info" style="font-size:20px;color: orange">Khách hàng - {{user.full_name}}</span>
+            <span class="user-info">{{user.dob | moment("DD/MM/YYYY")}}</span>
             <div class="progress" style="margin-top:10px">
                 <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 50%">75%</div>
             </div>
@@ -48,7 +48,7 @@
                                                 <i class="fas fa-user-circle"></i> &#160; Danh sách tài khoản
                                             </router-link>
                                         </div>
-                                         <div class="col-lg-12">
+                                        <div class="col-lg-12">
                                             <router-link to="/customer/receiver" class="btn btn-outline-dark btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                                 <i class="fas fa-handshake"></i> &#160; Danh sách người nhận
                                             </router-link>
@@ -83,10 +83,10 @@
                                 </div>
                             </div>
                         </div>
-                         <div class="card">
+                        <div class="card">
                             <div class="card-header" id="headingOne">
                                 <button class="btn btn-light btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseOne">
-                                 <i class="fas fa-calendar-alt"></i>
+                                    <i class="fas fa-calendar-alt"></i>
                                     &#160; Quản lý nhắc nợ
                                 </button>
                             </div>
@@ -103,7 +103,7 @@
                                 </div>
                             </div>
                         </div>
-                         <div class="card">
+                        <div class="card">
                             <div class="card-header" id="headingOne">
                                 <button class="btn btn-light btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseFive" aria-expanded="true" aria-controls="collapseOne">
                                     <i class="fas fa-history"></i>
@@ -119,12 +119,12 @@
                                                 <i class="fas fa-arrow-alt-circle-left"></i> &#160; Lịch sử nhận tiền
                                             </router-link>
                                         </div>
-                                         <div class="col-lg-12">
+                                        <div class="col-lg-12">
                                             <router-link to="/customer/history-send" class="btn btn-outline-dark btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseFive" aria-expanded="true" aria-controls="collapseOne">
                                                 <i class="fas fa-paper-plane"></i> &#160; Lịch sử chuyển tiền
                                             </router-link>
                                         </div>
-                                           <div class="col-lg-12">
+                                        <div class="col-lg-12">
                                             <router-link to="/customer/history-dept" class="btn btn-outline-dark btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseFive" aria-expanded="true" aria-controls="collapseOne">
                                                 <i class="far fa-credit-card"></i> &#160; Lịch sử thanh toán nợ
                                             </router-link>
@@ -133,7 +133,7 @@
                                 </div>
                             </div>
                         </div>
-                          <div class="card">
+                        <div class="card">
                             <div class="card-header" id="headingOne">
                                 <button class="btn btn-light btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseOne">
                                     <i class="fas fa-info-circle"></i>
@@ -172,7 +172,9 @@ export default {
     data: function () {
         return {
             imgAva: "https://images.complex.com/images/fl_lossy,q_auto/knaro2lesld9cfvpdbmp/steve-jobs-wearing-new-balance-991",
-            title: "Hello"
+            title: "Hello",
+            user: {}
+
         };
     },
     methods: {
@@ -182,6 +184,12 @@ export default {
         },
         onChooseFile: function (e) {
             this.imgAva = URL.createObjectURL(e.target.files[0]);
+        }
+    },
+    mounted: function () {
+        let userSt = JSON.parse(window.localStorage.getItem("USER"));
+        if (userSt) {
+            this.user = userSt.USER;
         }
     }
 };

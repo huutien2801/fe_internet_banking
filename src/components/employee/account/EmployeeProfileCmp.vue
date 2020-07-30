@@ -29,7 +29,7 @@
                                     Họ tên
                                     <span style="color:red">(*)</span>
                                 </label>
-                                <input type="text" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                <input type="text" disabled :value="user.full_name" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -38,16 +38,17 @@
                                     Email
                                     <span style="color:red">(*)</span>
                                 </label>
-                                <input type="text" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                <input type="email" disabled v-model="user.email" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
                                 <label for="txt-user-name">
                                     Ngày tháng năm sinh
-                                    <span style="color:red">(*)</span>
                                 </label>
-                                <input type="text" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                <div style="background: #e9ecef;padding: 8px;border: 1px solid #e3e7ea; border-radius: 5px;">
+                                    {{user.dob | moment("DD/MM/YYYY")}}
+                                </div>
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -56,43 +57,42 @@
                                     Số điện thoại
                                     <span style="color:red">(*)</span>
                                 </label>
-                                <input type="text" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                <input type="number" :value="user.phone" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
                                 <label for="txt-user-name">
                                     CMND
-                                    <span style="color:red">(*)</span>
                                 </label>
-                                <input type="text" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                <input type="number" :value="user.identity_number" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
                                 <label for="txt-user-name">
-                                    Ngày cấp
-                                    <span style="color:red">(*)</span>
+                                    Giới tính
                                 </label>
-                                <input type="text" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                <multiselect v-model="genderValue" :options="genderOptions" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" placeholder="Chọn giới tính" label="text" track-by="id" :preselect-first="false" />
                             </div>
                         </div>
+
                         <div class="col-lg-12">
                             <div class="form-group">
                                 <label for="txt-user-name">
                                     Địa chỉ
                                     <span style="color:red">(*)</span>
                                 </label>
-                                <input type="text" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                <input type="text" v-model="user.address" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-12 text-left" style="margin-bottom:10px">
-                    <!-- <button class="btn btn-outline-info" data-toggle="modal" data-target="">
+                    <button class="btn btn-outline-info" @click="onUpdateProfile" data-toggle="modal" data-target="">
                         <i class="fas fa-edit"></i>
                         Cập nhật
-                    </button> -->
+                    </button>
                     <button class="btn btn-outline-danger" data-toggle="modal" data-target="#changePassword">
                         <i class="fas fa-cog"></i>
                         Đổi mật khẩu
@@ -102,7 +102,7 @@
         </div>
     </div>
 
-    <!-- Modal đổi mật khẩu -->
+     <!-- Modal đổi mật khẩu -->
     <div class="modal fade" id="changePassword" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-md">
             <div class="modal-content">
@@ -121,7 +121,7 @@
                                         Mật khẩu hiện tại
                                         <span style="color:red">(*)</span>
                                     </label>
-                                    <input type="text" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                    <input type="password" v-model="oldPassword" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                                 </div>
                             </div>
 
@@ -131,11 +131,20 @@
                                         Mật khẩu mới
                                         <span style="color:red">(*)</span>
                                     </label>
-                                    <input type="text" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                    <input type="password" v-model="newPassword" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                                 </div>
                             </div>
                             <div class="col-lg-12">
-                                <button disabled class="btn btn-outline-success">
+                                <div class="form-group">
+                                    <label for="txt-user-name">
+                                        Xác nhận mật khẩu
+                                        <span style="color:red">(*)</span>
+                                    </label>
+                                    <input type="password" v-model="confirmPassword" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <button class="btn btn-outline-success" @click="onChangePassword">
                                     <i class="far fa-save"></i>
                                     Xác nhận đổi
                                 </button>
@@ -160,42 +169,117 @@ import Datepicker from "vuejs-datepicker";
 export default {
     data: function () {
         return {
-            statusValue: [],
-            statusOptions: [{
-                    id: "ACTIVE",
-                    text: "Đang tuyển"
-                },
-                {
-                    id: "EXPIRED",
-                    text: "Đã hết hạn"
-                }
-            ],
-            sortValue: [],
-            sortOptions: [{
-                    id: "ASC",
-                    text: "Cũ nhất"
-                },
-                {
-                    id: "DESC",
-                    text: "Mới nhất"
-                }
-            ],
-            index: 1
+            user: {},
+            genderValue: null,
+            genderOptions: [],
+            oldPassword: "",
+            newPassword: "",
+            confirmPassword: ""
         };
     },
     methods: {
-        onSelectCategoryJob: function (obj) {
-            let {
-                id,
-                text
-            } = obj;
-            console.log(text);
+        getGender: function () {
+            let genderOpts = [{
+                    id: 'MALE',
+                    text: "Nam"
+                },
+                {
+                    id: 'FEMALE',
+                    text: "Nữ"
+                }
+            ]
+            return genderOpts
         },
-        onRemoveGender: function (obj) {
-            let {
-                id,
-                text
-            } = obj;
+        onUpdateProfile: async function () {
+
+            if (this.user.address == '') {
+                alert("Vui lòng điền địa chỉ hiện tại của bạn")
+                return
+            }
+
+            // if (this.user.email == '') {
+            //     alert("Vui lòng điền email của bạn")
+            //     return
+            // }
+
+            if (this.genderValue != null && this.genderValue[0] != undefined) {
+                this.user.gender = this.genderValue[0].id;
+            }
+
+            let payloadUpdate = {
+                userId: this.user.user_id
+            }
+
+            let body = {
+                address: this.user.address,
+                gender: this.user.gender
+            };
+
+            payloadUpdate.body = body
+
+            const resUpdateUser = await this.$store.dispatch(
+                "userRole/updateUserRole",
+                payloadUpdate
+            );
+
+            if (resUpdateUser && !resUpdateUser.error) {
+                // khi BE trả ra 200 sẽ nhảy vào đây
+                alert("Cập nhật thông tin cá nhân thành công");
+
+                let respGetMe = await this.$store.dispatch("user/getMe", {})
+                if (respGetMe && !respGetMe.error) {
+                    window.localStorage.removeItem("USER")
+                    let userInfo = {
+                        USER: respGetMe.data.data,
+                        //STATUS: response.data.user.status,
+                    }
+                    window.localStorage.setItem("USER", JSON.stringify(userInfo))
+                    this.user = respGetMe.data.data
+                }
+            } else {
+                alert("Có lỗi xảy ra.Vui lòng thử lại sau");
+            }
+        },
+        onChangePassword: async function () {
+
+            if (this.oldPassword == '') {
+                alert("Vui lòng điền mật khẩu hiện tại")
+                return
+            }
+
+            if (this.newPassword == '') {
+                alert("Vui lòng nhập mật khẩu mới")
+                return
+            }
+
+            if (this.confirmPassword == '') {
+                alert("Vui lòng nhập mật khẩu xác nhận")
+                return
+            }
+
+            if (this.oldPassword == this.newPassword) {
+                alert("Mật khẩu mới và mật khẩu cũ không được trùng nhau. Bạn vui lòng thay đổi mật khẩu mới")
+                return
+            }
+
+            if (this.confirmPassword != this.newPassword) {
+                alert("Mật khẩu xác nhận không đúng. Vui lòng thử lại")
+                return
+            }
+
+            let payload = {
+                body: {
+                    oldPassword: this.oldPassword,
+                    newPassword: this.newPassword
+                }
+            }
+
+            let respChangePwd = await this.$store.dispatch("userRole/changePassword", payload)
+            if (respChangePwd && !respChangePwd.error) {
+                alert("Thay đổi mật khẩu thành công!")
+            } else {
+                alert('Thay đổi mật khẩu thất bại')
+            }
         }
     },
     components: {
@@ -203,7 +287,14 @@ export default {
         Paginate,
 
         Datepicker
-    }
+    },
+    mounted: async function () {
+        let userSt = JSON.parse(window.localStorage.getItem("USER"));
+        if (userSt) {
+            this.user = userSt.USER;
+        }
+        this.genderOptions = this.getGender()
+    },
 };
 </script>
 

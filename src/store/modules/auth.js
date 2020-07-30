@@ -13,7 +13,6 @@ const mutations = {
         state.isLoadingRedirect = loadingPage.isLoadingRedirect
     },
 }
-let LOCAL_STORED_OBJ_EXPIRED_VALUE = 60 * 60 * 1000;
 const actions = {
     login({ commit }, payload) {
         return new Promise((resolve, reject) => {
@@ -27,7 +26,6 @@ const actions = {
                         let userInfo = {
                             USER: response.data.data,
                             //STATUS: response.data.user.status,
-                            LOCAL_STORED_OBJ_EXPIRED_KEY: new Date().getTime() + LOCAL_STORED_OBJ_EXPIRED_VALUE
                         }
                         window.localStorage.setItem("USER", JSON.stringify(userInfo))
                         res = {
