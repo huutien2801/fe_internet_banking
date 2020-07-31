@@ -51,7 +51,7 @@
         </div>
     </div>
 
-    <div class="col-lg-12" v-if="isShown == false" style="margin-top:20px">
+    <div class="col-lg-12" v-if="isShown == true" style="margin-top:20px">
         <div class="row container-account" style="padding-top:20px">
             <div class="col-lg-12" style="border-bottom: 1px solid #ebebeb">
                 <h5>THÔNG TIN TÀI KHOẢN</h5>
@@ -64,7 +64,7 @@
                                 Số tài khoản
                                 <span style="color:red">(*)</span>
                             </label>
-                            <input type="number" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                            <input type="number" v-model="bankAccount" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                         </div>
                     </div>
                     <div class="col-lg-6">
@@ -73,7 +73,7 @@
                                 Họ tên khách hàng
                                 <span style="color:red">(*)</span>
                             </label>
-                            <input type="text" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                            <input type="text" v-model="customerInfo.full_name" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                         </div>
                     </div>
                     <div class="col-lg-6">
@@ -82,25 +82,17 @@
                                 CMND
                                 <span style="color:red">(*)</span>
                             </label>
-                            <input type="text" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                            <input type="text" v-model="customerInfo.identity_number" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                         </div>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <label for="txt-user-name">
-                                Ngày cấp
-                                <span style="color:red">(*)</span>
-                            </label>
-                            <input type="text" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
-                        </div>
-                    </div>
+                 
                     <div class="col-lg-6">
                         <div class="form-group">
                             <label for="txt-user-name">
                                 Email
                                 <span style="color:red">(*)</span>
                             </label>
-                            <input type="text" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                            <input type="text" v-model="customerInfo.email" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                         </div>
                     </div>
                     <div class="col-lg-6">
@@ -109,7 +101,7 @@
                                 Ngày tháng năm sinh
                                 <span style="color:red">(*)</span>
                             </label>
-                            <input type="text" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                            <input type="text" v-model="customerInfo.dob" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                         </div>
                     </div>
                     <div class="col-lg-6">
@@ -118,20 +110,20 @@
                                 Điện thoại
                                 <span style="color:red">(*)</span>
                             </label>
-                            <input type="text" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                            <input type="number" v-model="customerInfo.phone" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                         </div>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-12">
                         <div class="form-group">
                             <label for="txt-user-name">
                                 Địa chỉ
                                 <span style="color:red">(*)</span>
                             </label>
-                            <input type="text" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                            <input type="text" v-model="customerInfo.address" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                         </div>
                     </div>
                     <div class="col-lg-12">
-                        <button class="btn btn-primary" data-toggle='modal' data-target="#addBalanceModal">
+                        <button class="btn btn-primary"  data-toggle='modal' data-target="#addBalanceModal">
                             TIẾN HÀNH NẠP TIỀN
                         </button>
                     </div>
@@ -207,7 +199,7 @@ export default {
     },
     methods: {
         onGetCustomerInfo: async function () {
-            if (this.bankAccount == '') {
+            if (this.bankAccount == '' ) {
                 alert("Chưa nhập số tài khoản")
                 return
             }
@@ -228,6 +220,11 @@ export default {
 
             if (respCustomerInfo && !respCustomerInfo.error) {
                 console.log(respCustomerInfo)
+                this.customerInfo = respCustomerInfo.data.user[0]
+                this.isShown = true
+            }else{
+                alert("Số tài khoản hoặc tên đăng nhập của bạn bị sai. Vui lòng nhập chính xác")
+                this.isShown = false
             }
         },
         getFeeType: function () {
@@ -262,16 +259,18 @@ export default {
                 accountNumber: this.bankAccount,
                 username: this.username,
                 money: this.balance,
-                featype: "RECEIVER"
+                feeType: "RECEIVER"
             }
 
             payload.body = body
             let respChangeBalance = await this.$store.dispatch("exchangeMoney/depositMoney", payload)
+            let addBalanceModal = document.getElementById("addBalanceModal")
             if(respChangeBalance && !respChangeBalance.error){
                 alert("Nạp tiền vào tài khoản thành công. Bạn vui lòng kiểm tra lại số dư")
             }else{
                 alert("Hệ thống đã xảy ra lỗi. Bạn vui lòng thử lại sau")
             }
+            $(addBalanceModal).modal("hide")
         }
     },
     components: {

@@ -14,7 +14,7 @@
     <td class="text-center" style="vertical-align: middle">
         <span>{{employeeObj.created_date | moment("DD/MM/YYYY")}}</span>
     </td>
-     <td class="text-center text-wrap" :title="employeeObj.address" style="vertical-align: middle">
+    <td class="text-center text-wrap" :title="employeeObj.address" style="vertical-align: middle">
         <p>{{employeeObj.address}}</p>
     </td>
     <td class="text-center" style="vertical-align: middle">
@@ -24,7 +24,7 @@
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 <button class="dropdown-item" data-toggle="modal" :data-target="'#updateEmployeeModal'+employeeObj.user_id">Cập nhật</button>
-                <button class="dropdown-item"  data-toggle="modal" :data-target="'#deleteEmployeeModal'+employeeObj.user_id">Xóa</button>
+                <button class="dropdown-item" data-toggle="modal" :data-target="'#deleteEmployeeModal'+employeeObj.user_id">Xóa</button>
             </div>
         </div>
     </td>
@@ -33,7 +33,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">CẬP NHẬT NHÂN VIÊN</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">CẬP NHẬT THÔNG TIN CÁ NHÂN</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -57,7 +57,7 @@
                                         Số điện thoại
                                         <span style="color:red">(*)</span>
                                     </label>
-                                    <input v-model="employeeObj.phone" type="text" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                    <input v-model="employeeObj.phone" disabled type="text" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -85,6 +85,14 @@
                                         <span style="color:red">(*)</span>
                                     </label>
                                     <datepicker v-model="employeeObj.dob" :bootstrap-styling="true"></datepicker>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="txt-user-name">
+                                        Giới tính
+                                    </label>
+                                    <multiselect v-model="genderValue" :options="genderOptions" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" placeholder="Chọn giới tính" label="text" track-by="id" :preselect-first="false" />
                                 </div>
                             </div>
 
@@ -149,6 +157,7 @@
 
 <script>
 import Datepicker from "vuejs-datepicker";
+import Multiselect from "vue-multiselect";
 export default {
     props: {
         employeeObj: Object,
@@ -156,16 +165,28 @@ export default {
     mounted: function () {
         console.log(this.employeeObj);
     },
+    data() {
+        return {
+            genderValue: null,
+            genderOptions: [],
+        }
+    },
     methods: {
         onUpdateEmployee: async function () {
             let payloadUpdate = {
                 userId: this.employeeObj.user_id
             }
+
+            if (this.genderValue != null && this.genderValue[0] != undefined) {
+                this.employeeObj.gender = this.genderValue[0].id;
+            }
+
             let body = {
                 fullName: this.employeeObj.fullName,
                 phone: this.employeeObj.phone,
                 address: this.employeeObj.address,
                 dob: this.employeeObj.dob,
+                gender: this.employeeObj.gender
             };
 
             payloadUpdate.body = body
@@ -174,17 +195,17 @@ export default {
                 "userRole/updateUserRole",
                 payloadUpdate
             );
-
+            let modalUpdate = document.getElementById("updateEmployeeModal" + this.employeeObj.user_id);
             if (resUpdateUser && !resUpdateUser.error) {
                 // khi BE trả ra 200 sẽ nhảy vào đây
-                alert("Cập nhật nhân viên thành công");
-                let modalUpdate = document.getElementById("updateEmployeeModal" + this.employeeObj.user_id);
-                $(modalUpdate).modal("hide");
+                alert("Cập nhật thông tin cá nhân thành công");
 
                 this.$emit("onCompleteUpdate")
             } else {
                 alert("Có lỗi xảy ra.Vui lòng thử lại sau");
             }
+            $(modalUpdate).modal("hide");
+
         },
         onDeleteEmployee: async function () {
             let payloadDelete = {
@@ -206,10 +227,34 @@ export default {
             } else {
                 alert("Có lỗi xảy ra.Vui lòng thử lại sau");
             }
+        },
+        getGender: function () {
+            let genderOpts = [{
+                    id: 'MALE',
+                    text: "Nam"
+                },
+                {
+                    id: 'FEMALE',
+                    text: "Nữ"
+                }
+            ]
+            return genderOpts
+        },
+    },
+    mounted() {
+        this.genderOptions = this.getGender()
+
+        let genderInfo = this.genderOptions.find(gender => {
+            return gender.id == this.employeeObj.gender
+        })
+        this.genderValue = {
+            id: this.employeeObj.gender,
+            text: genderInfo.text
         }
     },
     components: {
         Datepicker,
+        Multiselect
     },
 };
 </script>
