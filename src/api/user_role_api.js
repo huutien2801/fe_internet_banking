@@ -60,3 +60,13 @@ export function changePassword(data){
     })
 }
 
+export function resetPassword(data){
+    let url = `/reset`
+    return userRoleRequest({
+        url: url,
+        method: 'post',
+        data
+    })
+}
+
+

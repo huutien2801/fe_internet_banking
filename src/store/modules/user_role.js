@@ -5,7 +5,8 @@ import {
     deleteUserRole,
     getPartner,
     changePassword,
-    getUserInfoByBankAccount
+    getUserInfoByBankAccount,
+    resetPassword
 }
 from "../../api/user_role_api"
 
@@ -105,6 +106,16 @@ const actions = {
                 .then((response) => {
                     let res = {}
 
+                    resolve(response)
+                }).catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    resetPassword({ commit }, payload) {
+        return new Promise((resolve, reject) => {
+            resetPassword(payload)
+                .then((response) => {
                     resolve(response)
                 }).catch(err => {
                     reject(err)

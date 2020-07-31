@@ -88,7 +88,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="accordion" id="accordionExample">
-                        <div class="row">
+                        <div class="row" id="otp-email">
                             <div class="col-lg-12">
                                 <div class="form-group">
                                     <label for="txt-user-name">
@@ -100,6 +100,41 @@
                             </div>
                             <div class="col-lg-12">
                                 <button class="btn btn-outline-success" @click="onForgotPassword">
+                                    <i class="far fa-save"></i>
+                                    Lấy lại mật khẩu
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row" id="update-pwd" style="display:none;">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label for="txt-user-name">
+                                        Mật khẩu mới
+                                        <span style="color:red">(*)</span>
+                                    </label>
+                                    <input type="password" v-model="newPassword" class="form-control" aria-describedby="new password" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="txt-user-name">
+                                        Nhập lại mật khẩu
+                                        <span style="color:red">(*)</span>
+                                    </label>
+                                    <input type="password" v-model="confirmPassword" class="form-control" aria-describedby="confirm password" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="txt-user-name">
+                                        PIN
+                                        <span style="color:red">(*)</span>
+                                    </label>
+                                    <input type="email" v-model="PIN" class="form-control" aria-describedby="pin" />
+                                    <button class="btn btn-outline-success" id="confirm-button" @click="onConfirmPin">Xác nhận</button>
+                                    <button class="btn btn-outline-success" id="tick-button" style="display:none">
+                                        <i class="far fa-tick"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <button class="btn btn-outline-success" @click="onResetPassword">
                                     <i class="far fa-save"></i>
                                     Lấy lại mật khẩu
                                 </button>
@@ -126,6 +161,9 @@ export default {
             email: "",
             password: "",
             username: "",
+            newPassword:"",
+            confirmPassword:"",
+            PIN:"",
             isWrongFormatEmail: false,
             isWrongFormatPwd: false,
             isEmptyPwd: false,
@@ -135,7 +173,8 @@ export default {
             sitekey: "6LczFKUZAAAAADB93_2XnrqUEoTTjAr7-8k8P3M6",
             secretkey: "6LczFKUZAAAAAO8YHVRNOkz3H7B5uIFPWYGzFRWm",
             responseCaptcha: "",
-            isWrongCatcha: false
+            isWrongCatcha: false,
+            isConfirmOTP: false,
         };
     },
     methods: {
@@ -266,8 +305,49 @@ export default {
         resetRecaptcha() {
             this.$refs.recaptcha.reset(); // Direct call reset method
         },
-        onForgotPassword(){
-
+        async onForgotPassword(){
+            let payload = {
+                email:this.email
+            }
+            const res = await this.$store.dispatch("otp/createOTPMail", payload);
+            if (res && !res.error) {
+                document.getElementById('otp-email').style.display = 'none'
+                document.getElementById('update-pwd').style.display = 'block'
+            }
+        },
+        async onResetPassword(){
+            if (this.isConfirmOTP){
+                if (this.newPassword != this.confirmPassword){
+                    alert('Xác nhận mật khẩu sai. Vui lòng nhập lại')
+                } else {
+                    let payload = {
+                        email:this.email,
+                        newPassword:this.newPassword
+                    }
+                    const res = await this.$store.dispatch("userRole/resetPassword", payload);
+                    if (res && !res.error){
+                        alert('Cập nhật mật khẩu thành công. Đăng nhập lại để vào hệ thống');
+                        $('#forgotPassword').modal('hide');
+                    }
+                }
+                
+            }else {
+                alert('Bạn phải xác nhận mã OTP trước');
+            }
+        },
+        async onConfirmPin(){
+            let payload = {
+                email:this.email,
+                OTP:this.PIN
+            }
+            const res = await this.$store.dispatch("otp/confirmOTP", payload);
+            if (res && !res.error){
+                document.getElementById('confirm-button').style.display = 'none';
+                document.getElementById('tick-button').style.display = 'block';
+                this.isConfirmOTP = true;
+            } else {
+                alert('Nhập sai mã PIN vui lòng kiểm tra email và nhập lại');
+            }
         }
     },
     mounted: function () {
