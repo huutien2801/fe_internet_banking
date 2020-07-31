@@ -26,6 +26,16 @@ const actions = {
                 })
         })
     },
+    getAllById({ commit }, payload) {
+        return new Promise((resolve, reject) => {
+            getAllById(JSON.stringify(payload.q), payload.limit, payload.offset)
+                .then((response) => {
+                    resolve(response)
+                }).catch(err => {
+                    reject(err)
+                })
+        })
+    },
 }
 
 export default {

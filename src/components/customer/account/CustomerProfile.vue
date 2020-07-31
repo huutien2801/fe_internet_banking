@@ -275,11 +275,13 @@ export default {
             }
 
             let respChangePwd = await this.$store.dispatch("userRole/changePassword", payload)
+            let changePasswordModal = document.getElementById("changePassword")
             if (respChangePwd && !respChangePwd.error) {
                 alert("Thay đổi mật khẩu thành công!")
             } else {
-                alert('Thay đổi mật khẩu thất bại')
+                alert('Thay đổi mật khẩu thất bại. Bạn vui lòng thử lại sau')
             }
+            $(changePasswordModal).modal("hide")
         }
     },
     mounted: async function () {
@@ -288,6 +290,15 @@ export default {
             this.user = userSt.USER;
         }
         this.genderOptions = this.getGender()
+
+        let genderInfo = this.genderOptions.find(gender => {
+            return gender.id == this.user.gender
+        })
+        
+        this.genderValue = {
+            id: this.user.gender,
+            text: genderInfo.text
+        }
     },
     components: {
         Multiselect,

@@ -28,7 +28,7 @@
                                 Số tài khoản
                                 <span style="color:red">(*)</span>
                             </label>
-                            <input type="number" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                            <input type="number" v-model="bankAccount" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                         </div>
                     </div>
                     <div class="col-lg-6">
@@ -37,11 +37,11 @@
                                 Tên đăng nhập
                                 <span style="color:red">(*)</span>
                             </label>
-                            <input type="text" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                            <input type="text" v-model="username" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                         </div>
                     </div>
                     <div class="col-lg-12">
-                        <button class="btn btn-primary">
+                        <button class="btn btn-primary" @click="onGetCustomerInfo">
                             LẤY THÔNG TIN
                         </button>
                     </div>
@@ -90,82 +90,6 @@
         </div>
     </div>
 
-    <!-- Modal thêm tài khoản tiết kiệm -->
-    <div class="modal fade" id="addEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">THÊM TÀI KHOẢN TIẾT KIỆM</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="accordion" id="accordionExample">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="form-group">
-                                    <label for="txt-user-name">
-                                        Nhập số tiền muốn gửi
-                                        <span style="color:red">(*)</span>
-                                    </label>
-                                    <input type="number" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
-                                </div>
-                            </div>
-
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label for="txt-user-name">
-                                        Ngày gửi
-                                        <span style="color:red">(*)</span>
-                                    </label>
-                                    <datepicker :language="vi" :bootstrap-styling="true">
-                                    </datepicker>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label for="txt-user-name">
-                                        Ngày nhận
-                                        <span style="color:red">(*)</span>
-                                    </label>
-                                    <datepicker :language="vi" :bootstrap-styling="true">
-                                    </datepicker>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label for="txt-user-name">
-                                        Mức lãi suất
-                                        <span style="color:red">(*)</span>
-                                    </label>
-                                    <input type="number" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label for="txt-user-name">
-                                        Lãi cuối kỳ
-                                        <span style="color:red">(*)</span>
-                                    </label>
-                                    <input type="number" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
-                                </div>
-                            </div>
-                            <div class="col-lg-12">
-                                <button class="btn btn-outline-success">
-                                    <i class="far fa-save"></i>
-                                    Gửi
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Đóng</button>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 </template>
 
@@ -177,43 +101,40 @@ import HistoryReceiveItemCmp from '../../customer/account/list-item/HistoryRecei
 export default {
     data: function () {
         return {
-            statusValue: [],
-            statusOptions: [{
-                    id: "ACTIVE",
-                    text: "Đang tuyển"
-                },
-                {
-                    id: "EXPIRED",
-                    text: "Đã hết hạn"
-                }
-            ],
-            sortValue: [],
-            sortOptions: [{
-                    id: "ASC",
-                    text: "Cũ nhất"
-                },
-                {
-                    id: "DESC",
-                    text: "Mới nhất"
-                }
-            ],
-            index: 1
+            bankAccount: '',
+            username: '',
+            isShown: false,
         };
     },
     methods: {
-        onSelectCategoryJob: function (obj) {
-            let {
-                id,
-                text
-            } = obj;
-            console.log(text);
+        onGetCustomerInfo: async function () {
+            if (this.bankAccount == '') {
+                alert("Chưa nhập số tài khoản")
+                return
+            }
+
+            if (this.username == '') {
+                alert("Chưa nhập tên đăng nhập của khách hàng")
+                return
+            }
+
+            let payload = {
+                q: {
+                    account_number: this.bankAccount,
+                    username: this.username
+                }
+            }
+
+            let respCustomerInfo = await this.$store.dispatch("userRole/getUserInfoByBankAccount", payload)
+
+            if (respCustomerInfo && !respCustomerInfo.error) {
+                this.customerInfo = respCustomerInfo.data.user[0]
+                this.isShown = true
+            } else {
+                alert("Số tài khoản hoặc tên đăng nhập của bạn bị sai. Vui lòng nhập chính xác")
+                this.isShown = false
+            }
         },
-        onRemoveGender: function (obj) {
-            let {
-                id,
-                text
-            } = obj;
-        }
     },
     components: {
         Multiselect,
