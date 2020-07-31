@@ -44,7 +44,7 @@ export default {
     mounted: function () {
         let userSt = JSON.parse(window.localStorage.getItem("USER"));
         if (userSt) {
-            this.user = userSt.USER.username;
+            this.user = userSt.USER.full_name;
             this.isLogin = true
         } else {
             this.isLogin = false

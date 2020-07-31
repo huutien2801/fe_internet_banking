@@ -122,14 +122,14 @@
                                     <input type="password" v-model="confirmPassword" class="form-control" aria-describedby="confirm password" />
                                 </div>
                                 <div class="form-group">
-                                    <label for="txt-user-name">
+                                    <label for="txt-user-name" style="display:block">
                                         PIN
                                         <span style="color:red">(*)</span>
                                     </label>
-                                    <input type="email" v-model="PIN" class="form-control" aria-describedby="pin" />
-                                    <button class="btn btn-outline-success" id="confirm-button" @click="onConfirmPin">Xác nhận</button>
-                                    <button class="btn btn-outline-success" id="tick-button" style="display:none">
-                                        <i class="far fa-tick"></i>
+                                    <input type="text" v-model="PIN" class="form-control" style="display:inline-block;width:50%" aria-describedby="pin" />
+                                    <button class="btn btn-outline-success" style="margin-top:-3px" id="confirm-button" @click="onConfirmPin">Xác nhận</button>
+                                    <button class="btn btn-outline-success" id="tick-button" style="display:none;margin-top:-3px">
+                                        <i class="fas fa-check-circle"></i>
                                     </button>
                                 </div>
                             </div>
@@ -343,7 +343,7 @@ export default {
             const res = await this.$store.dispatch("otp/confirmOTP", payload);
             if (res && !res.error){
                 document.getElementById('confirm-button').style.display = 'none';
-                document.getElementById('tick-button').style.display = 'block';
+                document.getElementById('tick-button').style.display = 'inline-block';
                 this.isConfirmOTP = true;
             } else {
                 alert('Nhập sai mã PIN vui lòng kiểm tra email và nhập lại');

@@ -22,7 +22,7 @@
             </div>
             <div class="col-lg-12" style="margin-top:10px">
                 <div class="row">
-                    <div class="col-lg-6">
+                    <div class="col-lg-10">
                         <div class="form-group">
                             <label for="txt-user-name">
                                 Số tài khoản
@@ -31,17 +31,9 @@
                             <input type="number" v-model="bankAccount" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                         </div>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <label for="txt-user-name">
-                                Tên đăng nhập
-                                <span style="color:red">(*)</span>
-                            </label>
-                            <input type="text" v-model="username" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
-                        </div>
-                    </div>
-                    <div class="col-lg-12">
-                        <button class="btn btn-primary" @click="onGetCustomerInfo">
+              
+                    <div class="col-lg-2" style="margin-top:32px">
+                        <button class="btn btn-outline-info" @click="onGetCustomerInfo">
                             LẤY THÔNG TIN
                         </button>
                     </div>
@@ -50,7 +42,7 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-12" style="margin-top:20px">
+    <div class="col-lg-12" v-if="isShown == true" style="margin-top:20px">
         <div class="row container-account" style="padding-top:20px">
             <div class="col-lg-12" style="border-bottom: 1px solid #ebebeb">
                 <h5>THÔNG TIN GIAO DỊCH NHẬN TIỀN</h5>
@@ -69,7 +61,6 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th scope="col" class="text-center">STT</th>
                             <th scope="col" class="text-center">Số TK</th>
                             <th scope="col" class="text-center">Họ tên</th>
                             <th scope="col" class="text-center">Ngân hàng</th>
@@ -80,12 +71,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <HistoryReceiveItemCmp />
+                        <HistoryReceiveItemCmp v-for="receive in listReceive" :key="receive.exchange_money_id" :historyObj="receive" />
                     </tbody>
                 </table>
             </div>
             <div class="col-12 text-center" style="margin-top:20px">
-                <paginate :page-count="5" :prev-text="'&#8249;'" :next-text="'&#8250;'" :first-last-button="true" :last-button-text="'&#187;'" :first-button-text="'&#171;'" :container-class="'pagination'" :page-class="'page-item'" :page-link-class="'page-link'" :next-link-class="'page-link'" :prev-link-class="'page-link'" :click-handler="onPaginationClick" :hide-prev-next="true" v-model="index"></paginate>
+                <paginate :page-count="lastIndex" :prev-text="'&#8249;'" :next-text="'&#8250;'" :first-last-button="true" :last-button-text="'&#187;'" :first-button-text="'&#171;'" :container-class="'pagination'" :page-class="'page-item'" :page-link-class="'page-link'" :next-link-class="'page-link'" :prev-link-class="'page-link'" :click-handler="onPaginationClick" :hide-prev-next="true" v-model="index">
+                </paginate>
             </div>
         </div>
     </div>
@@ -102,8 +94,12 @@ export default {
     data: function () {
         return {
             bankAccount: '',
-            username: '',
             isShown: false,
+            listReceive: [],
+            index: 1,
+            limit: 5,
+            lastIndex: 0,
+            totalReceive: 0
         };
     },
     methods: {
@@ -113,26 +109,54 @@ export default {
                 return
             }
 
-            if (this.username == '') {
-                alert("Chưa nhập tên đăng nhập của khách hàng")
-                return
-            }
-
-            let payload = {
+            let payloadHistory = {
+                limit: this.limit,
+                offset: (this.index - 1) * this.limit,
                 q: {
-                    account_number: this.bankAccount,
-                    username: this.username
+                    accountNumber: this.bankAccount,
+                    isInside: true
                 }
             }
+            let respReceiveHistory = await this.$store.dispatch("exchangeMoney/getAllById", payloadHistory)
 
-            let respCustomerInfo = await this.$store.dispatch("userRole/getUserInfoByBankAccount", payload)
+            if (respReceiveHistory && !respReceiveHistory.error) {
+                this.listReceive = respReceiveHistory.data.data.receive
 
-            if (respCustomerInfo && !respCustomerInfo.error) {
-                this.customerInfo = respCustomerInfo.data.user[0]
+                this.totalReceive = respReceiveHistory.data.total;
+
+                if (respReceiveHistory.data.total % this.limit == 0) {
+                    this.lastIndex = respReceiveHistory.data.total / this.limit;
+                } else {
+                    this.lastIndex = parseInt(respReceiveHistory.data.total / this.limit) + 1;
+                }
                 this.isShown = true
             } else {
-                alert("Số tài khoản hoặc tên đăng nhập của bạn bị sai. Vui lòng nhập chính xác")
                 this.isShown = false
+            }
+
+        },
+
+        onPaginationClick: async function (pageNumber) {
+            let payloadHistory = {
+                limit: this.limit,
+                offset: (this.index - 1) * this.limit,
+                q: {
+                    accountNumber: this.bankAccount,
+                    isInside: true
+                }
+            }
+            let respReceiveHistory = await this.$store.dispatch("exchangeMoney/getAllById", payloadHistory)
+
+            if (respReceiveHistory && !respReceiveHistory.error) {
+                this.listReceive = respReceiveHistory.data.data.receive
+
+                this.totalReceive = respReceiveHistory.data.total;
+
+                if (respReceiveHistory.data.total % this.limit == 0) {
+                    this.lastIndex = respReceiveHistory.data.total / this.limit;
+                } else {
+                    this.lastIndex = parseInt(respReceiveHistory.data.total / this.limit) + 1;
+                }
             }
         },
     },

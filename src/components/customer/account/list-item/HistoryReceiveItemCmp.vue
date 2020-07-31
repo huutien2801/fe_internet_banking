@@ -1,22 +1,33 @@
 <template>
 <tr>
-    <th scope="row text-center" style="vertical-align: middle">1</th>
+
     <td style="vertical-align: middle" class="text-center">
         <p>
-            970012847289
+            {{historyObj.sender_account_number}}
         </p>
     </td>
     <td style="vertical-align: middle" class="text-center">
         <p>La Thoại</p>
     </td>
     <td style="vertical-align: middle" class="text-center">
-        <p>Ngân hàng Sacombank</p>
+        <p v-if="historyObj.is_inside == true">3TBank</p>
+        <p v-else>{{historyObj.partner_code}}</p>
     </td>
     <td class="text-center text-wrap" style="vertical-align: middle">
-        <p>500,000</p>
+        <currency-input class="ipt-balance" :value="historyObj.money" disabled v-currency="{
+    currency: {
+        suffix:' VNĐ'
+    },
+    valueAsInteger: false,
+    distractionFree: true,
+    precision: 1,
+    autoDecimalMode: true,
+    valueRange: { min: 0 },
+    allowNegative: false
+  }" />
     </td>
     <td class="text-center" style="vertical-align: middle">
-        <p>23/12/2019</p>
+        <p>{{historyObj.send_date | moment("DD/MM/YYYY")}}</p>
     </td>
     <td class="text-center text-wrap" style="vertical-align: middle">
         <p>Chuyển rồi đó bạn ơi. Check dùm mình nhé</p>
@@ -35,7 +46,11 @@
 </template>
 
 <script>
-export default {};
+export default {
+    props: {
+        historyObj: Object
+    }
+};
 </script>
 
 <style scoped>
@@ -43,7 +58,7 @@ p {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 150px;
+    max-width: 350px;
     margin-bottom: 0px;
 }
 
@@ -77,5 +92,10 @@ th {
 
 .dropdown-item {
     font-size: 13px;
+}
+
+.ipt-balance{
+    background: transparent;
+    border: none;
 }
 </style>
