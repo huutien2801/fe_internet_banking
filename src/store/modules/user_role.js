@@ -45,6 +45,7 @@ const actions = {
     },
     changePassword({ commit }, payload) {
         return new Promise((resolve, reject) => {
+            console.log(payload)
             changePassword(payload.body)
                 .then((response) => {
                     resolve(response)
