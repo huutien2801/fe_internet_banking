@@ -41,11 +41,6 @@
                                             </router-link>
                                         </div>
 
-                                        <div class="col-lg-12">
-                                            <router-link to="#" class="btn btn-outline-dark btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseOne">
-                                                <i class="fas fa-sign-out-alt"></i>&#160; Đăng xuất
-                                            </router-link>
-                                        </div>
                                     </div>
                                 </div>
                             </div>

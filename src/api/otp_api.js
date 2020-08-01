@@ -10,7 +10,6 @@ export function createOTPMail(email){
 
 export function confirmOTP(data){
     let url = `/confirm`
-    console.log(data)
     return userRoleRequest({
         url: url,
         method: 'post',

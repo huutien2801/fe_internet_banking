@@ -31,7 +31,7 @@
                             <input type="number" v-model="bankAccount" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                         </div>
                     </div>
-              
+
                     <div class="col-lg-2" style="margin-top:32px">
                         <button class="btn btn-outline-info" @click="onGetCustomerInfo">
                             LẤY THÔNG TIN
@@ -50,10 +50,39 @@
             <div class="col-lg-12" style="margin-top: 20px">
                 <div class="row">
                     <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 20px">
-                        <multiselect v-model="statusValue" :options="statusOptions" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo trạng thái" label="text" track-by="id" :preselect-first="false" @select="onSelectCategoryJob($event)" @remove="onRemoveGender($event)" />
+                        <label for="">Từ ngày</label>
+                        <datepicker  v-model="fromDate"  :bootstrap-styling="true">
+                        </datepicker>
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 20px">
-                        <multiselect v-model="sortValue" :options="sortOptions" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo thời gian" label="text" track-by="id" :preselect-first="false" @select="onSelectCategoryJob($event)" @remove="onRemoveGender($event)" />
+                        <label for="">Đến ngày</label>
+                        <datepicker  v-model="toDate"  :bootstrap-styling="true">
+                        </datepicker>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 20px">
+                        <label for="">Loại giao dịch</label>
+                        <multiselect v-model="transactionValue" :options="transationOption" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo ngân hàng" label="text" track-by="id" :preselect-first="false" @select="onSelectTransactionType($event)" @remove="onRemoveTransationType($event)" />
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12" id="selectPartner" style="margin-bottom: 20px">
+                        <label for="">Tên ngân hàng</label>
+                        <multiselect v-model="partnerValue" :options="partnerOption" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo ngân hàng" label="text" track-by="id" :preselect-first="false" />
+                    </div>
+                    <div class="col-lg-12" style="margin-bottom: 20px">
+                        <button class="btn btn-outline-success" @click="onFilterHistory">LỌC</button>
+                    </div>
+                    <div class="col-12" style="margin-bottom: 20px">
+                        <label for="">Tổng giao dịch: </label>
+                        <currency-input class="ipt-balance" :value="totalTransaction" disabled v-currency="{
+                                currency: {
+                                    suffix:' VNĐ'
+                                },
+                                valueAsInteger: false,
+                                distractionFree: true,
+                                precision: 1,
+                                autoDecimalMode: true,
+                                valueRange: { min: 0 },
+                                allowNegative: false
+                            }" />
                     </div>
                 </div>
             </div>
@@ -81,7 +110,6 @@
             </div>
         </div>
     </div>
-
 </div>
 </template>
 
@@ -90,6 +118,10 @@ import Multiselect from "vue-multiselect";
 import Paginate from "vuejs-paginate";
 import Datepicker from "vuejs-datepicker";
 import HistoryReceiveItemCmp from '../../customer/account/list-item/HistoryReceiveItemCmp'
+import {
+    getTransationOption,
+    getPartner
+} from '../../../utils/common'
 export default {
     data: function () {
         return {
@@ -99,7 +131,17 @@ export default {
             index: 1,
             limit: 5,
             lastIndex: 0,
-            totalReceive: 0
+            totalReceive: 0,
+            fromDate: '',
+            toDate: '',
+            transactionValue: null,
+            transationOption: [],
+            totalTransaction: 0,
+            partnerOption: [],
+            partnerValue: null,
+            isSelectedInside: true,
+            active: 'active',
+            inActive: 'inactive'
         };
     },
     methods: {
@@ -117,12 +159,13 @@ export default {
                     isInside: true
                 }
             }
-            let respReceiveHistory = await this.$store.dispatch("exchangeMoney/getAllById", payloadHistory)
+            let respReceiveHistory = await this.$store.dispatch("exchangeMoney/getAllReceiver", payloadHistory)
 
             if (respReceiveHistory && !respReceiveHistory.error) {
-                this.listReceive = respReceiveHistory.data.data.receive
+                this.listReceive = respReceiveHistory.data.data
 
                 this.totalReceive = respReceiveHistory.data.total;
+                this.totalTransaction = respReceiveHistory.data.sum
 
                 if (respReceiveHistory.data.total % this.limit == 0) {
                     this.lastIndex = respReceiveHistory.data.total / this.limit;
@@ -135,7 +178,6 @@ export default {
             }
 
         },
-
         onPaginationClick: async function (pageNumber) {
             let payloadHistory = {
                 limit: this.limit,
@@ -159,17 +201,107 @@ export default {
                 }
             }
         },
+        onSelectTransactionType: function (obj) {
+            let {
+                id,
+                text
+            } = obj;
+
+            if (id != 'INSIDE') {
+                document.getElementById("selectPartner").style.display = 'block'
+            } else {
+                document.getElementById("selectPartner").style.display = 'none'
+                this.partnerValue != null
+            }
+        },
+        onRemoveTransationType: function (obj) {
+            document.getElementById("selectPartner").style.display = 'none'
+            this.partnerValue != null
+        },
+        onFilterHistory: async function () {
+
+            let q = {}
+            let payloadHistory = {
+                limit: this.limit,
+                offset: (this.index - 1) * this.limit,
+            }
+
+            q = {
+                accountNumber: this.bankAccount,
+            }
+
+            if (this.fromDate != '') {
+                q.start = this.fromDate
+            }
+            if (this.toDate != '') {
+                q.end = this.toDate
+            }
+
+            if (this.transactionValue != null && this.transactionValue[0] != undefined) {
+                q.isInside = this.transactionValue[0].id == 'INSIDE' ? true : false
+
+                if (q.isInside == false) {
+                    if (this.partnerValue != null && this.partnerValue[0] != undefined) {
+                        q.partnerCode = this.partnerValue[0].id
+                    }
+                }
+            }
+
+            payloadHistory.q = q
+
+            let respReceiveHistory = await this.$store.dispatch("exchangeMoney/getAllReceiver", payloadHistory)
+
+            if (respReceiveHistory && !respReceiveHistory.error) {
+                this.listReceive = respReceiveHistory.data.data
+
+                this.totalReceive = respReceiveHistory.data.total;
+                this.totalTransaction = respReceiveHistory.data.sum
+
+                if (respReceiveHistory.data.total % this.limit == 0) {
+                    this.lastIndex = respReceiveHistory.data.total / this.limit;
+                } else {
+                    this.lastIndex = parseInt(respReceiveHistory.data.total / this.limit) + 1;
+                }
+                this.isShown = true
+            } else {
+                this.isShown = false
+            }
+        }
     },
     components: {
         Multiselect,
         Paginate,
         Datepicker,
         HistoryReceiveItemCmp
+    },
+    mounted: async function () {
+        this.transationOption = getTransationOption()
+        this.partnerOption = await getPartner()
+
     }
 };
 </script>
 
 <style scoped>
+#selectPartner {
+    display: none;
+}
+
+.active {
+    display: block;
+}
+
+.inactive {
+    display: none;
+}
+
+.ipt-balance {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid gray;
+    text-align: right;
+}
+
 .container-account {
     box-shadow: 1px 0px 10px 1px #ebebeb;
     padding-top: 10px;

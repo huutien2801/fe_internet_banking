@@ -2,11 +2,11 @@
 <tr>
     <td style="vertical-align: middle" class="text-center">
         <p>
-            {{historyObj.sender_account_number}}
+            {{historyObj.receiver_account_number}}
         </p>
     </td>
     <td style="vertical-align: middle" class="text-center">
-        <p>{{historyObj.sender_full_name}}</p>
+        <p>{{historyObj.receiver_full_name}}</p>
     </td>
     <td style="vertical-align: middle" class="text-center">
         <p v-if="historyObj.is_inside == true">3TBank</p>
