@@ -38,7 +38,7 @@ const actions = {
     },
     confirmOTP({ commit }, payload) {
         return new Promise((resolve, reject) => {
-            confirmOTP(payload)
+            confirmOTP(payload.body)
                 .then((response) => {
                     resolve(response)
                 }).catch(err => {

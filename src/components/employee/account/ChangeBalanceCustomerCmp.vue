@@ -259,7 +259,8 @@ export default {
                 accountNumber: this.bankAccount,
                 username: this.username,
                 money: this.balance,
-                feeType: "RECEIVER"
+                feeType: "RECEIVER",
+                message: "Bạn vừa nạp tiền từ ngân hàng vào tài khoản"
             }
 
             payload.body = body

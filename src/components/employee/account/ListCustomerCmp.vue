@@ -14,14 +14,18 @@
         </div>
     </div>
     <div class="col-lg-12" style="margin-top:20px">
-        <div class="row container-account" style="padding-top:20px">
+        <div class="row container-account" style="padding-top:0px">
             <div class="col-lg-12" style="margin-top: 20px">
                 <div class="row">
-                    <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 20px">
-                        <multiselect v-model="statusValue" :options="statusOptions" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo trạng thái" label="text" track-by="id" :preselect-first="false" @select="onSelectCategoryJob($event)" @remove="onRemoveGender($event)" />
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <input type="email" v-model="searchEmail" placeholder="Vui lòng nhập email để tìm kiếm" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                        </div>
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 20px">
-                        <multiselect v-model="sortValue" :options="sortOptions" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo thời gian" label="text" track-by="id" :preselect-first="false" @select="onSelectCategoryJob($event)" @remove="onRemoveGender($event)" />
+                    <div class="col-lg-2">
+                        <button class="btn btn-outline-primary" @click="onSearchCustomer">
+                            Tìm kiếm
+                        </button>
                     </div>
                     <div class="col-lg-6 text-right">
                         <button class="btn btn-outline-info" data-toggle="modal" data-target="#addCustomerModal">
@@ -52,11 +56,11 @@
             </div>
             <div class="col-12 text-center" style="margin-top:20px">
                 <paginate :page-count="lastIndex" :prev-text="'&#8249;'" :next-text="'&#8250;'" :first-last-button="true" :last-button-text="'&#187;'" :first-button-text="'&#171;'" :container-class="'pagination'" :page-class="'page-item'" :page-link-class="'page-link'" :next-link-class="'page-link'" :prev-link-class="'page-link'" :click-handler="onPaginationClick" :hide-prev-next="true" v-model="index">
-        </paginate>
+                </paginate>
             </div>
         </div>
     </div>
-    <!-- Modal thêm tài khoản tiết kiệm -->
+
     <!-- Modal thêm nhân viên -->
     <div class="modal fade" id="addCustomerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -161,6 +165,45 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal xác nhận OTP -->
+    <div class="modal fade" id="confirmOTPModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">XÁC NHẬN KÍCH HOẠT TÀI KHOẢN</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="accordion" id="accordionExample">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="txt-user-name">
+                                        OTP
+                                        <span style="color:red">(*)</span>
+                                    </label>
+                                    <input v-model="otp" type="num" min='0' class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <button class="btn btn-outline-success" @click="onConfirmOTP">
+                                    <i class="far fa-save"></i>
+                                    Xác nhận
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </template>
 
@@ -205,7 +248,9 @@ export default {
             index: 1,
             limit: 5,
             lastIndex: 0,
-            totalCustomer: 0
+            totalCustomer: 0,
+            otp: 0,
+            searchEmail: ''
         };
     },
     methods: {
@@ -274,12 +319,14 @@ export default {
             }
 
             const resCreateUser = await this.$store.dispatch("userRole/createUserRole", body);
-
+            let modalAdd = document.getElementById("addCustomerModal")
             if (resCreateUser && !resCreateUser.error) {
                 // khi BE trả ra 200 sẽ nhảy vào đây
                 alert("Thêm khách hàng thành công")
-                let modalAdd = document.getElementById("addCustomerModal")
                 $(modalAdd).modal("hide")
+
+                let confirmOTPModal = document.getElementById("confirmOTPModal")
+                $(confirmOTPModal).modal("show")
 
                 let payload = {
                     limit: this.limit,
@@ -304,6 +351,7 @@ export default {
                 }
             } else {
                 alert("Có lỗi xảy ra.Vui lòng thử lại sau")
+                $(modalAdd).modal("hide")
             }
         },
         onPaginationClick: async function (pageNumber) {
@@ -336,6 +384,58 @@ export default {
             }
             let q = {}
             q.roleCode = "CUSTOMER"
+            payload.q = q
+
+            const res = await this.$store.dispatch("userRole/getUserRole", payload);
+
+            if (res && !res.error) {
+
+                this.listCustomer = res.data.users;
+                this.totalCustomer = res.data.total;
+
+                if (res.data.total % this.limit == 0) {
+                    this.lastIndex = res.data.total / this.limit;
+                } else {
+                    this.lastIndex = parseInt(res.data.total / this.limit) + 1;
+                }
+            }
+        },
+        onConfirmOTP: async function () {
+            let payloadOTP = {}
+
+            if (this.otp == 0) {
+                alert("Vui lòng nhập mã OTP")
+                return;
+            }
+
+            payloadOTP.body = {
+                OTP: this.otp + "",
+                email: this.email
+            }
+
+            let respConfirm = await this.$store.dispatch("otp/confirmOTP", payloadOTP)
+            let confirmOTPModal = document.getElementById("confirmOTPModal")
+            if (respConfirm && !respConfirm.error) {
+                alert("Kích hoạt thành công")
+                $(confirmOTPModal).modal("hide")
+            } else {
+                alert("Mã OTP sai. Vui lòng nhập lại")
+            }
+
+        },
+        onSearchCustomer: async function () {
+            if (this.searchEmail == '') {
+                alert("Vui lòng điền email cần tìm kiếm")
+                return
+            }
+
+            let payload = {
+                limit: this.limit,
+                offset: (this.index - 1) * this.limit,
+            }
+            let q = {}
+            q.roleCode = "CUSTOMER"
+            q.email = this.searchEmail
             payload.q = q
 
             const res = await this.$store.dispatch("userRole/getUserRole", payload);
