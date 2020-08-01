@@ -51,12 +51,12 @@
                 <div class="row">
                     <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 20px">
                         <label for="">Từ ngày</label>
-                        <datepicker  v-model="fromDate"  :bootstrap-styling="true">
+                        <datepicker v-model="fromDate" :bootstrap-styling="true">
                         </datepicker>
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 20px">
                         <label for="">Đến ngày</label>
-                        <datepicker  v-model="toDate"  :bootstrap-styling="true">
+                        <datepicker v-model="toDate" :bootstrap-styling="true">
                         </datepicker>
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 20px">
@@ -187,18 +187,22 @@ export default {
                     isInside: true
                 }
             }
-            let respReceiveHistory = await this.$store.dispatch("exchangeMoney/getAllById", payloadHistory)
+            let respReceiveHistory = await this.$store.dispatch("exchangeMoney/getAllReceiver", payloadHistory)
 
             if (respReceiveHistory && !respReceiveHistory.error) {
-                this.listReceive = respReceiveHistory.data.data.receive
+                this.listReceive = respReceiveHistory.data.data
 
                 this.totalReceive = respReceiveHistory.data.total;
+                this.totalTransaction = respReceiveHistory.data.sum
 
                 if (respReceiveHistory.data.total % this.limit == 0) {
                     this.lastIndex = respReceiveHistory.data.total / this.limit;
                 } else {
                     this.lastIndex = parseInt(respReceiveHistory.data.total / this.limit) + 1;
                 }
+                this.isShown = true
+            } else {
+                this.isShown = false
             }
         },
         onSelectTransactionType: function (obj) {
