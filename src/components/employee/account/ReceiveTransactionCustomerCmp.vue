@@ -72,7 +72,21 @@
                     </div>
                     <div class="col-12" style="margin-bottom: 20px">
                         <label for="">Tổng giao dịch: </label>
-                        <currency-input class="ipt-balance" :value="totalTransaction" disabled v-currency="{
+                        <currency-input class="ipt-balance" :value="totalSumTransaction" disabled v-currency="{
+                                currency: {
+                                    suffix:' VNĐ'
+                                },
+                                valueAsInteger: false,
+                                distractionFree: true,
+                                precision: 1,
+                                autoDecimalMode: true,
+                                valueRange: { min: 0 },
+                                allowNegative: false
+                            }" />
+                    </div>
+                    <div class="col-12" style="margin-bottom: 20px">
+                        <label for="">Tổng giao dịch trong <b>tháng {{currentMonth}}</b> : </label>
+                        <currency-input class="ipt-balance" :value="totalMonthTransaction" disabled v-currency="{
                                 currency: {
                                     suffix:' VNĐ'
                                 },
@@ -96,15 +110,35 @@
                             <th class="text-center" scope="col">Số tiền</th>
                             <th class="text-center" scope="col">Ngày nhận</th>
                             <th class="text-center" scope="col">Nội dung</th>
-                            <th class="text-center" scope="col">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
                         <HistoryReceiveItemCmp v-for="receive in listReceive" :key="receive.exchange_money_id" :historyObj="receive" />
+                        <tr>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                                <currency-input class="ipt-balance" :value="totalTransaction" disabled v-currency="{
+                                currency: {
+                                    suffix:' VNĐ'
+                                },
+                                valueAsInteger: false,
+                                distractionFree: true,
+                                precision: 1,
+                                autoDecimalMode: true,
+                                valueRange: { min: 0 },
+                                allowNegative: false
+                            }" />
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
-            <div class="col-12 text-center" style="margin-top:20px">
+            <div class="col-12 text-center" style="margin-top:0px">
                 <paginate :page-count="lastIndex" :prev-text="'&#8249;'" :next-text="'&#8250;'" :first-last-button="true" :last-button-text="'&#187;'" :first-button-text="'&#171;'" :container-class="'pagination'" :page-class="'page-item'" :page-link-class="'page-link'" :next-link-class="'page-link'" :prev-link-class="'page-link'" :click-handler="onPaginationClick" :hide-prev-next="true" v-model="index">
                 </paginate>
             </div>
@@ -140,8 +174,9 @@ export default {
             partnerOption: [],
             partnerValue: null,
             isSelectedInside: true,
-            active: 'active',
-            inActive: 'inactive'
+            currentMonth: 0,
+            totalSumTransaction: 0,
+            totalMonthTransaction: 0
         };
     },
     methods: {
@@ -166,7 +201,8 @@ export default {
 
                 this.totalReceive = respReceiveHistory.data.total;
                 this.totalTransaction = respReceiveHistory.data.sum
-
+                this.totalSumTransaction = respReceiveHistory.data.sumTotal
+                this.totalMonthTransaction = respReceiveHistory.data.sumMonth
                 if (respReceiveHistory.data.total % this.limit == 0) {
                     this.lastIndex = respReceiveHistory.data.total / this.limit;
                 } else {
@@ -194,7 +230,8 @@ export default {
 
                 this.totalReceive = respReceiveHistory.data.total;
                 this.totalTransaction = respReceiveHistory.data.sum
-
+                this.totalSumTransaction = respReceiveHistory.data.sumTotal
+                this.totalMonthTransaction = respReceiveHistory.data.sumMonth
                 if (respReceiveHistory.data.total % this.limit == 0) {
                     this.lastIndex = respReceiveHistory.data.total / this.limit;
                 } else {
@@ -260,6 +297,8 @@ export default {
 
                 this.totalReceive = respReceiveHistory.data.total;
                 this.totalTransaction = respReceiveHistory.data.sum
+                this.totalSumTransaction = respReceiveHistory.data.sumTotal
+                this.totalMonthTransaction = respReceiveHistory.data.sumMonth
 
                 if (respReceiveHistory.data.total % this.limit == 0) {
                     this.lastIndex = respReceiveHistory.data.total / this.limit;
@@ -281,7 +320,8 @@ export default {
     mounted: async function () {
         this.transationOption = getTransationOption()
         this.partnerOption = await getPartner()
-
+        let currentDate = new Date()
+        this.currentMonth = currentDate.getMonth() + 1
     }
 };
 </script>

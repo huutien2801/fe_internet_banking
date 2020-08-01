@@ -219,7 +219,6 @@ export default {
             let respCustomerInfo = await this.$store.dispatch("userRole/getUserInfoByBankAccount", payload)
 
             if (respCustomerInfo && !respCustomerInfo.error) {
-                console.log(respCustomerInfo)
                 this.customerInfo = respCustomerInfo.data.user[0]
                 this.isShown = true
             }else{

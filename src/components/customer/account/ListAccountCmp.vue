@@ -41,16 +41,16 @@
                                     <span style="color:red">(*)</span>
                                 </label>
                                 <currency-input class="ipt-balance" :value="standarAccount.balance" disabled v-currency="{
-    currency: {
-        suffix:' VNĐ'
-    },
-    valueAsInteger: false,
-    distractionFree: true,
-    precision: 1,
-    autoDecimalMode: true,
-    valueRange: { min: 0 },
-    allowNegative: false
-  }" />
+                                        currency: {
+                                            suffix:' VNĐ'
+                                        },
+                                        valueAsInteger: false,
+                                        distractionFree: true,
+                                        precision: 1,
+                                        autoDecimalMode: true,
+                                        valueRange: { min: 0 },
+                                        allowNegative: false
+                                    }" />
                             </div>
                         </div>
                         <div class="col-lg-6">

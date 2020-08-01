@@ -31,16 +31,7 @@
     <td class="text-center text-wrap" style="vertical-align: middle">
         <p>{{historyObj.message}}</p>
     </td>
-    <td class="text-center" style="vertical-align: middle">
-        <div class="dropdown">
-            <button class="btn btn-outline-info" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <button class="dropdown-item">Chi tiết</button>
-            </div>
-        </div>
-    </td>
+
 </tr>
 </template>
 
@@ -96,5 +87,6 @@ th {
 .ipt-balance{
     background: transparent;
     border: none;
+    text-align: right;
 }
 </style>

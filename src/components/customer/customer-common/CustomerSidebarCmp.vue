@@ -133,32 +133,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card">
-                            <div class="card-header" id="headingOne">
-                                <button class="btn btn-light btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseOne">
-                                    <i class="fas fa-info-circle"></i>
-                                    &#160; Cá nhân
-                                </button>
-                            </div>
-
-                            <div id="collapseThree" class="collapse child-menu" aria-labelledby="headingOne" data-parent="#accordionExample">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <router-link to="/admin/transation" class="btn btn-outline-dark btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseOne">
-                                                <i class="fas fa-sign-out-alt"></i>&#160; Đăng xuất
-                                            </router-link>
-                                        </div>
-
-                                        <div class="col-lg-12">
-                                            <router-link to="/admin/customer" class="btn btn-outline-dark btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseOne">
-                                                <i class="fas fa-cog"></i> &#160; Đổi mật khẩu
-                                            </router-link>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                       
                     </div>
                 </div>
             </div>
