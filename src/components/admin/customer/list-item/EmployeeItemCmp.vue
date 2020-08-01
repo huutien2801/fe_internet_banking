@@ -182,7 +182,7 @@ export default {
             }
 
             let body = {
-                fullName: this.employeeObj.fullName,
+                fullName: this.employeeObj.full_name,
                 phone: this.employeeObj.phone,
                 address: this.employeeObj.address,
                 dob: this.employeeObj.dob,

@@ -424,11 +424,7 @@ export default {
 
         },
         onSearchCustomer: async function () {
-            if (this.searchEmail == '') {
-                alert("Vui lòng điền email cần tìm kiếm")
-                return
-            }
-
+     
             let payload = {
                 limit: this.limit,
                 offset: (this.index - 1) * this.limit,
