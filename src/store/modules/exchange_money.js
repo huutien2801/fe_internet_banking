@@ -2,7 +2,9 @@ import {
     depositMoney,
     getAllById,
     getUserLogs,
-    getAllHistoryAdmin
+    getAllHistoryAdmin,
+    getAllReceiver,
+    getAllSender
 } from "../../api/exchange_money_api"
 
 const state = {

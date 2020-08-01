@@ -8,6 +8,22 @@ export function getAllById(q,limit,offset){
     })
 }
 
+export function getAllReceiver(q,limit,offset){
+    let url = `/receiver?q=${q}&limit=${limit}&offset=${offset}`
+    return ExchangeMoneyRequest({
+        url: url,
+        method: 'get'
+    })
+}
+
+export function getAllSender(q,limit,offset){
+    let url = `/sender?q=${q}&limit=${limit}&offset=${offset}`
+    return ExchangeMoneyRequest({
+        url: url,
+        method: 'get'
+    })
+}
+
 export function depositMoney(data){
     let url = `/deposit`
     return ExchangeMoneyRequest({
@@ -16,6 +32,7 @@ export function depositMoney(data){
         data
     })
 }
+
 export function getUserLogs(limit,offset){
     let url = `/get-userlogs?limit=${limit}&offset=${offset}`
     return ExchangeMoneyRequest({
