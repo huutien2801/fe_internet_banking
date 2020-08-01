@@ -36,7 +36,7 @@
 
                                 <div class="form-group">
                                     <label for="email">Username</label>
-                                    <input type="text" v-model="username" class="form-control" v-bind:class="{ 'border-error': isWrongFormatEmail || isEmptyEmail }" id="email" v-on:keydown.tab="onValidateEmail($event)" v-on:input="onValidateEmail($event)" required aria-describedby="emailHelp" />
+                                    <input type="text" v-model="username" class="form-control" v-bind:class="{ 'border-error': isWrongFormatEmail || isEmptyEmail }" id="email" required aria-describedby="emailHelp" />
 
                                 </div>
                                 <div class="form-group">

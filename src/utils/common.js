@@ -14,6 +14,20 @@ export function getTransationOption() {
     return opts
 }
 
+export function getFeeTypeOption() {
+    let opts = [
+        {
+            id: "RECEIVER",
+            text: "Người nhận trả tiền"
+        },
+        {
+            id: "SENDER",
+            text: "Người gửi trả tiền"
+        }
+    ]
+    return opts
+}
+
 export async function getPartner() {
     let payload = {
         limit: 100,

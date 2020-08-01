@@ -1,127 +1,156 @@
 <template>
-<div class="row">
+<div class="row" style="margin-right:4px">
     <div class="col-lg-12">
-        <div class="container">
-            <div class="row container-account">
-                <div class="col-lg-1" style="padding-right:0px">
-                    <i class="fas fa-exchange-alt icon-title"></i>
+        <div class="row container-account">
+            <div class="col-lg-1" style="padding-right:0px">
+                <i class="fas fa-exchange-alt icon-title"></i>
+            </div>
+            <div class="col-lg-11" style="padding-left:0px">
+                <div class="header-title">
+                    <span class="main-title">Chuyển khoản nội bộ</span>
+                    <span class="sub-title">(Chuyển khoản trong nội bộ ngân hàng 3TBank)</span>
                 </div>
-                <div class="col-lg-11" style="padding-left:0px">
-                    <div class="header-title">
-                        <span class="main-title">Chuyển khoản nội bộ</span>
-                        <span class="sub-title">(Chuyển khoản trong nội bộ ngân hàng 3TBank)</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12" style="margin-top:20px">
+        <div class="row container-account">
+            <div class="col-lg-12" style="border-bottom: 1px solid #ebebeb">
+                <h5>THÔNG TIN TÀI KHOẢN THANH TOÁN</h5>
+            </div>
+            <div class="col-lg-12" style="margin-top:10px">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="txt-user-name">
+                                Số tài khoản
+                                <span style="color:red">(*)</span>
+                            </label>
+                            <input type="text" :value="standarAccount.account_number" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="txt-user-name">
+                                Số dư hiện có
+                                <span style="color:red">(*)</span>
+                            </label>
+                            <currency-input class="ipt-balance" :value="standarAccount.balance" disabled v-currency="{
+                                        currency: {
+                                            suffix:' VNĐ'
+                                        },
+                                        valueAsInteger: false,
+                                        distractionFree: true,
+                                        precision: 1,
+                                        autoDecimalMode: true,
+                                        valueRange: { min: 0 },
+                                        allowNegative: false
+                                    }" />
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="txt-user-name">
+                                Ngày mở tài khoản
+                                <span style="color:red">(*)</span>
+                            </label>
+                            <datepicker v-model="standarAccount.register_date" :bootstrap-styling="true">
+                            </datepicker>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="txt-user-name">
+                                Ngày hết hạn
+                                <span style="color:red">(*)</span>
+                            </label>
+                            <datepicker v-model="standarAccount.expired_date" :bootstrap-styling="true">
+                            </datepicker>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-lg-12" style="margin-top:20px">
-        <div class="container">
-            <div class="row container-account">
-                <div class="col-lg-12" style="border-bottom: 1px solid #ebebeb">
-                    <h5>THÔNG TIN CHUYỂN KHOẢN</h5>
-                </div>
-                <div class="col-lg-12" style="margin-top:10px">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <label for="txt-user-name">
-                                    Số tài khoản
-                                    <span style="color:red">(*)</span>
-                                </label>
-                                <input type="text" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
-                            </div>
-                        </div>
-                              <div class="col-lg-6">
-                            <div class="form-group">
-                                <label for="txt-user-name">
-                                    Tên người nhận
-                                    <span style="color:red">(*)</span>
-                                </label>
-                                <input type="text" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <label for="txt-user-name">
-                                    Số dư hiện tại
-                                    <span style="color:red">(*)</span>
-                                </label>
-                                <input type="number" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
-                            </div>
-                        </div>
-                            <div class="col-lg-6">
-                            <div class="form-group">
-                                <label for="txt-user-name">
-                                    Số tiền muốn chuyển
-                                    <span style="color:red">(*)</span>
-                                </label>
-                                <input type="number" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
-                            </div>
+        <div class="row container-account">
+            <div class="col-lg-12" style="border-bottom: 1px solid #ebebeb">
+                <h5>THÔNG TIN CHUYỂN KHOẢN</h5>
+            </div>
+            <div class="col-lg-12" style="margin-top:10px">
+                <div class="row">
+                    <div class="col-lg-12 col-md-6 col-sm-12" style="margin-bottom: 20px">
+                        <label for="">Chọn người nhận</label>
+                        <multiselect v-model="exchangeUserValue" :options="exchangeUserOption" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Chọn người nhận" label="text" track-by="id" :preselect-first="false" @select="onSelectTransactionType($event)" @remove="onRemoveTransationType($event)" />
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="txt-user-name">
+                                Số tài khoản
+                                <span style="color:red">(*)</span>
+                            </label>
+                            <input type="text" v-model="receiverAccountNumber" @blur="onGetUserInfo" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                         </div>
                     </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="txt-user-name">
+                                Tên người nhận
+                                <span style="color:red">(*)</span>
+                            </label>
+                            <input type="text" v-model="receiverFullname" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="txt-user-name">
+                                Số tiền muốn chuyển
+                                <span style="color:red">(*)</span>
+                            </label>
+                            <currency-input class="ipt-balance" :value="sendMoney" v-currency="{
+                                        currency: {
+                                            suffix:' VNĐ'
+                                        },
+                                        valueAsInteger: false,
+                                        distractionFree: true,
+                                        precision: 1,
+                                        autoDecimalMode: true,
+                                        valueRange: { min: 0 },
+                                        allowNegative: false
+                                    }" />
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="txt-user-name">
+                                Nội dung chuyển tiền
+                                <span style="color:red">(*)</span>
+                            </label>
+                            <input type="text" v-model="message" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-md-6 col-sm-12" style="margin-bottom: 20px">
+                        <label for="">Chọn hình thức thanh toán phí</label>
+                        <multiselect v-model="feeTypeValue" :options="feeTypeOption" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Chọn hình thức thanh toán phí" label="text" track-by="id" :preselect-first="false" @select="onSelectTransactionType($event)" @remove="onRemoveTransationType($event)" />
+                    </div>
                 </div>
-                <div class="col-lg-12 text-left" style="margin-bottom:10px">
-                    <button class="btn btn-outline-info" data-toggle="modal" data-target="">
-                        <i class="fas fa-save"></i>
-                        Lưu thông tin người nhận
-                    </button>
-                    <button class="btn btn-outline-danger" data-toggle="modal" data-target="#changePassword">
-                        <i class="fas fa-paper-plane"></i>
-                        Chuyển
-                    </button>
-                </div>
+            </div>
+            <div class="col-lg-12 text-left" style="margin-bottom:10px">
+                <button class="btn btn-outline-info" data-toggle="modal" data-target="">
+                    <i class="fas fa-save"></i>
+                    Lưu thông tin người nhận
+                </button>
+                <button class="btn btn-outline-danger" @click="onSendMoney" data-toggle="modal" data-target="#changePassword">
+                    <i class="fas fa-paper-plane"></i>
+                    Chuyển
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- Modal đổi mật khẩu -->
-    <div class="modal fade" id="changePassword" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">ĐỔI MẬT KHẨU</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="accordion" id="accordionExample">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="form-group">
-                                    <label for="txt-user-name">
-                                        Mật khẩu hiện tại
-                                        <span style="color:red">(*)</span>
-                                    </label>
-                                    <input type="text" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
-                                </div>
-                            </div>
-
-                            <div class="col-lg-12">
-                                <div class="form-group">
-                                    <label for="txt-user-name">
-                                        Mật khẩu mới
-                                        <span style="color:red">(*)</span>
-                                    </label>
-                                    <input type="text" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
-                                </div>
-                            </div>
-                            <div class="col-lg-12">
-                                <button disabled class="btn btn-outline-success">
-                                    <i class="far fa-save"></i>
-                                    Xác nhận đổi
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Đóng</button>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 </template>
 
@@ -130,52 +159,105 @@ import Multiselect from "vue-multiselect";
 import Paginate from "vuejs-paginate";
 import Datepicker from "vuejs-datepicker";
 import AccountItemCmp from "./list-item/AccountItemCmp";
+import {
+    getFeeTypeOption
+} from '../../../utils/common'
 export default {
     data: function () {
         return {
-            statusValue: [],
-            statusOptions: [{
-                    id: "ACTIVE",
-                    text: "Đang tuyển"
-                },
-                {
-                    id: "EXPIRED",
-                    text: "Đã hết hạn"
-                }
-            ],
-            sortValue: [],
-            sortOptions: [{
-                    id: "ASC",
-                    text: "Cũ nhất"
-                },
-                {
-                    id: "DESC",
-                    text: "Mới nhất"
-                }
-            ],
-            index: 1
+            standarAccount: {},
+            receiverAccountNumber: '',
+            receiverFullname: '',
+            sendMoney: 0,
+            message: '',
+            exchangeUserOption: [],
+            exchangeUserValue: null,
+            feeTypeValue: null,
+            feeTypeOption: []
         };
     },
     methods: {
-        onSelectCategoryJob: function (obj) {
-            let {
-                id,
-                text
-            } = obj;
-            console.log(text);
+        onGetUserInfo: async function () {
+
+            let payload = {
+                q: {
+                    account_number: this.receiverAccountNumber,
+                }
+            }
+
+            let respCustomerInfo = await this.$store.dispatch("userRole/getUserInfoByBankAccount", payload)
+            if (respCustomerInfo && !respCustomerInfo.error) {
+                alert("Lấy thông tin thành công")
+                this.receiverFullname = respCustomerInfo.data.user[0].full_name
+            } else {
+                alert("Số tài khoản hoặc tên đăng nhập của bạn bị sai. Vui lòng nhập chính xác")
+                this.receiverFullname = ''
+            }
         },
-        onRemoveGender: function (obj) {
-            let {
-                id,
-                text
-            } = obj;
+        onSendMoney: async function () {
+            let payload = {}
+
+            if (this.receiverAccountNumber == '') {
+                alert("Thiếu thông tin tài khoản")
+                return
+            }
+
+            if (this.receiverFullname == '') {
+                alert("Tên người nhận hiện đang rỗng")
+                return
+            }
+
+            if (this.sendMoney == 0) {
+                alert("Chưa nhập số tiền muốn nạp")
+                return
+            }
+
+            if(this.feeTypeValue == null || this.feeTypeValue[0] != undefined){
+                alert("Chưa chọn hình thức thanh toán chuyển khoản")
+                return
+            }
+
+            if(this.message == ''){
+                alert("Mời bạn nhập nội dung chuyển khoản")
+                return
+            }
+
+            if (this.partnerValue != null && this.partnerValue[0] != undefined) {
+                q.partnerCode = this.partnerValue[0].id
+            }
+
+            let body = {
+                accountNumber: this.receiverAccountNumber,
+                money: this.sendMoney,
+                feeType: this.feeTypeValue[0].id,
+                message: this.message
+            }
+
+            payload.body = body
+            let respChangeBalance = await this.$store.dispatch("exchangeMoney/depositMoney", payload)
+            let addBalanceModal = document.getElementById("addBalanceModal")
+            if (respChangeBalance && !respChangeBalance.error) {
+                alert("Nạp tiền vào tài khoản thành công. Bạn vui lòng kiểm tra lại số dư")
+            } else {
+                alert("Hệ thống đã xảy ra lỗi. Bạn vui lòng thử lại sau")
+            }
         }
+
     },
     components: {
         Multiselect,
         Paginate,
         AccountItemCmp,
         Datepicker
+    },
+    mounted: async function () {
+
+        let respStandarAccount = await this.$store.dispatch('bankAccount/getStandarAccount', {})
+        if (respStandarAccount && !respStandarAccount.error) {
+            this.standarAccount = respStandarAccount.data.data
+        }
+
+        this.feeTypeOption = getFeeTypeOption()
     }
 };
 </script>
@@ -204,5 +286,13 @@ export default {
 
 .sub-title {
     font-size: 15px;
+}
+
+.ipt-balance {
+    display: block;
+    border-radius: 5px;
+    width: 100%;
+    padding: 5px;
+    border: 1px solid gray;
 }
 </style>
