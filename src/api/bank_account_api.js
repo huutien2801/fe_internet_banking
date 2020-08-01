@@ -1,4 +1,4 @@
-import bankAccountRequest from "../utils/bank_account_request"
+import bankAccountRequest from "../utils/bank_account.request"
 
 export function createbankAccount(data){
     let url = `/create`
@@ -15,5 +15,13 @@ export function updatebankAccount(data){
         url: url,
         method: 'post',
         data
+    })
+}
+
+export function getStandarAccount(){
+    let url = `/standard`
+    return bankAccountRequest({
+        url: url,
+        method: 'get'
     })
 }

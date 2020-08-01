@@ -4,16 +4,6 @@ import {
 } from "../../api/otp_api"
 
 
-// import {
-//     createUserRole,
-//     getUserRole,
-//     updateUserRole,
-//     deleteUserRole,
-//     getPartner,
-//     changePassword
-// }
-// from "../../api/user_role_api"
-
 const state = {
 
 }

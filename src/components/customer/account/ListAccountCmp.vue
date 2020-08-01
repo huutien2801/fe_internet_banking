@@ -2,19 +2,19 @@
 <div class="row">
     <div class="col-lg-12">
         <div class="container">
-              <div class="row container-account">
-            <div class="col-lg-1" style="padding-right:0px">
-                <i class="fas fa-user-circle icon-title"></i>
-            </div>
-            <div class="col-lg-11" style="padding-left:0px">
-                <div class="header-title">
-                    <span class="main-title">Danh sách tài khoản</span>
-                    <span class="sub-title">(Danh sách những tài khoản khách hàng đang sử dụng của 3TBank)</span>
+            <div class="row container-account">
+                <div class="col-lg-1" style="padding-right:0px">
+                    <i class="fas fa-user-circle icon-title"></i>
+                </div>
+                <div class="col-lg-11" style="padding-left:0px">
+                    <div class="header-title">
+                        <span class="main-title">Danh sách tài khoản</span>
+                        <span class="sub-title">(Danh sách những tài khoản khách hàng đang sử dụng của 3TBank)</span>
+                    </div>
                 </div>
             </div>
         </div>
-        </div>
-  
+
     </div>
 
     <div class="col-lg-12" style="margin-top:20px">
@@ -31,7 +31,7 @@
                                     Số tài khoản
                                     <span style="color:red">(*)</span>
                                 </label>
-                                <input type="text" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                <input type="text" :value="standarAccount.account_number" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -40,7 +40,17 @@
                                     Số dư hiện có
                                     <span style="color:red">(*)</span>
                                 </label>
-                                <input type="text" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                <currency-input class="ipt-balance" :value="standarAccount.balance" disabled v-currency="{
+    currency: {
+        suffix:' VNĐ'
+    },
+    valueAsInteger: false,
+    distractionFree: true,
+    precision: 1,
+    autoDecimalMode: true,
+    valueRange: { min: 0 },
+    allowNegative: false
+  }" />
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -49,7 +59,8 @@
                                     Ngày mở tài khoản
                                     <span style="color:red">(*)</span>
                                 </label>
-                                <input type="text" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                <datepicker v-model="standarAccount.register_date" :bootstrap-styling="true">
+                                </datepicker>
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -58,7 +69,8 @@
                                     Ngày hết hạn
                                     <span style="color:red">(*)</span>
                                 </label>
-                                <input type="text" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                <datepicker v-model="standarAccount.expired_date" :bootstrap-styling="true">
+                                </datepicker>
                             </div>
                         </div>
                     </div>
@@ -169,7 +181,7 @@
                                         Mức lãi suất
                                         <span style="color:red">(*)</span>
                                     </label>
-                                     <input type="number" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                    <input type="number" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -227,7 +239,8 @@ export default {
                     text: "Mới nhất"
                 }
             ],
-            index: 1
+            index: 1,
+            standarAccount: {}
         };
     },
     methods: {
@@ -250,6 +263,13 @@ export default {
         Paginate,
         AccountItemCmp,
         Datepicker
+    },
+    mounted: async function () {
+
+        let respStandarAccount = await this.$store.dispatch('bankAccount/getStandarAccount', {})
+        if (respStandarAccount && !respStandarAccount.error) {
+            this.standarAccount = respStandarAccount.data.data
+        }
     }
 };
 </script>
@@ -278,5 +298,13 @@ export default {
 
 .sub-title {
     font-size: 15px;
+}
+
+.ipt-balance {
+    display: block;
+    border-radius: 5px;
+    width: 100%;
+    padding: 5px;
+    border: 1px solid gray;
 }
 </style>

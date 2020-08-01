@@ -15,6 +15,7 @@ import userRoleModule from "./modules/user_role"
 import userModule from './modules/user'
 import exchangeMoneyModule from './modules/exchange_money'
 import otpModule from './modules/otp'
+import bankAccountModule from './modules/bank_account'
 
 export default new Vuex.Store({
     // state,
@@ -26,6 +27,7 @@ export default new Vuex.Store({
         userRole: userRoleModule,
         user: userModule,
         exchangeMoney: exchangeMoneyModule,
-        otp: otpModule
+        otp: otpModule,
+        bankAccount: bankAccountModule
     }
 });

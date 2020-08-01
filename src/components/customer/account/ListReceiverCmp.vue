@@ -24,13 +24,20 @@
                 </div>
                 <div class="col-lg-12" style="margin-top: 20px">
                     <div class="row">
-                        <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 20px">
-                            <multiselect v-model="statusValue" :options="statusOptions" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo trạng thái" label="text" track-by="id" :preselect-first="false" @select="onSelectCategoryJob($event)" @remove="onRemoveGender($event)" />
+
+                        <div class="col-lg-4 col-md-6 col-sm-12" style="margin-bottom: 20px">
+                            <label for="">Loại giao dịch</label>
+                            <multiselect v-model="transactionValue" :options="transationOption" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Chọn loại tài khoản" label="text" track-by="id" :preselect-first="false" @select="onSelectTransactionType($event)" @remove="onRemoveTransationType($event)" />
                         </div>
-                        <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 20px">
-                            <multiselect v-model="sortValue" :options="sortOptions" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo thời gian" label="text" track-by="id" :preselect-first="false" @select="onSelectCategoryJob($event)" @remove="onRemoveGender($event)" />
+                        <div class="col-lg-4 col-md-6 col-sm-12" id="selectPartner" style="margin-bottom: 20px">
+                            <label for="">Tên ngân hàng</label>
+                            <multiselect v-model="partnerValue" :options="partnerOption" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo ngân hàng" label="text" track-by="id" :preselect-first="false" />
                         </div>
-                        <div class="col-lg-6 text-right">
+
+                        <div class="col-lg-1" style="margin-top:33px">
+                            <button class="btn btn-outline-success" @click="onFilterHistory">LỌC</button>
+                        </div>
+                        <div class="col-lg-3 text-right" style="margin-top:33px">
                             <button class="btn btn-outline-info" data-toggle="modal" data-target="#addEmployeeModal">
                                 <i class="fas fa-plus-circle"></i>
                                 Thêm người nhận
@@ -56,7 +63,8 @@
                     </table>
                 </div>
                 <div class="col-12 text-center" style="margin-top:20px">
-                    <paginate :page-count="5" :prev-text="'&#8249;'" :next-text="'&#8250;'" :first-last-button="true" :last-button-text="'&#187;'" :first-button-text="'&#171;'" :container-class="'pagination'" :page-class="'page-item'" :page-link-class="'page-link'" :next-link-class="'page-link'" :prev-link-class="'page-link'" :click-handler="onPaginationClick" :hide-prev-next="true" v-model="index"></paginate>
+                    <paginate :page-count="lastIndex" :prev-text="'&#8249;'" :next-text="'&#8250;'" :first-last-button="true" :last-button-text="'&#187;'" :first-button-text="'&#171;'" :container-class="'pagination'" :page-class="'page-item'" :page-link-class="'page-link'" :next-link-class="'page-link'" :prev-link-class="'page-link'" :click-handler="onPaginationClick" :hide-prev-next="true" v-model="index">
+                </paginate>
                 </div>
             </div>
         </div>
@@ -116,7 +124,7 @@
                                         Tên ngân hàng
                                         <span style="color:red">(*)</span>
                                     </label>
-                                    <multiselect v-model="sortValue" :disabled="this.isDisabledOutsideCheck" :options="sortOptions" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo thời gian" label="text" track-by="id" :preselect-first="false" @select="onSelectCategoryJob($event)" @remove="onRemoveGender($event)" />
+                                    <multiselect v-model="partnerValue" :options="partnerOption" :disabled="this.isDisabledOutsideCheck" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo thời gian" label="text" track-by="id" :preselect-first="false" />
                                 </div>
                             </div>
                             <div class="col-lg-12">
@@ -143,52 +151,84 @@ import Paginate from "vuejs-paginate";
 import Datepicker from "vuejs-datepicker";
 import AccountItemCmp from "./list-item/AccountItemCmp";
 import ReceiverItemCmp from "./list-item/ReceiverItemCmp";
+import {
+    getPartner,
+    getTransationOption
+} from '../../../utils/common'
 export default {
     data: function () {
         return {
-            statusValue: [],
-            statusOptions: [{
-                    id: "ACTIVE",
-                    text: "Đang tuyển"
-                },
-                {
-                    id: "EXPIRED",
-                    text: "Đã hết hạn"
-                }
-            ],
-            sortValue: [],
-            sortOptions: [{
-                    id: "ASC",
-                    text: "Cũ nhất"
-                },
-                {
-                    id: "DESC",
-                    text: "Mới nhất"
-                }
-            ],
+            transactionValue: null,
+            transationOption: [],
+            partnerOption: [],
+            partnerValue: null,
             index: 1,
+            limit: 5,
+            lastIndex: 0,
             isDisabledOutsideCheck: true
         };
     },
     methods: {
-        onSelectCategoryJob: function (obj) {
-            let {
-                id,
-                text
-            } = obj;
-            console.log(text);
-        },
-        onRemoveGender: function (obj) {
-            let {
-                id,
-                text
-            } = obj;
-        },
         onCheckType: function (e) {
             if (e.target.value == "IS_OUTSIDE") {
                 this.isDisabledOutsideCheck = false
             } else {
                 this.isDisabledOutsideCheck = true
+            }
+        },
+        onSelectTransactionType: function (obj) {
+            let {
+                id,
+                text
+            } = obj;
+
+            if (id != 'INSIDE') {
+                document.getElementById("selectPartner").style.display = 'block'
+            } else {
+                document.getElementById("selectPartner").style.display = 'none'
+                this.partnerValue != null
+            }
+        },
+        onRemoveTransationType: function (obj) {
+            document.getElementById("selectPartner").style.display = 'none'
+            this.partnerValue != null
+        },
+        onFilterHistory: async function () {
+
+            let q = {}
+            let payloadHistory = {
+                limit: this.limit,
+                offset: (this.index - 1) * this.limit,
+            }
+
+            if (this.transactionValue != null && this.transactionValue[0] != undefined) {
+                q.isInside = this.transactionValue[0].id == 'INSIDE' ? true : false
+
+                if (q.isInside == false) {
+                    if (this.partnerValue != null && this.partnerValue[0] != undefined) {
+                        q.partnerCode = this.partnerValue[0].id
+                    }
+                }
+            }
+
+            payloadHistory.q = q
+
+            let respReceiveHistory = await this.$store.dispatch("exchangeMoney/getAllReceiver", payloadHistory)
+
+            if (respReceiveHistory && !respReceiveHistory.error) {
+                this.listReceive = respReceiveHistory.data.data
+
+                this.totalReceive = respReceiveHistory.data.total;
+                this.totalTransaction = respReceiveHistory.data.sum
+
+                if (respReceiveHistory.data.total % this.limit == 0) {
+                    this.lastIndex = respReceiveHistory.data.total / this.limit;
+                } else {
+                    this.lastIndex = parseInt(respReceiveHistory.data.total / this.limit) + 1;
+                }
+                this.isShown = true
+            } else {
+                this.isShown = false
             }
         }
     },
@@ -198,6 +238,10 @@ export default {
         AccountItemCmp,
         ReceiverItemCmp,
         Datepicker
+    },
+    mounted: async function () {
+        this.partnerOption = await getPartner()
+        this.transationOption = getTransationOption()
     }
 };
 </script>
