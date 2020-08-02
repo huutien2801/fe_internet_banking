@@ -4,29 +4,25 @@ import axios from 'axios'
 const exchangeUserService = axios.create({
     baseURL: 'https://ibs-api.herokuapp.com/api/v1/exchange-user',
     // baseURL: 'http://35.223.196.250:8080/api/v1/auth',// url = base url + request url
-    timeout: 15000 // request timeout
+    timeout: 60000 // request timeout
 })
 
-// authService.interceptors.request.use(
-//     config => {
-//         // do something before request is sent
-//         // const token = 'bGFzdG1pbGUtZnJvbnRlbmQ6elVzSjJmOFZ3NHh0eXJ6RXp6RjUyT3diNlU2aTQ3NkM='
+exchangeUserService.interceptors.request.use(
+    config => {
+        // do something before request is sent
+      
+        let tokenSession = window.localStorage.getItem("ACCESS_TOKEN") || ""
+        if (tokenSession) {
+            config.headers.Authorization = `Bearer ${tokenSession}`
+        }
 
-//         // if (token) {
-//         //     config.headers.Authorization = `Basic ${token}`
-//         // }
-//         // let tokenSession = window.localStorage.getItem("ACCESS_TOKEN") || ""
-//         // if (tokenSession) {
-//         //     config.headers.Authorization = `Bearer ${tokenSession}`
-//         // }
-
-//         // return config
-//     },
-//     error => {
-//         // do something with request error
-//         return Promise.reject(error)
-//     }
-// )
+        return config
+    },
+    error => {
+        // do something with request error
+        return Promise.reject(error)
+    }
+)
 
 // request interceptor
 exchangeUserService.interceptors.response.use((response) => {
