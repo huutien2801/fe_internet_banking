@@ -1,7 +1,10 @@
 import {
     getStandarAccount,
-    transferMoney,
+    updatebankAccount,
     createbankAccount,
+    getDepositAccount,
+    redeemDepositAccount,
+    transferMoney,
     confirmTransfer
 } from "../../api/bank_account_api"
 
@@ -28,7 +31,36 @@ const actions = {
                 })
         })
     },
-
+    createbankAccount({ commit }, payload){
+        return new Promise((resolve, reject) => {
+            createbankAccount(payload)
+                .then((response) => {
+                    resolve(response)
+                }).catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    getDepositAccount({ commit }, payload){
+        return new Promise((resolve, reject) => {
+            getDepositAccount(payload.limit, payload.offset, payload.accountNumber)
+                .then((response) => {
+                    resolve(response)
+                }).catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    redeemDepositAccount({ commit }, payload){
+        return new Promise((resolve, reject) => {
+            redeemDepositAccount(payload)
+                .then((response) => {
+                    resolve(response)
+                }).catch(err => {
+                    reject(err)
+                })
+        })
+    },
     transferMoney({ commit }, payload) {
         return new Promise((resolve, reject) => {
             transferMoney(payload.body)
