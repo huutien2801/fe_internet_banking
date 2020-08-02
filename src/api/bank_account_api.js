@@ -26,6 +26,27 @@ export function getStandarAccount(){
     })
 }
 
+export function getDepositAccount(limit, offset, accountNumber){
+    let url = `/deposit?limit=${limit}&offset=${offset}`
+    if (accountNumber){
+        url += `&accountNumber=${accountNumber}`
+    }
+    return bankAccountRequest({
+        url: url,
+        method: 'get'
+    })
+}
+
+export function redeemDepositAccount(data){
+    let url = `/redeem`
+
+    return bankAccountRequest({
+        url: url,
+        method: 'post',
+        data
+    })
+}
+
 export function confirmTransfer(data){
     let url = `/confirm-transfer`
     return bankAccountRequest({
