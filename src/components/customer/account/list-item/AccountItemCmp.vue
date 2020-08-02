@@ -3,24 +3,24 @@
     <th scope="row text-center" style="vertical-align: middle">1</th>
     <td style="vertical-align: middle" class="text-center">
         <p>
-            970012847289
+            {{depositAcc.account_number}}
         </p>
     </td>
     <td style="vertical-align: middle" class="text-center">
-      <p>50.000.000</p>
+      <p>{{depositAcc.deposit}}</p>
     </td>
-    <td style="vertical-align: middle" class="text-center">23/03/2019</td>
+    <td style="vertical-align: middle" class="text-center">{{depositAcc.deposit_date  | moment("DD/MM/YYYY")}}</td>
     <td class="text-center text-wrap" style="vertical-align: middle">
-      <p>23/03/2020</p>
+      <p>{{depositAcc.redeem_date  | moment("DD/MM/YYYY")}}</p>
     </td>
     <td class="text-center" style="vertical-align: middle">
-      <p>5.6%</p>
+      <p>{{ratioData[depositAcc.ratio_id - 1]}}%</p>
     </td>
     <td class="text-center" style="vertical-align: middle">
-      <span>2.800.000</span>
+      <span>{{depositAcc.redeem}}</span>
     </td>
      <td class="text-center" style="vertical-align: middle">
-      <span>52.800.000</span>
+      <span>{{depositAcc.deposit}}</span>
     </td>
     <td class="text-center" style="vertical-align: middle">
       <div class="dropdown">
@@ -35,8 +35,7 @@
           <i class="fas fa-bars"></i>
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <button class="dropdown-item">Cập nhật</button>
-          <button class="dropdown-item">Xóa</button>
+          <button class="dropdown-item" @click="onRedeem">Rút</button>
         </div>
       </div>
     </td>
@@ -44,7 +43,50 @@
 </template>
 
 <script>
-export default {};
+export default {
+   props: {
+        depositAcc: Object,
+        ratioData: []
+    },
+    mounted: function () {
+        console.log(this.employeeObj);
+    },
+    data() {
+        return {
+            genderValue: null,
+            genderOptions: [],
+        }
+    },
+    methods: {
+      onRedeem: async function (obj) {
+        let payload = {
+          accountNumber: this.depositAcc.account_number
+        }
+
+        let curDate = new Date();
+        if (this.depositAcc.redeem_date > curDate){
+          let realMoney = parseInt(this.depositAcc.deposit) + parseInt(this.depositAcc.deposit / 100); 
+          if (confirm(`Bạn có chắc muốn rút tiền sớm?\n Nếu rút sớm bạn sẽ chỉ nhận được ${realMoney}`)) {
+            let redeemResp = await this.$store.dispatch('bankAccount/redeemDepositAccount', payload);
+            if (redeemResp && !redeemResp.error){
+              alert('Rút tiền tiết kiệm thành công.')
+              this.$emit("onCompleteUpdate")
+            }    
+            
+          } else {
+             
+          }
+        } else {
+          let redeemResp = await this.$store.dispatch('bankAccount/redeemDepositAccount', payload);
+            if (redeemResp && !redeemResp.error){
+              alert('Rút tiền tiết kiệm thành công.')
+              this.$emit("onCompleteUpdate")
+            }   
+        }
+        alert('Có lỗi hệ thống! Rút tài khoản tiết kiệm thất bại.');
+      },
+    }
+};
 </script>
 
 <style scoped>

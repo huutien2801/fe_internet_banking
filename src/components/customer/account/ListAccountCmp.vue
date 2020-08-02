@@ -86,14 +86,12 @@
                 </div>
                 <div class="col-lg-12" style="margin-top: 20px">
                     <div class="row">
-                        <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 20px">
-                            <multiselect v-model="statusValue" :options="statusOptions" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo trạng thái" label="text" track-by="id" :preselect-first="false" @select="onSelectCategoryJob($event)" @remove="onRemoveGender($event)" />
-                        </div>
-                        <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 20px">
-                            <multiselect v-model="sortValue" :options="sortOptions" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo thời gian" label="text" track-by="id" :preselect-first="false" @select="onSelectCategoryJob($event)" @remove="onRemoveGender($event)" />
+                        <div class="col-lg-6 col-md-6 col-sm-12" style="margin-bottom: 20px">
+                            <input type="number" class="form-control" id="txt-search" aria-describedby="Search" v-model="accountNumber"/>
+                            <button @click="onSearch">Search</button>
                         </div>
                         <div class="col-lg-6 text-right">
-                            <button class="btn btn-outline-info" data-toggle="modal" data-target="#addEmployeeModal">
+                            <button class="btn btn-outline-info" data-toggle="modal" data-target="#createDepositAccount">
                                 <i class="fas fa-plus-circle"></i>
                                 Thêm tài khoản tiết kiệm
                             </button>
@@ -116,24 +114,19 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <AccountItemCmp />
-                            <AccountItemCmp />
-                            <AccountItemCmp />
-                            <AccountItemCmp />
-                            <AccountItemCmp />
-                            <AccountItemCmp />
+                            <AccountItemCmp v-on:onCompleteUpdate="onCompleteRedeem" v-for="depositAcc in arrDepositAccount" :key="depositAcc.email" :depositAcc="depositAcc" :ratioData="ratioData"/>
                         </tbody>
                     </table>
                 </div>
                 <div class="col-12 text-center" style="margin-top:20px">
-                    <paginate :page-count="5" :prev-text="'&#8249;'" :next-text="'&#8250;'" :first-last-button="true" :last-button-text="'&#187;'" :first-button-text="'&#171;'" :container-class="'pagination'" :page-class="'page-item'" :page-link-class="'page-link'" :next-link-class="'page-link'" :prev-link-class="'page-link'" :click-handler="onPaginationClick" :hide-prev-next="true" v-model="index"></paginate>
+                    <paginate :page-count="lastIndex" :prev-text="'&#8249;'" :next-text="'&#8250;'" :first-last-button="true" :last-button-text="'&#187;'" :first-button-text="'&#171;'" :container-class="'pagination'" :page-class="'page-item'" :page-link-class="'page-link'" :next-link-class="'page-link'" :prev-link-class="'page-link'" :click-handler="onPaginationClick" :hide-prev-next="true" v-model="index"></paginate>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Modal thêm tài khoản tiết kiệm -->
-    <div class="modal fade" id="addEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="createDepositAccount" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -151,37 +144,25 @@
                                         Nhập số tiền muốn gửi
                                         <span style="color:red">(*)</span>
                                     </label>
-                                    <input type="number" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                    <input type="number" class="form-control" id="txt-user-name" aria-describedby="emailHelp" v-model="depositAccount.deposit" @change="onDepositChange($event)"/>
                                 </div>
                             </div>
 
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="txt-user-name">
-                                        Ngày gửi
+                                        Loại tiết kiệm
                                         <span style="color:red">(*)</span>
                                     </label>
-                                    <datepicker :language="vi" :bootstrap-styling="true">
-                                    </datepicker>
+                                    <multiselect v-model="ratioValue" :options="ratioOptions" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Loại tiết kiệm" label="text" track-by="id" :preselect-first="false" @select="onSelectRatio($event)" @remove="onRemoveRatio($event)" />
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="txt-user-name">
-                                        Ngày nhận
-                                        <span style="color:red">(*)</span>
+                                        Mức lãi suất (%)
                                     </label>
-                                    <datepicker :language="vi" :bootstrap-styling="true">
-                                    </datepicker>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label for="txt-user-name">
-                                        Mức lãi suất
-                                        <span style="color:red">(*)</span>
-                                    </label>
-                                    <input type="number" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                    <input type="number" disabled class="form-control" id="txt-ratio" aria-describedby="emailHelp" />
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -190,11 +171,11 @@
                                         Lãi cuối kỳ
                                         <span style="color:red">(*)</span>
                                     </label>
-                                    <input type="number" disabled class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                    <input type="number" disabled class="form-control" id="txt-redeem" aria-describedby="emailHelp" />
                                 </div>
                             </div>
                             <div class="col-lg-12">
-                                <button class="btn btn-outline-success">
+                                <button class="btn btn-outline-success" @click="onCreateDepositBank">
                                     <i class="far fa-save"></i>
                                     Gửi
                                 </button>
@@ -239,8 +220,19 @@ export default {
                     text: "Mới nhất"
                 }
             ],
+            ratioValue: [],
+            ratioOptions:[],
             index: 1,
-            standarAccount: {}
+            lastIndex: 0,
+            standarAccount: {},
+            depositAccount: {
+                deposit: 0,
+                ratioMonth: 0,
+                type: "DEPOSIT",
+            },
+            arrDepositAccount: [],
+            ratioData: [],
+            accountNumber: ""
         };
     },
     methods: {
@@ -256,7 +248,80 @@ export default {
                 id,
                 text
             } = obj;
-        }
+        },
+        onSelectRatio: function(obj){
+            let {
+                id,
+                text
+            } = obj;
+            this.depositAccount.ratioMonth = id;
+            $('#txt-ratio').val(this.ratioData[id-1].toString());
+            let redeem = parseInt(this.depositAccount.deposit) + parseInt(this.depositAccount.deposit * this.ratioData[id-1] / 100);
+            $('#txt-redeem').val(redeem.toString())
+
+        },
+        onRemoveRatio: function(obj){
+            $('#txt-redeem').val("")
+        },
+        onDepositChange: function(obj){
+            if (this.depositAccount.ratioMonth != 0){
+                let redeem = parseInt(this.depositAccount.deposit) + parseInt(this.depositAccount.deposit * this.ratioData[this.depositAccount.ratioMonth-1] / 100);
+                $('#txt-redeem').val(redeem.toString())
+            }
+            
+        },
+        onCreateDepositBank: async function (obj){
+            let depositResp = await this.$store.dispatch('bankAccount/createbankAccount', this.depositAccount);
+            if (depositResp && !depositResp.error){
+                alert('Tạo tài khoản tiết kiệm thành công.');
+                $('#createDepositAccount').modal('hide');
+                let respDepositAccount = await this.$store.dispatch('bankAccount/getDepositAccount', {offset: 0, limit: 10})
+                if (respDepositAccount && !respDepositAccount.error) {
+                    this.arrDepositAccount = respDepositAccount.data.data;
+                    if (respDepositAccount.data.total % 10 == 0) {
+                        this.lastIndex = respDepositAccount.data.total / 10;
+                    } else {
+                         this.lastIndex = parseInt(respDepositAccount.data.total / 10) + 1;
+                    }
+                }
+            }
+        },
+        onPaginationClick: async function(obj){
+            let payload = {
+                limit: 10,
+                offset: (this.index - 1) * 10,
+            }
+
+            const res = await this.$store.dispatch("userRole/getUserRole", payload);
+
+            if (res && !res.error) {
+
+                this.arrDepositAccount = res.data.data;
+            }
+        },
+        onSearch: async function(obj){
+            let respDepositAccount = await this.$store.dispatch('bankAccount/getDepositAccount', {offset: 0, limit: 10, accountNumber: this.accountNumber})
+                if (respDepositAccount && !respDepositAccount.error) {
+                    this.arrDepositAccount = respDepositAccount.data.data;
+                    if (respDepositAccount.data.total % 10 == 0) {
+                        this.lastIndex = respDepositAccount.data.total / 10;
+                    } else {
+                         this.lastIndex = parseInt(respDepositAccount.data.total / 10) + 1;
+                    }
+                }
+        },
+        onCompleteRedeem: async function(obj){
+            let payload = {
+                limit: 10,
+                offset: 0,
+            }
+
+            const res = await this.$store.dispatch("userRole/getUserRole", payload);
+
+            if (res && !res.error) {
+                this.arrDepositAccount = res.data.data;
+            }
+        },
     },
     components: {
         Multiselect,
@@ -269,6 +334,30 @@ export default {
         let respStandarAccount = await this.$store.dispatch('bankAccount/getStandarAccount', {})
         if (respStandarAccount && !respStandarAccount.error) {
             this.standarAccount = respStandarAccount.data.data
+        }
+
+        let respRatio = await this.$store.dispatch('ratio/getRatio', {})
+        if (respRatio && !respRatio.error) {
+            //this.standarAccount = respStandarAccount.data.data
+            let ratioData = respRatio.data.data;
+            ratioData.forEach(element => {
+                this.ratioOptions.push({
+                    id: element.month,
+                    text: element.month.toString() + " tháng"
+                });
+                this.ratioData.push(element.ratio);
+            });
+        }
+
+        let respDepositAccount = await this.$store.dispatch('bankAccount/getDepositAccount', {offset: 0, limit: 10})
+        if (respDepositAccount && !respDepositAccount.error) {
+            this.arrDepositAccount = respDepositAccount.data.data;
+            if (respDepositAccount.data.total % 10 == 0) {
+                this.lastIndex = respDepositAccount.data.total / 10;
+            } else {
+                this.lastIndex = parseInt(respDepositAccount.data.total / 10) + 1;
+            }
+            //this.lastIndex = respDepositAccount.data.total / 10;
         }
     }
 };

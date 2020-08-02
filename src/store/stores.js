@@ -16,6 +16,7 @@ import userModule from './modules/user'
 import exchangeMoneyModule from './modules/exchange_money'
 import otpModule from './modules/otp'
 import bankAccountModule from './modules/bank_account'
+import ratioModule from './modules/ratio'
 
 export default new Vuex.Store({
     // state,
@@ -28,6 +29,7 @@ export default new Vuex.Store({
         user: userModule,
         exchangeMoney: exchangeMoneyModule,
         otp: otpModule,
-        bankAccount: bankAccountModule
+        bankAccount: bankAccountModule,
+        ratio: ratioModule,
     }
 });

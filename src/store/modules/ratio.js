@@ -1,10 +1,8 @@
 import {
-    getStandarAccount,
-    updatebankAccount,
-    createbankAccount,
-    getDepositAccount,
-    redeemDepositAccount,
-} from "../../api/bank_account_api"
+    getRatio,
+    createRatio,
+    updateRatio
+} from "../../api/ratio_api"
 
 
 const state = {
@@ -19,9 +17,9 @@ const mutations = {
     
 }
 const actions = {
-    getStandarAccount({ commit }, payload) {
+    getRatio({ commit }, payload) {
         return new Promise((resolve, reject) => {
-            getStandarAccount()
+            getRatio()
                 .then((response) => {
                     resolve(response)
                 }).catch(err => {
@@ -29,9 +27,9 @@ const actions = {
                 })
         })
     },
-    createbankAccount({ commit }, payload){
+    createRatio({ commit }, payload) {
         return new Promise((resolve, reject) => {
-            createbankAccount(payload)
+            createRatio(payload.body)
                 .then((response) => {
                     resolve(response)
                 }).catch(err => {
@@ -39,19 +37,9 @@ const actions = {
                 })
         })
     },
-    getDepositAccount({ commit }, payload){
+    updateRatio({ commit }, payload) {
         return new Promise((resolve, reject) => {
-            getDepositAccount(payload.limit, payload.offset, payload.accountNumber)
-                .then((response) => {
-                    resolve(response)
-                }).catch(err => {
-                    reject(err)
-                })
-        })
-    },
-    redeemDepositAccount({ commit }, payload){
-        return new Promise((resolve, reject) => {
-            redeemDepositAccount(payload)
+            updateRatio(payload.body)
                 .then((response) => {
                     resolve(response)
                 }).catch(err => {
