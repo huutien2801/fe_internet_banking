@@ -1,4 +1,4 @@
-import ExchangeUserRequest from "../utils/exchange_user_request"
+import ExchangeUserRequest from "../utils/exchange_user.request"
 
 export function addUserToList(data){
     let url = `/add-user`
@@ -9,8 +9,8 @@ export function addUserToList(data){
     })
 }
 
-export function showList(limit,offset){
-    let url = `/show-user?limit=${limit}&offset=${offset}`
+export function showList(q,limit,offset){
+    let url = `/show-user?q=${q}&limit=${limit}&offset=${offset}`
     return ExchangeUserRequest({
         url: url,
         method: 'get'

@@ -55,3 +55,44 @@ export function convertPartnerToOption(listPartner) {
     });
     return opts;
 }
+
+export function convertReceiverToOption(listReceiver) {
+    let opts = []
+    listReceiver.forEach(receiver => {
+        console.log(receiver)
+        let opt = {
+            id: receiver.receiver_account_number,
+            text: receiver.receiver_nick_name
+        }
+        opts.push(opt)
+    });
+    return opts;
+}
+
+export async function getInsideReceiverOption(){
+    let payload = {
+        q: {
+            isInside: true
+        },
+        limit: 100,
+        offset: 0
+    }
+    let respReceiver = await store.dispatch("exchangeUser/showList", payload)
+    if (respReceiver && !respReceiver.error) {
+        return convertReceiverToOption(respReceiver.data.users)
+    }
+}
+
+export async function getOutsideReceiverOption(){
+    let payload = {
+        q: {
+            isInside: true
+        },
+        limit: 100,
+        offset: 0
+    }
+    let respReceiver = await store.dispatch("exchangeUser/showList", payload)
+    if (respReceiver && !respReceiver.error) {
+        return convertReceiverToOption(respReceiver.data.users)
+    }
+}

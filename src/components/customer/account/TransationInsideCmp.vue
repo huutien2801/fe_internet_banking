@@ -82,7 +82,7 @@
                 <div class="row">
                     <div class="col-lg-12 col-md-6 col-sm-12" style="margin-bottom: 20px">
                         <label for="">Chọn người nhận</label>
-                        <multiselect v-model="exchangeUserValue" :options="exchangeUserOption" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Chọn người nhận" label="text" track-by="id" :preselect-first="false" @select="onSelectTransactionType($event)" @remove="onRemoveTransationType($event)" />
+                        <multiselect v-model="exchangeUserValue" :options="exchangeUserOption" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Chọn người nhận" label="text" track-by="id" :preselect-first="false" @select="onSelectReceiver($event)" @remove="onRemoveReceiver($event)" />
                     </div>
                     <div class="col-lg-6">
                         <div class="form-group">
@@ -127,19 +127,18 @@
                         <div class="form-group">
                             <label for="txt-user-name">
                                 Nội dung chuyển tiền
-                                <span style="color:red">(*)</span>
                             </label>
                             <input type="text" v-model="message" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                         </div>
                     </div>
                     <div class="col-lg-12 col-md-6 col-sm-12" style="margin-bottom: 20px">
                         <label for="">Chọn hình thức thanh toán phí</label>
-                        <multiselect v-model="feeTypeValue" :options="feeTypeOption" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Chọn hình thức thanh toán phí" label="text" track-by="id" :preselect-first="false" @select="onSelectTransactionType($event)" @remove="onRemoveTransationType($event)" />
+                        <multiselect v-model="feeTypeValue" :options="feeTypeOption" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Chọn hình thức thanh toán phí" label="text" track-by="id" :preselect-first="false" />
                     </div>
                 </div>
             </div>
             <div class="col-lg-12 text-left" style="margin-bottom:10px">
-                <button class="btn btn-outline-info" data-toggle="modal" data-target="">
+                <button class="btn btn-outline-info" data-toggle="modal" data-target="#addReceiverModal">
                     <i class="fas fa-save"></i>
                     Lưu thông tin người nhận
                 </button>
@@ -189,6 +188,44 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal xác nhận lưu người nhận mới -->
+    <div class="modal fade" id="addReceiverModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">XÁC NHẬN</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="accordion" id="accordionExample">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <h6>Bạn có muốn lưu lại thông tin người nhận này cho lần gửi kế tiếp ?</h6>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label for="txt-user-name">
+                                        Nhập tên gợi nhớ
+                                    </label>
+                                    <input type="text" v-model="nickName" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline-success" @click="onSaveReceiver">
+                        <i class="far fa-save"></i>
+                        Xác nhận
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </template>
 
@@ -198,7 +235,8 @@ import Paginate from "vuejs-paginate";
 import Datepicker from "vuejs-datepicker";
 import AccountItemCmp from "./list-item/AccountItemCmp";
 import {
-    getFeeTypeOption
+    getFeeTypeOption,
+    getInsideReceiverOption
 } from '../../../utils/common'
 export default {
     data: function () {
@@ -212,7 +250,8 @@ export default {
             exchangeUserValue: null,
             feeTypeValue: null,
             feeTypeOption: [],
-            otp: ''
+            otp: '',
+            nickName: ''
         };
     },
     methods: {
@@ -304,9 +343,52 @@ export default {
                 if (respStandarAccount && !respStandarAccount.error) {
                     this.standarAccount = respStandarAccount.data.data
                 }
+                let isExisted = this.exchangeUserOption.find(exchangeUser => {
+                    return exchangeUser.id == this.receiverAccountNumber
+                })
+
+                if (isExisted == undefined) {
+                    let addReceiverModal = document.getElementById('addReceiverModal')
+                    $(addReceiverModal).modal('show')
+                }
             } else {
                 alert("Mã OTP không chính xác")
             }
+        },
+        onSelectReceiver: function (obj) {
+            let {
+                id,
+                text
+            } = obj
+            this.receiverAccountNumber = id
+            this.receiverFullname = text
+        },
+        onRemoveReceiver: function (obj) {
+            this.receiverAccountNumber = ''
+            this.receiverFullname = ''
+        },
+        onSaveReceiver: async function () {
+            let payload = {}
+            if (this.receiverAccountNumber == '') {
+                alert("Chưa điền thông tin người nhận")
+                return
+            }
+            let body = {}
+            body.receiverAccountNumber = this.receiverAccountNumber
+            body.isInside = true
+
+            body.nickName = this.nickName
+            payload.body = body
+
+            let respCreateReceiver = await this.$store.dispatch("exchangeUser/addUserToList", payload)
+            let addReceiverModal = document.getElementById('addReceiverModal')
+            if (respCreateReceiver && !respCreateReceiver.error) {
+                alert("Thêm người nhận thành công")
+                this.exchangeUserOption = await getInsideReceiverOption()
+            } else {
+                alert("Thêm người nhận thất bại. Vui lòng thử lại sau")
+            }
+            $(addReceiverModal).modal('hide')
         }
     },
     components: {
@@ -316,13 +398,12 @@ export default {
         Datepicker
     },
     mounted: async function () {
-
         let respStandarAccount = await this.$store.dispatch('bankAccount/getStandarAccount', {})
         if (respStandarAccount && !respStandarAccount.error) {
             this.standarAccount = respStandarAccount.data.data
         }
-
         this.feeTypeOption = getFeeTypeOption()
+        this.exchangeUserOption = await getInsideReceiverOption()
     }
 };
 </script>

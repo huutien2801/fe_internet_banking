@@ -1,77 +1,75 @@
 <template>
-<div class="row">
+<div class="row" style="margin-right:3px">
     <div class="col-lg-12">
-        <div class="container">
-            <div class="row container-account">
-                <div class="col-lg-1" style="padding-right:0px">
-                    <i class="fas fa-handshake icon-title"></i>
-                </div>
-                <div class="col-lg-11" style="padding-left:0px">
-                    <div class="header-title">
-                        <span class="main-title">Danh sách người nhận</span>
-                        <span class="sub-title">(Danh sách những người nhận mà bạn đã lưu để chuyển khoảng)</span>
-                    </div>
+
+        <div class="row container-account">
+            <div class="col-lg-1" style="padding-right:0px">
+                <i class="fas fa-handshake icon-title"></i>
+            </div>
+            <div class="col-lg-11" style="padding-left:0px">
+                <div class="header-title">
+                    <span class="main-title">Danh sách người nhận</span>
+                    <span class="sub-title">(Danh sách những người nhận mà bạn đã lưu để chuyển khoảng)</span>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="col-lg-12" style="margin-top:20px">
-        <div class="container">
-            <div class="row container-account" style="padding-top:10px">
-                <div class="col-lg-12" style="border-bottom: 1px solid #ebebeb">
-                    <h5>THÔNG TIN NGƯỜI NHẬN</h5>
-                </div>
-                <div class="col-lg-12" style="margin-top: 20px">
-                    <div class="row">
 
-                        <div class="col-lg-4 col-md-6 col-sm-12" style="margin-bottom: 20px">
-                            <label for="">Loại giao dịch</label>
-                            <multiselect v-model="transactionValue" :options="transationOption" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Chọn loại tài khoản" label="text" track-by="id" :preselect-first="false" @select="onSelectTransactionType($event)" @remove="onRemoveTransationType($event)" />
-                        </div>
-                        <div class="col-lg-4 col-md-6 col-sm-12" id="selectPartner" style="margin-bottom: 20px">
-                            <label for="">Tên ngân hàng</label>
-                            <multiselect v-model="partnerValue" :options="partnerOption" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo ngân hàng" label="text" track-by="id" :preselect-first="false" />
-                        </div>
+        <div class="row container-account" style="padding-top:10px">
+            <div class="col-lg-12" style="border-bottom: 1px solid #ebebeb">
+                <h5>THÔNG TIN NGƯỜI NHẬN</h5>
+            </div>
+            <div class="col-lg-12" style="margin-top: 20px">
+                <div class="row">
 
-                        <div class="col-lg-1" style="margin-top:33px">
-                            <button class="btn btn-outline-success" @click="onFilterHistory">LỌC</button>
-                        </div>
-                        <div class="col-lg-3 text-right" style="margin-top:33px">
-                            <button class="btn btn-outline-info" data-toggle="modal" data-target="#addEmployeeModal">
-                                <i class="fas fa-plus-circle"></i>
-                                Thêm người nhận
-                            </button>
-                        </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12" style="margin-bottom: 20px">
+                        <label for="">Loại giao dịch</label>
+                        <multiselect v-model="transactionValue" :options="transationOption" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Chọn loại tài khoản" label="text" track-by="id" :preselect-first="false" @select="onSelectTransactionType($event)" @remove="onRemoveTransationType($event)" />
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12" id="selectPartner" style="margin-bottom: 20px">
+                        <label for="">Tên ngân hàng</label>
+                        <multiselect v-model="partnerValue" :options="partnerOption" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo ngân hàng" label="text" track-by="id" :preselect-first="false" />
+                    </div>
+
+                    <div class="col-lg-1" style="margin-top:33px">
+                        <button class="btn btn-outline-success" @click="onFilterReceiver">LỌC</button>
+                    </div>
+                    <div class="col-lg-3 text-right" style="margin-top:33px">
+                        <button class="btn btn-outline-info" data-toggle="modal" data-target="#addReceiverModal">
+                            <i class="fas fa-plus-circle"></i>
+                            Thêm người nhận
+                        </button>
                     </div>
                 </div>
-                <div class="col-lg-12 table-responsive-md">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th scope="col">STT</th>
-                                <th scope="col" class="text-center">Số tài khoản</th>
-                                <th scope="col" class="text-center">Tên người nhận</th>
-                                <th class="text-center" scope="col">Tên ngân hàng</th>
-                                <th class="text-center" scope="col">Loại</th>
-                                <th class="text-center" scope="col">Thao tác</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <ReceiverItemCmp />
-                        </tbody>
-                    </table>
-                </div>
-                <div class="col-12 text-center" style="margin-top:20px">
-                    <paginate :page-count="lastIndex" :prev-text="'&#8249;'" :next-text="'&#8250;'" :first-last-button="true" :last-button-text="'&#187;'" :first-button-text="'&#171;'" :container-class="'pagination'" :page-class="'page-item'" :page-link-class="'page-link'" :next-link-class="'page-link'" :prev-link-class="'page-link'" :click-handler="onPaginationClick" :hide-prev-next="true" v-model="index">
+            </div>
+            <div class="col-lg-12 table-responsive-md">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="text-center">Số tài khoản</th>
+                            <!--<th scope="col" class="text-center">Tên người nhận</th>-->
+                            <th scope="col" class="text-center">Tên gợi nhớ</th>
+                            <th class="text-center" scope="col">Tên ngân hàng</th>
+                            <th class="text-center" scope="col">Loại</th>
+                            <!--<th class="text-center" scope="col">Thao tác</th>-->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ReceiverItemCmp v-for="receiver in listReceiver" :key="receiver._id" :receiverObj="receiver" />
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-12 text-center" style="margin-top:20px">
+                <paginate :page-count="lastIndex" :prev-text="'&#8249;'" :next-text="'&#8250;'" :first-last-button="true" :last-button-text="'&#187;'" :first-button-text="'&#171;'" :container-class="'pagination'" :page-class="'page-item'" :page-link-class="'page-link'" :next-link-class="'page-link'" :prev-link-class="'page-link'" :click-handler="onPaginationClick" :hide-prev-next="true" v-model="index">
                 </paginate>
-                </div>
             </div>
         </div>
     </div>
 
     <!-- Modal thêm người nhận -->
-    <div class="modal fade" id="addEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addReceiverModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -89,7 +87,7 @@
                                         Nhập số tài khoản
                                         <span style="color:red">(*)</span>
                                     </label>
-                                    <input type="text" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                    <input type="text" v-model="receiverAccountNumber" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -98,7 +96,7 @@
                                         Nhập tên gợi nhớ
                                         <span style="color:red">(*)</span>
                                     </label>
-                                    <input type="text" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                    <input type="text" v-model="nickName" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -124,11 +122,11 @@
                                         Tên ngân hàng
                                         <span style="color:red">(*)</span>
                                     </label>
-                                    <multiselect v-model="partnerValue" :options="partnerOption" :disabled="this.isDisabledOutsideCheck" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo thời gian" label="text" track-by="id" :preselect-first="false" />
+                                    <multiselect v-model="partnerValue" :options="partnerOption" :disabled="this.isInside" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo thời gian" label="text" track-by="id" :preselect-first="false" />
                                 </div>
                             </div>
                             <div class="col-lg-12">
-                                <button class="btn btn-outline-success">
+                                <button class="btn btn-outline-success" @click="onSaveReceiver">
                                     <i class="far fa-save"></i>
                                     Lưu
                                 </button>
@@ -165,15 +163,18 @@ export default {
             index: 1,
             limit: 5,
             lastIndex: 0,
-            isDisabledOutsideCheck: true
+            isInside: true,
+            receiverAccountNumber: '',
+            nickName: '',
+            listReceiver: []
         };
     },
     methods: {
         onCheckType: function (e) {
             if (e.target.value == "IS_OUTSIDE") {
-                this.isDisabledOutsideCheck = false
+                this.isInside = false
             } else {
-                this.isDisabledOutsideCheck = true
+                this.isInside = true
             }
         },
         onSelectTransactionType: function (obj) {
@@ -193,43 +194,82 @@ export default {
             document.getElementById("selectPartner").style.display = 'none'
             this.partnerValue != null
         },
-        onFilterHistory: async function () {
-
-            let q = {}
-            let payloadHistory = {
+        onFilterReceiver: async function () {
+            let payload = {
+                q: {},
                 limit: this.limit,
-                offset: (this.index - 1) * this.limit,
+                offset: (this.index - 1) * this.limit
             }
-
             if (this.transactionValue != null && this.transactionValue[0] != undefined) {
-                q.isInside = this.transactionValue[0].id == 'INSIDE' ? true : false
-
-                if (q.isInside == false) {
+                payload.q.isInside = this.transactionValue[0].id == 'INSIDE' ? true : false
+                if (payload.q.isInside == false) {
                     if (this.partnerValue != null && this.partnerValue[0] != undefined) {
-                        q.partnerCode = this.partnerValue[0].id
+                        payload.q.partnerCode = this.partnerValue[0].id
                     }
                 }
             }
 
-            payloadHistory.q = q
+            let respReceiver = await this.$store.dispatch("exchangeUser/showList", payload)
+            if (respReceiver && !respReceiver.error) {
+                this.listReceiver = respReceiver.data.users
 
-            let respReceiveHistory = await this.$store.dispatch("exchangeMoney/getAllReceiver", payloadHistory)
-
-            if (respReceiveHistory && !respReceiveHistory.error) {
-                this.listReceive = respReceiveHistory.data.data
-
-                this.totalReceive = respReceiveHistory.data.total;
-                this.totalTransaction = respReceiveHistory.data.sum
-
-                if (respReceiveHistory.data.total % this.limit == 0) {
-                    this.lastIndex = respReceiveHistory.data.total / this.limit;
+                if (respReceiver.data.total % this.limit == 0) {
+                    this.lastIndex = respReceiver.data.total / this.limit;
                 } else {
-                    this.lastIndex = parseInt(respReceiveHistory.data.total / this.limit) + 1;
+                    this.lastIndex = parseInt(respReceiver.data.total / this.limit) + 1;
                 }
-                this.isShown = true
-            } else {
-                this.isShown = false
+            }else{
+                this.listReceiver = []
+                this.lastIndex = 0
             }
+        },
+        onPaginationClick: async function (pageNumber) {
+            this.index = pageNumber
+            let payload = {
+                q: {},
+                limit: this.limit,
+                offset: (this.index - 1) * this.limit
+            }
+            let respReceiver = await this.$store.dispatch("exchangeUser/showList", payload)
+            if (respReceiver && !respReceiver.error) {
+                this.listReceiver = respReceiver.data.users
+
+                if (respReceiver.data.total % this.limit == 0) {
+                    this.lastIndex = respReceiver.data.total / this.limit;
+                } else {
+                    this.lastIndex = parseInt(respReceiver.data.total / this.limit) + 1;
+                }
+            }
+        },
+        onSaveReceiver: async function () {
+            let payload = {}
+            if (this.receiverAccountNumber == '') {
+                alert("Chưa điền thông tin người nhận")
+                return
+            }
+            let body = {}
+            body.receiverAccountNumber = this.receiverAccountNumber
+            body.isInside = this.isInside
+            if (this.isInside == false) {
+                if (this.partnerValue == null || this.partnerValue[0] == undefined) {
+                    alert("Bạn chưa chọn thông tin ngân hàng")
+                    return
+                }
+                body.partnerCode = this.partnerValue[0].id
+            }
+
+            body.nickName = this.nickName
+            payload.body = body
+
+            let respCreateReceiver = await this.$store.dispatch("exchangeUser/addUserToList", payload)
+            let addReceiverModal = document.getElementById('addReceiverModal')
+            if (respCreateReceiver && !respCreateReceiver.error) {
+                alert("Thêm người nhận thành công")
+            } else {
+                alert("Thêm người nhận thất bại. Vui lòng thử lại sau")
+            }
+
+            $(addReceiverModal).modal('hide')
         }
     },
     components: {
@@ -242,11 +282,31 @@ export default {
     mounted: async function () {
         this.partnerOption = await getPartner()
         this.transationOption = getTransationOption()
+
+        let payload = {
+            q: {},
+            limit: this.limit,
+            offset: (this.index - 1) * this.limit
+        }
+        let respReceiver = await this.$store.dispatch("exchangeUser/showList", payload)
+        if (respReceiver && !respReceiver.error) {
+            this.listReceiver = respReceiver.data.users
+
+            if (respReceiver.data.total % this.limit == 0) {
+                this.lastIndex = respReceiver.data.total / this.limit;
+            } else {
+                this.lastIndex = parseInt(respReceiver.data.total / this.limit) + 1;
+            }
+        }
     }
 };
 </script>
 
 <style scoped>
+#selectPartner {
+    display: none;
+}
+
 .container-account {
     box-shadow: 1px 0px 10px 1px #ebebeb;
     padding-top: 10px;
