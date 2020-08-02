@@ -9,7 +9,7 @@ export function createbankAccount(data){
     })
 }
 
-export function updatebankAccount(data){
+export function transferMoney(data){
     let url = `/transfer`
     return bankAccountRequest({
         url: url,
@@ -23,5 +23,14 @@ export function getStandarAccount(){
     return bankAccountRequest({
         url: url,
         method: 'get'
+    })
+}
+
+export function confirmTransfer(data){
+    let url = `/confirm-transfer`
+    return bankAccountRequest({
+        url: url,
+        method: 'post',
+        data
     })
 }

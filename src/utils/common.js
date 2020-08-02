@@ -17,11 +17,11 @@ export function getTransationOption() {
 export function getFeeTypeOption() {
     let opts = [
         {
-            id: "RECEIVER",
+            id: "NOT_PAY",
             text: "Người nhận trả tiền"
         },
         {
-            id: "SENDER",
+            id: "PAY",
             text: "Người gửi trả tiền"
         }
     ]

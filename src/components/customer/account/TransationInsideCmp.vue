@@ -109,7 +109,7 @@
                                 Số tiền muốn chuyển
                                 <span style="color:red">(*)</span>
                             </label>
-                            <currency-input class="ipt-balance" :value="sendMoney" v-currency="{
+                            <currency-input class="ipt-balance" v-model="sendMoney" v-currency="{
                                         currency: {
                                             suffix:' VNĐ'
                                         },
@@ -151,6 +151,44 @@
         </div>
     </div>
 
+    <!-- Modal xác nhận OTP -->
+    <div class="modal fade" id="confirmOTPModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">XÁC NHẬN OTP</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="accordion" id="accordionExample">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label for="txt-user-name">
+                                        MÃ OTP
+                                        <span style="color:red">(*)</span>
+                                    </label>
+                                    <input type="text" v-model="otp" class="form-control" id="txt-user-name" aria-describedby="emailHelp" />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <button class="btn btn-outline-success" @click="onConfirmOTP">
+                                    <i class="far fa-save"></i>
+                                    Xác nhận
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </template>
 
@@ -173,7 +211,8 @@ export default {
             exchangeUserOption: [],
             exchangeUserValue: null,
             feeTypeValue: null,
-            feeTypeOption: []
+            feeTypeOption: [],
+            otp: ''
         };
     },
     methods: {
@@ -207,17 +246,17 @@ export default {
                 return
             }
 
-            if (this.sendMoney == 0) {
-                alert("Chưa nhập số tiền muốn nạp")
+            if (this.sendMoney <= 0) {
+                alert("Số tiền chuyển tối thiểu phải lớn hơn 50,000")
                 return
             }
 
-            if(this.feeTypeValue == null || this.feeTypeValue[0] != undefined){
+            if (this.feeTypeValue == null || this.feeTypeValue[0] == undefined) {
                 alert("Chưa chọn hình thức thanh toán chuyển khoản")
                 return
             }
 
-            if(this.message == ''){
+            if (this.message == '') {
                 alert("Mời bạn nhập nội dung chuyển khoản")
                 return
             }
@@ -227,22 +266,48 @@ export default {
             }
 
             let body = {
-                accountNumber: this.receiverAccountNumber,
-                money: this.sendMoney,
+                receiverAccountNumber: this.receiverAccountNumber,
+                amount: this.sendMoney,
                 feeType: this.feeTypeValue[0].id,
                 message: this.message
             }
 
             payload.body = body
-            let respChangeBalance = await this.$store.dispatch("exchangeMoney/depositMoney", payload)
+            let respChangeBalance = await this.$store.dispatch("bankAccount/transferMoney", payload)
             let addBalanceModal = document.getElementById("addBalanceModal")
             if (respChangeBalance && !respChangeBalance.error) {
-                alert("Nạp tiền vào tài khoản thành công. Bạn vui lòng kiểm tra lại số dư")
+                alert("Mời bạn nhập tiếp mã OTP")
+                let confirmOTPModal = document.getElementById("confirmOTPModal")
+                $(confirmOTPModal).modal("show")
             } else {
                 alert("Hệ thống đã xảy ra lỗi. Bạn vui lòng thử lại sau")
             }
-        }
+        },
+        onConfirmOTP: async function () {
+            if (this.otp == '') {
+                alert("Chưa nhập mã OTP")
+                return
+            }
 
+            let payload = {}
+            let body = {
+                OTP: this.otp,
+            }
+            payload.body = body
+
+            let respConfirmOTP = await this.$store.dispatch("bankAccount/confirmTransfer", payload)
+            if (respConfirmOTP && !respConfirmOTP.error) {
+                alert("Bạn đã xác nhận thành công. Số dư đã thay đổi. Bạn vui lòng kiểm tra lại")
+                let confirmOTPModal = document.getElementById("confirmOTPModal")
+                $(confirmOTPModal).modal("hide")
+                let respStandarAccount = await this.$store.dispatch('bankAccount/getStandarAccount', {})
+                if (respStandarAccount && !respStandarAccount.error) {
+                    this.standarAccount = respStandarAccount.data.data
+                }
+            } else {
+                alert("Mã OTP không chính xác")
+            }
+        }
     },
     components: {
         Multiselect,
