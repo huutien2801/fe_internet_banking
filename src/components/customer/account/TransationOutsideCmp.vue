@@ -151,10 +151,6 @@
                 </div>
             </div>
             <div class="col-lg-12 text-left" style="margin-bottom:10px">
-                <button class="btn btn-outline-info" data-toggle="modal" data-target="#addReceiverModal">
-                    <i class="fas fa-save"></i>
-                    Lưu thông tin người nhận
-                </button>
                 <button class="btn btn-outline-danger" @click="onSendMoney" data-toggle="modal" data-target="#changePassword">
                     <i class="fas fa-paper-plane"></i>
                     Chuyển
@@ -273,16 +269,20 @@ export default {
     methods: {
         onGetUserInfo: async function () {
 
-            let payload = {
-                q: {
-                    account_number: this.receiverAccountNumber,
-                }
+            if (this.partnerValue == null || this.partnerValue[0] == undefined) {
+                alert("Bạn chưa chọn ngân hàng cần chuyển")
+                return
             }
 
-            let respCustomerInfo = await this.$store.dispatch("userRole/getUserInfoByBankAccount", payload)
+            let payload = {
+                accountNumber: this.receiverAccountNumber,
+                partnerCode: this.partnerValue[0].id
+            }
+
+            let respCustomerInfo = await this.$store.dispatch("client/getClientName", payload)
             if (respCustomerInfo && !respCustomerInfo.error) {
                 alert("Lấy thông tin thành công")
-                this.receiverFullname = respCustomerInfo.data.user[0].full_name
+                this.receiverFullname = respCustomerInfo.data.data
             } else {
                 alert("Số tài khoản hoặc tên đăng nhập của bạn bị sai. Vui lòng nhập chính xác")
                 this.receiverFullname = ''
@@ -290,6 +290,16 @@ export default {
         },
         onSendMoney: async function () {
             let payload = {}
+
+            if (this.sendMoney > this.standarAccount.balance) {
+                alert("Số tiền gửi vượt số dư")
+                return
+            }
+
+            if (this.standarAccount.balance - this.sendMoney < 10) {
+                alert("Số dư trong tài khoản phải lớn hơn 10,000")
+                return
+            }
 
             if (this.receiverAccountNumber == '') {
                 alert("Thiếu thông tin tài khoản")
@@ -330,15 +340,15 @@ export default {
             }
 
             payload.body = body
-            // let respChangeBalance = await this.$store.dispatch("client/transferMoney", payload)
-            // let addBalanceModal = document.getElementById("addBalanceModal")
-            // if (respChangeBalance && !respChangeBalance.error) {
-            //     alert("Mời bạn nhập tiếp mã OTP")
-            //     let confirmOTPModal = document.getElementById("confirmOTPModal")
-            //     $(confirmOTPModal).modal("show")
-            // } else {
-            //     alert("Hệ thống đã xảy ra lỗi. Bạn vui lòng thử lại sau")
-            // }
+            let respChangeBalance = await this.$store.dispatch("client/transferMoney", payload)
+            let addBalanceModal = document.getElementById("addBalanceModal")
+            if (respChangeBalance && !respChangeBalance.error) {
+                alert("Mời bạn nhập tiếp mã OTP")
+                let confirmOTPModal = document.getElementById("confirmOTPModal")
+                $(confirmOTPModal).modal("show")
+            } else {
+                alert("Hệ thống đã xảy ra lỗi. Bạn vui lòng thử lại sau")
+            }
         },
         onConfirmOTP: async function () {
             if (this.otp == '') {
@@ -349,10 +359,11 @@ export default {
             let payload = {}
             let body = {
                 OTP: this.otp,
+                receiverName: this.receiverFullname
             }
             payload.body = body
 
-            let respConfirmOTP = await this.$store.dispatch("bankAccount/confirmTransfer", payload)
+            let respConfirmOTP = await this.$store.dispatch("client/confirmOTP", payload)
             if (respConfirmOTP && !respConfirmOTP.error) {
                 alert("Bạn đã xác nhận thành công. Số dư đã thay đổi. Bạn vui lòng kiểm tra lại")
                 let confirmOTPModal = document.getElementById("confirmOTPModal")
@@ -412,8 +423,8 @@ export default {
             }
             let body = {}
             body.receiverAccountNumber = this.receiverAccountNumber
-            body.isInside = true
-
+            body.isInside = false
+            body.partnerCode = this.partnerValue[0].id
             body.nickName = this.nickName
             payload.body = body
 
@@ -421,7 +432,7 @@ export default {
             let addReceiverModal = document.getElementById('addReceiverModal')
             if (respCreateReceiver && !respCreateReceiver.error) {
                 alert("Thêm người nhận thành công")
-                this.exchangeUserOption = await getInsideReceiverOption()
+                this.exchangeUserOption = await getOutsideReceiverOption()
             } else {
                 alert("Thêm người nhận thất bại. Vui lòng thử lại sau")
             }

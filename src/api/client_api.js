@@ -16,3 +16,20 @@ export function getClientInfo(q){
         method: 'get'
     })
 }
+
+export function getClientName(partnerCode, accountNumber){
+    let url = `/get-name?partnerCode=${partnerCode}&accountNumber=${accountNumber}`
+    return clientRequest({
+        url: url,
+        method: 'get'
+    })
+}
+
+export function confirmOTP(data){
+    let url = `/confirm-otp`
+    return clientRequest({
+        url: url,
+        method: 'post',
+        data
+    })
+}

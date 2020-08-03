@@ -28,6 +28,38 @@ export function getFeeTypeOption() {
     return opts
 }
 
+export function getDeptTypeOption() {
+    let opts = [
+        {
+            id: "REMINDER",
+            text: "Nhắc nợ"
+        },
+        {
+            id: "REMINDED",
+            text: "Bị nhắc nợ"
+        }
+    ]
+    return opts
+}
+
+export function getDeptStatusOption() {
+    let opts = [
+        {
+            id: "DONE",
+            text: "Đã thanh toán"
+        },
+        {
+            id: "UNDONE",
+            text: "Chưa thanh toán"
+        },
+        {
+            id: "CANCEL",
+            text: "Đã hủy"
+        }
+    ]
+    return opts
+}
+
 export async function getPartner() {
     let payload = {
         limit: 100,
@@ -83,7 +115,7 @@ export function convertOutsideReceiverToOption(listReceiver) {
     return opts;
 }
 
-export async function getInsideReceiverOption(){
+export async function getInsideReceiverOption() {
     let payload = {
         q: {
             isInside: true
@@ -97,7 +129,7 @@ export async function getInsideReceiverOption(){
     }
 }
 
-export async function getOutsideReceiverOption(){
+export async function getOutsideReceiverOption() {
     let payload = {
         q: {
             isInside: false

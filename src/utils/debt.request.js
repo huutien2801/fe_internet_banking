@@ -7,26 +7,26 @@ const debtService = axios.create({
     timeout: 15000 // request timeout
 })
 
-// authService.interceptors.request.use(
-//     config => {
-//         // do something before request is sent
-//         // const token = 'bGFzdG1pbGUtZnJvbnRlbmQ6elVzSjJmOFZ3NHh0eXJ6RXp6RjUyT3diNlU2aTQ3NkM='
+debtService.interceptors.request.use(
+    config => {
+        // do something before request is sent
+        // const token = 'bGFzdG1pbGUtZnJvbnRlbmQ6elVzSjJmOFZ3NHh0eXJ6RXp6RjUyT3diNlU2aTQ3NkM='
 
-//         // if (token) {
-//         //     config.headers.Authorization = `Basic ${token}`
-//         // }
-//         // let tokenSession = window.localStorage.getItem("ACCESS_TOKEN") || ""
-//         // if (tokenSession) {
-//         //     config.headers.Authorization = `Bearer ${tokenSession}`
-//         // }
+        // if (token) {
+        //     config.headers.Authorization = `Basic ${token}`
+        // }
+        let tokenSession = window.localStorage.getItem("ACCESS_TOKEN") || ""
+        if (tokenSession) {
+            config.headers.Authorization = `Bearer ${tokenSession}`
+        }
 
-//         // return config
-//     },
-//     error => {
-//         // do something with request error
-//         return Promise.reject(error)
-//     }
-// )
+        return config
+    },
+    error => {
+        // do something with request error
+        return Promise.reject(error)
+    }
+)
 
 // request interceptor
 debtService.interceptors.response.use((response) => {

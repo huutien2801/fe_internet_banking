@@ -275,6 +275,16 @@ export default {
         onSendMoney: async function () {
             let payload = {}
 
+            if (this.sendMoney > this.standarAccount.balance) {
+                alert("Số tiền gửi vượt số dư")
+                return
+            }
+
+            if (this.standarAccount.balance - this.sendMoney < 10) {
+                alert("Số dư trong tài khoản phải lớn hơn 10,000")
+                return
+            }
+
             if (this.receiverAccountNumber == '') {
                 alert("Thiếu thông tin tài khoản")
                 return

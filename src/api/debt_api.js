@@ -1,4 +1,4 @@
-import DebtRequest from "../utils/debt_request"
+import DebtRequest from "../utils/debt.request"
 
 export function createDebt(data){
     let url = `/create`
@@ -6,6 +6,14 @@ export function createDebt(data){
         url: url,
         method: 'post',
         data
+    })
+}
+
+export function getDebt(q,limit,offset){
+    let url = `/get-all?q=${q}&limit=${limit}&offset=${offset}`
+    return DebtRequest({
+        url: url,
+        method: 'get'
     })
 }
 

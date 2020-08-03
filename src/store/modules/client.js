@@ -1,7 +1,9 @@
 import {
     transferMoney,
-    getClientInfo
-} from "../../api/otp_api"
+    getClientInfo,
+    confirmOTP,
+    getClientName
+} from '../../api/client_api'
 
 
 const state = {
@@ -26,9 +28,31 @@ const actions = {
                 })
         })
     },
+
+    getClientName({ commit }, payload) {
+        return new Promise((resolve, reject) => {
+            getClientName(payload.partnerCode, payload.accountNumber)
+                .then((response) => {
+                    resolve(response)
+                }).catch(err => {
+                    reject(err)
+                })
+        })
+    },
     transferMoney({ commit }, payload) {
         return new Promise((resolve, reject) => {
+            console.log(payload)
             transferMoney(payload.body)
+                .then((response) => {
+                    resolve(response)
+                }).catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    confirmOTP({ commit }, payload) {
+        return new Promise((resolve, reject) => {
+            confirmOTP(payload.body)
                 .then((response) => {
                     resolve(response)
                 }).catch(err => {
