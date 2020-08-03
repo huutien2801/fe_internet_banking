@@ -86,9 +86,12 @@
                 </div>
                 <div class="col-lg-12" style="margin-top: 20px">
                     <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-12" style="margin-bottom: 20px">
-                            <input type="number" class="form-control" id="txt-search" aria-describedby="Search" v-model="accountNumber"/>
-                            <button @click="onSearch">Search</button>
+                        <div class="col-lg-4 col-md-4 col-sm-6" style="margin-bottom: 20px">
+                            <input type="number" class="form-control" id="txt-search" aria-describedby="Search" v-model="accountNumber" />
+
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-6" style="margin-bottom: 20px">
+                            <button class="btn btn-outline-warning" @click="onSearch">Tìm kiếm</button>
                         </div>
                         <div class="col-lg-6 text-right">
                             <button class="btn btn-outline-info" data-toggle="modal" data-target="#createDepositAccount">
@@ -114,7 +117,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <AccountItemCmp v-on:onCompleteUpdate="onCompleteRedeem" v-for="depositAcc in arrDepositAccount" :key="depositAcc.email" :depositAcc="depositAcc" :ratioData="ratioData"/>
+                            <AccountItemCmp v-on:onCompleteUpdate="onCompleteRedeem" v-for="depositAcc in arrDepositAccount" :key="depositAcc.email" :depositAcc="depositAcc" :ratioData="ratioData" />
                         </tbody>
                     </table>
                 </div>
@@ -144,7 +147,7 @@
                                         Nhập số tiền muốn gửi
                                         <span style="color:red">(*)</span>
                                     </label>
-                                    <input type="number" class="form-control" id="txt-user-name" aria-describedby="emailHelp" v-model="depositAccount.deposit" @change="onDepositChange($event)"/>
+                                    <input type="number" class="form-control" id="txt-user-name" aria-describedby="emailHelp" v-model="depositAccount.deposit" @change="onDepositChange($event)" />
                                 </div>
                             </div>
 
@@ -221,9 +224,10 @@ export default {
                 }
             ],
             ratioValue: [],
-            ratioOptions:[],
+            ratioOptions: [],
             index: 1,
             lastIndex: 0,
+            limit: 10,
             standarAccount: {},
             depositAccount: {
                 deposit: 0,
@@ -249,44 +253,47 @@ export default {
                 text
             } = obj;
         },
-        onSelectRatio: function(obj){
+        onSelectRatio: function (obj) {
             let {
                 id,
                 text
             } = obj;
             this.depositAccount.ratioMonth = id;
-            $('#txt-ratio').val(this.ratioData[id-1].toString());
-            let redeem = parseInt(this.depositAccount.deposit) + parseInt(this.depositAccount.deposit * this.ratioData[id-1] / 100);
+            $('#txt-ratio').val(this.ratioData[id - 1].toString());
+            let redeem = parseInt(this.depositAccount.deposit) + parseInt(this.depositAccount.deposit * this.ratioData[id - 1] / 100);
             $('#txt-redeem').val(redeem.toString())
 
         },
-        onRemoveRatio: function(obj){
+        onRemoveRatio: function (obj) {
             $('#txt-redeem').val("")
         },
-        onDepositChange: function(obj){
-            if (this.depositAccount.ratioMonth != 0){
-                let redeem = parseInt(this.depositAccount.deposit) + parseInt(this.depositAccount.deposit * this.ratioData[this.depositAccount.ratioMonth-1] / 100);
+        onDepositChange: function (obj) {
+            if (this.depositAccount.ratioMonth != 0) {
+                let redeem = parseInt(this.depositAccount.deposit) + parseInt(this.depositAccount.deposit * this.ratioData[this.depositAccount.ratioMonth - 1] / 100);
                 $('#txt-redeem').val(redeem.toString())
             }
-            
+
         },
-        onCreateDepositBank: async function (obj){
+        onCreateDepositBank: async function (obj) {
             let depositResp = await this.$store.dispatch('bankAccount/createbankAccount', this.depositAccount);
-            if (depositResp && !depositResp.error){
+            if (depositResp && !depositResp.error) {
                 alert('Tạo tài khoản tiết kiệm thành công.');
                 $('#createDepositAccount').modal('hide');
-                let respDepositAccount = await this.$store.dispatch('bankAccount/getDepositAccount', {offset: 0, limit: 10})
+                let respDepositAccount = await this.$store.dispatch('bankAccount/getDepositAccount', {
+                    offset: 0,
+                    limit: 10
+                })
                 if (respDepositAccount && !respDepositAccount.error) {
                     this.arrDepositAccount = respDepositAccount.data.data;
                     if (respDepositAccount.data.total % 10 == 0) {
                         this.lastIndex = respDepositAccount.data.total / 10;
                     } else {
-                         this.lastIndex = parseInt(respDepositAccount.data.total / 10) + 1;
+                        this.lastIndex = parseInt(respDepositAccount.data.total / 10) + 1;
                     }
                 }
             }
         },
-        onPaginationClick: async function(obj){
+        onPaginationClick: async function (obj) {
             let payload = {
                 limit: 10,
                 offset: (this.index - 1) * 10,
@@ -299,18 +306,22 @@ export default {
                 this.arrDepositAccount = res.data.data;
             }
         },
-        onSearch: async function(obj){
-            let respDepositAccount = await this.$store.dispatch('bankAccount/getDepositAccount', {offset: 0, limit: 10, accountNumber: this.accountNumber})
-                if (respDepositAccount && !respDepositAccount.error) {
-                    this.arrDepositAccount = respDepositAccount.data.data;
-                    if (respDepositAccount.data.total % 10 == 0) {
-                        this.lastIndex = respDepositAccount.data.total / 10;
-                    } else {
-                         this.lastIndex = parseInt(respDepositAccount.data.total / 10) + 1;
-                    }
+        onSearch: async function (obj) {
+            let respDepositAccount = await this.$store.dispatch('bankAccount/getDepositAccount', {
+                offset: 0,
+                limit: 10,
+                accountNumber: this.accountNumber
+            })
+            if (respDepositAccount && !respDepositAccount.error) {
+                this.arrDepositAccount = respDepositAccount.data.data;
+                if (respDepositAccount.data.total % 10 == 0) {
+                    this.lastIndex = respDepositAccount.data.total / 10;
+                } else {
+                    this.lastIndex = parseInt(respDepositAccount.data.total / 10) + 1;
                 }
+            }
         },
-        onCompleteRedeem: async function(obj){
+        onCompleteRedeem: async function (obj) {
             let payload = {
                 limit: 10,
                 offset: 0,
@@ -349,16 +360,23 @@ export default {
             });
         }
 
-        let respDepositAccount = await this.$store.dispatch('bankAccount/getDepositAccount', {offset: 0, limit: 10})
+        let respDepositAccount = await this.$store.dispatch('bankAccount/getDepositAccount', {
+            offset: (this.index - 1) * this.limit,
+            limit: this.limit
+        })
+
         if (respDepositAccount && !respDepositAccount.error) {
             this.arrDepositAccount = respDepositAccount.data.data;
-            if (respDepositAccount.data.total % 10 == 0) {
-                this.lastIndex = respDepositAccount.data.total / 10;
-            } else {
-                this.lastIndex = parseInt(respDepositAccount.data.total / 10) + 1;
+            if (respDepositAccount.data.total) {
+                if (respDepositAccount.data.total % 10 == 0) {
+                    this.lastIndex = respDepositAccount.data.total / 10;
+                } else {
+                    this.lastIndex = parseInt(respDepositAccount.data.total / 10) + 1;
+                }
             }
-            //this.lastIndex = respDepositAccount.data.total / 10;
         }
+
+        console.log(this.lastIndex)
     }
 };
 </script>
