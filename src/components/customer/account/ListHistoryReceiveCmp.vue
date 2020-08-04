@@ -1,51 +1,51 @@
 <template>
 <div class="row" style="margin-right:4px">
     <div class="col-lg-12">
-      
-            <div class="row container-account">
-                <div class="col-lg-1" style="padding-right:0px">
-                    <i class="fas fa-arrow-alt-circle-left icon-title"></i>
-                </div>
-                <div class="col-lg-11" style="padding-left:0px">
-                    <div class="header-title">
-                        <span class="main-title">Lịch sử nhận tiền</span>
-                        <span class="sub-title">(Quản lý danh sách nhận tiền từ người khác)</span>
-                    </div>
+
+        <div class="row container-account">
+            <div class="col-lg-1" style="padding-right:0px">
+                <i class="fas fa-arrow-alt-circle-left icon-title"></i>
+            </div>
+            <div class="col-lg-11" style="padding-left:0px">
+                <div class="header-title">
+                    <span class="main-title">Lịch sử nhận tiền</span>
+                    <span class="sub-title">(Quản lý danh sách nhận tiền từ người khác)</span>
                 </div>
             </div>
+        </div>
     </div>
 
     <div class="col-lg-12" style="margin-top:20px">
-            <div class="row container-account" style="padding-top:10px;padding-bottom:10px">
-                <div class="col-lg-12" style="border-bottom: 1px solid #ebebeb">
-                    <h5>THÔNG TIN NHẬN TIỀN</h5>
-                </div>
-                <div class="col-lg-12" style="margin-top: 20px">
-                    <div class="row">
-                        <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 20px">
-                            <label for="">Từ ngày</label>
-                            <datepicker v-model="fromDate" :bootstrap-styling="true">
-                            </datepicker>
-                        </div>
-                        <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 20px">
-                            <label for="">Đến ngày</label>
-                            <datepicker v-model="toDate" :bootstrap-styling="true">
-                            </datepicker>
-                        </div>
-                        <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 20px">
-                            <label for="">Loại giao dịch</label>
-                            <multiselect v-model="transactionValue" :options="transationOption" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo ngân hàng" label="text" track-by="id" :preselect-first="false" @select="onSelectTransactionType($event)" @remove="onRemoveTransationType($event)" />
-                        </div>
-                        <div class="col-lg-3 col-md-6 col-sm-12" id="selectPartner" style="margin-bottom: 20px">
-                            <label for="">Tên ngân hàng</label>
-                            <multiselect v-model="partnerValue" :options="partnerOption" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo ngân hàng" label="text" track-by="id" :preselect-first="false" />
-                        </div>
-                        <div class="col-lg-12" style="margin-bottom: 20px">
-                            <button class="btn btn-outline-success" @click="onFilterHistory">LỌC</button>
-                        </div>
-                        <div class="col-12" style="margin-bottom: 20px">
-                            <label for="">Tổng giao dịch: </label>
-                            <currency-input class="ipt-balance" :value="totalSumTransaction" disabled v-currency="{
+        <div class="row container-account" style="padding-top:10px;padding-bottom:10px">
+            <div class="col-lg-12" style="border-bottom: 1px solid #ebebeb">
+                <h5>THÔNG TIN NHẬN TIỀN</h5>
+            </div>
+            <div class="col-lg-12" style="margin-top: 20px">
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 20px">
+                        <label for="">Từ ngày</label>
+                        <datepicker v-model="fromDate" :bootstrap-styling="true">
+                        </datepicker>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 20px">
+                        <label for="">Đến ngày</label>
+                        <datepicker v-model="toDate" :bootstrap-styling="true">
+                        </datepicker>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 20px">
+                        <label for="">Loại giao dịch</label>
+                        <multiselect v-model="transactionValue" :options="transationOption" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo ngân hàng" label="text" track-by="id" :preselect-first="false" @select="onSelectTransactionType($event)" @remove="onRemoveTransationType($event)" />
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12" id="selectPartner" style="margin-bottom: 20px">
+                        <label for="">Tên ngân hàng</label>
+                        <multiselect v-model="partnerValue" :options="partnerOption" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo ngân hàng" label="text" track-by="id" :preselect-first="false" />
+                    </div>
+                    <div class="col-lg-12" style="margin-bottom: 20px">
+                        <button class="btn btn-outline-success" @click="onFilterHistory">LỌC</button>
+                    </div>
+                    <div class="col-12" style="margin-bottom: 20px">
+                        <label for="">Tổng giao dịch: </label>
+                        <currency-input class="ipt-balance" :value="totalSumTransaction" disabled v-currency="{
                                 currency: {
                                     suffix:' VNĐ'
                                 },
@@ -56,10 +56,10 @@
                                 valueRange: { min: 0 },
                                 allowNegative: false
                             }" />
-                        </div>
-                        <div class="col-12" style="margin-bottom: 20px">
-                            <label for="">Tổng giao dịch trong <b>tháng {{currentMonth}}</b> : </label>
-                            <currency-input class="ipt-balance" :value="totalMonthTransaction" disabled v-currency="{
+                    </div>
+                    <div class="col-12" style="margin-bottom: 20px">
+                        <label for="">Tổng giao dịch trong <b>tháng {{currentMonth}}</b> : </label>
+                        <currency-input class="ipt-balance" :value="totalMonthTransaction" disabled v-currency="{
                                 currency: {
                                     suffix:' VNĐ'
                                 },
@@ -70,32 +70,32 @@
                                 valueRange: { min: 0 },
                                 allowNegative: false
                             }" />
-                        </div>
                     </div>
                 </div>
-                <div class="col-lg-12 table-responsive-md">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="text-center">Số TK</th>
-                                <th scope="col" class="text-center">Họ tên</th>
-                                <th scope="col" class="text-center">Ngân hàng</th>
-                                <th class="text-center" scope="col">Số tiền</th>
-                                <th class="text-center" scope="col">Ngày nhận</th>
-                                <th class="text-center" scope="col">Nội dung</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <HistoryReceiveItemCmp v-for="receive in listReceive" :key="receive.exchange_money_id" :historyObj="receive" />
-                            <tr>
-                                <td>
-                                </td>
-                                <td>
-                                </td>
-                                <td>
-                                </td>
-                                <td>
-                                    <currency-input class="ipt-balance" :value="totalTransaction" disabled v-currency="{
+            </div>
+            <div class="col-lg-12 table-responsive-md">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="text-center">Số TK</th>
+                            <th scope="col" class="text-center">Họ tên</th>
+                            <th scope="col" class="text-center">Ngân hàng</th>
+                            <th class="text-center" scope="col">Số tiền</th>
+                            <th class="text-center" scope="col">Ngày nhận</th>
+                            <th class="text-center" scope="col">Nội dung</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <HistoryReceiveItemCmp v-for="receive in listReceive" :key="receive.exchange_money_id" :historyObj="receive" />
+                        <tr>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                                <currency-input class="ipt-balance" :value="totalTransaction" disabled v-currency="{
                                 currency: {
                                     suffix:' VNĐ'
                                 },
@@ -106,16 +106,16 @@
                                 valueRange: { min: 0 },
                                 allowNegative: false
                             }" />
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="col-12 text-center" style="margin-top:0px">
-                    <paginate :page-count="lastIndex" :prev-text="'&#8249;'" :next-text="'&#8250;'" :first-last-button="true" :last-button-text="'&#187;'" :first-button-text="'&#171;'" :container-class="'pagination'" :page-class="'page-item'" :page-link-class="'page-link'" :next-link-class="'page-link'" :prev-link-class="'page-link'" :click-handler="onPaginationClick" :hide-prev-next="true" v-model="index">
-                    </paginate>
-                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
+            <div class="col-12 text-center" style="margin-top:0px">
+                <paginate :page-count="lastIndex" :prev-text="'&#8249;'" :next-text="'&#8250;'" :first-last-button="true" :last-button-text="'&#187;'" :first-button-text="'&#171;'" :container-class="'pagination'" :page-class="'page-item'" :page-link-class="'page-link'" :next-link-class="'page-link'" :prev-link-class="'page-link'" :click-handler="onPaginationClick" :hide-prev-next="true" v-model="index">
+                </paginate>
+            </div>
+        </div>
     </div>
 
 </div>

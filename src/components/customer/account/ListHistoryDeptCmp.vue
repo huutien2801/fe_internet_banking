@@ -1,64 +1,54 @@
 <template>
-<div class="row">
+<div class="row" style="margin-right:3px">
     <div class="col-lg-12">
-        <div class="container">
-            <div class="row container-account">
-                <div class="col-lg-1" style="padding-right:0px">
-                    <i class="far fa-credit-card icon-title"></i>
-                </div>
-                <div class="col-lg-11" style="padding-left:0px">
-                    <div class="header-title">
-                        <span class="main-title">Lịch sử thanh toán nợ</span>
-                        <span class="sub-title">(Quản lý danh sách lịch sử thanh toán nợ của bạn)</span>
-                    </div>
+        <div class="row container-account">
+            <div class="col-lg-1" style="padding-right:0px">
+                <i class="fas fa-user-circle icon-title"></i>
+            </div>
+            <div class="col-lg-11" style="padding-left:0px">
+                <div class="header-title">
+                    <span class="main-title">LỊCH SỬ THANH TOÁN NỢ</span>
+                    <span class="sub-title">(Quản lý danh sách lịch sử nợ của bạn đã được thanh toán)</span>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="col-lg-12" style="margin-top:20px">
-        <div class="container">
-            <div class="row container-account" style="padding-top:10px;padding-bottom:10px">
-                <div class="col-lg-12" style="border-bottom: 1px solid #ebebeb">
-                    <h5>THÔNG TIN THANH TOÁN NỢ</h5>
+        <div class="row container-account" style="padding-top:10px;padding-bottom:0px">
+            <div class="col-lg-12" style="border-bottom: 1px solid #ebebeb">
+                <h5>DANH SÁCH LỊCH SỬ</h5>
+            </div>
+            <div class="col-lg-12" style="margin-top: 20px">
+                <div class="row" style="margin-bottom:20px">
+                  
                 </div>
-                <div class="col-lg-12" style="margin-top: 20px">
-                    <div class="row">
-                        <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 20px">
-                            <multiselect v-model="statusValue" :options="statusOptions" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo trạng thái" label="text" track-by="id" :preselect-first="false" @select="onSelectCategoryJob($event)" @remove="onRemoveGender($event)" />
-                        </div>
-                        <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 20px">
-                            <multiselect v-model="sortValue" :options="sortOptions" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo thời gian" label="text" track-by="id" :preselect-first="false" @select="onSelectCategoryJob($event)" @remove="onRemoveGender($event)" />
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col-lg-12 table-responsive-md">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="text-center">STT</th>
-                                <th scope="col" class="text-center">Số TK</th>
-                                <th scope="col" class="text-center">Họ tên</th>
-                                <th class="text-center" scope="col">Số tiền</th>
-                                <th class="text-center" scope="col">Loại</th>
-                                <th class="text-center" scope="col">Nội dung</th>
-                                <th class="text-center" scope="col">Trạng thái</th>
-                                <th class="text-center" scope="col">Ngày thanh toán</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <HistoryDeptItemCmp />
-                            <HistoryDeptItemCmp />
-                        </tbody>
-                    </table>
-                </div>
-                <div class="col-12 text-center" style="margin-top:20px">
-                    <paginate :page-count="5" :prev-text="'&#8249;'" :next-text="'&#8250;'" :first-last-button="true" :last-button-text="'&#187;'" :first-button-text="'&#171;'" :container-class="'pagination'" :page-class="'page-item'" :page-link-class="'page-link'" :next-link-class="'page-link'" :prev-link-class="'page-link'" :click-handler="onPaginationClick" :hide-prev-next="true" v-model="index"></paginate>
-                </div>
+            </div>
+            <div class="col-lg-12 table-responsive-md">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="text-center">Họ tên</th>
+                            <th scope="col" class="text-center">Số tài khoản</th>
+                            <th scope="col" class="text-center">Số tiền nợ</th>
+                            <th class="text-center" scope="col">Loại nhắc nợ</th>
+                            <th class="text-center" scope="col">Nội dung</th>
+                            <th class="text-center" scope="col">Trạng thái</th>
+                            <th class="text-center">Ngày thanh toán</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <HistoryDeptItemCmp v-on:onCompleteUpdateDebt='onCompleteUpdateDebt' v-for="debt in listDebt" :key='debt._id' :debtObj='debt'/>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-12 text-center" style="margin-top:20px">
+                <paginate :page-count="lastIndex" :prev-text="'&#8249;'" :next-text="'&#8250;'" :first-last-button="true" :last-button-text="'&#187;'" :first-button-text="'&#171;'" :container-class="'pagination'" :page-class="'page-item'" :page-link-class="'page-link'" :next-link-class="'page-link'" :prev-link-class="'page-link'" :click-handler="onPaginationClick" :hide-prev-next="true" v-model="index">
+                </paginate>
             </div>
         </div>
     </div>
+
 
 </div>
 </template>
@@ -69,45 +59,103 @@ import Paginate from "vuejs-paginate";
 import Datepicker from "vuejs-datepicker";
 import HistoryReceiveItemCmp from './list-item/HistoryReceiveItemCmp'
 import HistoryDeptItemCmp from './list-item/HistoryDeptItemCmp'
+
+import DeptItemCmp from './list-item/DeptItemCmp'
+import {
+    getFeeTypeOption,
+    getInsideReceiverOption,
+    getDeptStatusOption,
+    getDeptTypeOption
+} from '../../../utils/common'
+
 export default {
     data: function () {
         return {
-            statusValue: [],
-            statusOptions: [{
-                    id: "ACTIVE",
-                    text: "Đang tuyển"
-                },
-                {
-                    id: "EXPIRED",
-                    text: "Đã hết hạn"
-                }
-            ],
-            sortValue: [],
-            sortOptions: [{
-                    id: "ASC",
-                    text: "Cũ nhất"
-                },
-                {
-                    id: "DESC",
-                    text: "Mới nhất"
-                }
-            ],
-            index: 1
+            exchangeUserOption: [],
+            exchangeUserValue: null,
+            deptTypeOption: [],
+            deptTypeValue: null,
+            deptStatusOption: [],
+            deptStatusValue: null,
+            listDebt: [],
+            index: 1,
+            limit: 5,
+            lastIndex: 0,
         };
     },
     methods: {
-        onSelectCategoryJob: function (obj) {
-            let {
-                id,
-                text
-            } = obj;
-            console.log(text);
+        onFilterRemind: async function () {
+            let payload = {
+                limit: this.limit,
+                offset: (this.index - 1) * this.limit,
+                q: {}
+            }
+            if (this.deptStatusValue != null && this.deptStatusValue[0] != undefined) {
+                payload.q.status = this.deptStatusValue[0].id
+            }
+            if (this.deptTypeValue != null && this.deptTypeValue[0] != undefined) {
+                payload.q.type = this.deptTypeValue[0].id
+            }
+
+            let respDebt = await this.$store.dispatch('debt/getDebt', payload)
+            if (respDebt && !respDebt.error) {
+
+                this.listDebt = respDebt.data.data
+                if (respDebt.data.total % this.limit == 0) {
+                    this.lastIndex = respDebt.data.total / this.limit;
+                } else {
+                    this.lastIndex = parseInt(respDebt.data.total / this.limit) + 1;
+                }
+            }
         },
-        onRemoveGender: function (obj) {
-            let {
-                id,
-                text
-            } = obj;
+        onPaginationClick: async function (pageNumber) {
+            this.index = pageNumber
+            let payload = {
+                limit: this.limit,
+                offset: (this.index - 1) * this.limit,
+                q: {}
+            }
+
+            if (this.deptStatusValue != null && this.deptStatusValue[0] != undefined) {
+                payload.q.status = this.deptStatusValue[0].id
+            }
+            if (this.deptTypeValue != null && this.deptTypeValue[0] != undefined) {
+                payload.q.type = this.deptTypeValue[0].id
+            }
+
+            let respDebt = await this.$store.dispatch('debt/getDebt', payload)
+            if (respDebt && !respDebt.error) {
+                this.listDebt = respDebt.data.data
+                if (respDebt.data.total % this.limit == 0) {
+                    this.lastIndex = respDebt.data.total / this.limit;
+                } else {
+                    this.lastIndex = parseInt(respDebt.data.total / this.limit) + 1;
+                }
+            }
+        },
+        onCompleteUpdateDebt: async function () {
+            let payload = {
+                limit: this.limit,
+                offset: (this.index - 1) * this.limit,
+                q: {}
+            }
+
+            if (this.deptStatusValue != null && this.deptStatusValue[0] != undefined) {
+                payload.q.status = this.deptStatusValue[0].id
+            }
+            if (this.deptTypeValue != null && this.deptTypeValue[0] != undefined) {
+                payload.q.type = this.deptTypeValue[0].id
+            }
+
+            let respDebt = await this.$store.dispatch('debt/getDebt', payload)
+            if (respDebt && !respDebt.error) {
+                this.listDebt = respDebt.data.data
+                if (respDebt.data.total % this.limit == 0) {
+                    this.lastIndex = respDebt.data.total / this.limit;
+                } else {
+                    this.lastIndex = parseInt(respDebt.data.total / this.limit) + 1;
+                }
+            }
         }
     },
     components: {
@@ -115,7 +163,31 @@ export default {
         Paginate,
         Datepicker,
         HistoryReceiveItemCmp,
-        HistoryDeptItemCmp
+        HistoryDeptItemCmp,
+        DeptItemCmp
+    },
+    mounted: async function () {
+
+        let payload = {
+            limit: this.limit,
+            offset: (this.index - 1) * this.limit,
+            q: {
+                status: "DONE",
+                type:"REMINDED"
+            }
+        }
+
+        let respDebt = await this.$store.dispatch('debt/getDebt', payload)
+        if (respDebt && !respDebt.error) {
+            console.log(respDebt)
+            this.listDebt = respDebt.data.data
+            if (respDebt.data.total % this.limit == 0) {
+                this.lastIndex = respDebt.data.total / this.limit;
+            } else {
+                this.lastIndex = parseInt(respDebt.data.total / this.limit) + 1;
+            }
+        }
+
     }
 };
 </script>

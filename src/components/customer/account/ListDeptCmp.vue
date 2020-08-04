@@ -52,7 +52,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <DeptItemCmp v-for="debt in listDebt" :key='debt._id' :debtObj='debt' :userAccountObj='standarAccount' />
+                        <DeptItemCmp v-on:onCompleteUpdateDebt='onCompleteUpdateDebt' v-for="debt in listDebt" :key='debt._id' :debtObj='debt' :userAccountObj='standarAccount' />
                     </tbody>
                 </table>
             </div>
@@ -214,6 +214,20 @@ export default {
             }
 
             let body = {}
+            if (this.remindedAccount == '') {
+                alert("Chưa điền số tài khoản")
+                return
+            }
+
+            if (this.remindedName == '') {
+                alert("Chưa có tên người bị nhắc")
+                return
+            }
+            if (this.debt == 0) {
+                alert("Chưa nhập số tiền muốn nhắc nợ")
+                return
+            }
+
             body.remindedAccount = this.remindedAccount
             body.remindedName = this.remindedName
             body.mess = this.mess
@@ -258,7 +272,7 @@ export default {
 
             let respDebt = await this.$store.dispatch('debt/getDebt', payload)
             if (respDebt && !respDebt.error) {
-                console.log(respDebt)
+
                 this.listDebt = respDebt.data.data
                 if (respDebt.data.total % this.limit == 0) {
                     this.lastIndex = respDebt.data.total / this.limit;
@@ -292,6 +306,30 @@ export default {
                 }
             }
         },
+        onCompleteUpdateDebt: async function () {
+            let payload = {
+                limit: this.limit,
+                offset: (this.index - 1) * this.limit,
+                q: {}
+            }
+
+            if (this.deptStatusValue != null && this.deptStatusValue[0] != undefined) {
+                payload.q.status = this.deptStatusValue[0].id
+            }
+            if (this.deptTypeValue != null && this.deptTypeValue[0] != undefined) {
+                payload.q.type = this.deptTypeValue[0].id
+            }
+
+            let respDebt = await this.$store.dispatch('debt/getDebt', payload)
+            if (respDebt && !respDebt.error) {
+                this.listDebt = respDebt.data.data
+                if (respDebt.data.total % this.limit == 0) {
+                    this.lastIndex = respDebt.data.total / this.limit;
+                } else {
+                    this.lastIndex = parseInt(respDebt.data.total / this.limit) + 1;
+                }
+            }
+        }
     },
     components: {
         Multiselect,
@@ -301,6 +339,10 @@ export default {
         DeptItemCmp
     },
     mounted: async function () {
+        let respStandarAccount = await this.$store.dispatch('bankAccount/getStandarAccount', {})
+        if (respStandarAccount && !respStandarAccount.error) {
+            this.standarAccount = respStandarAccount.data.data
+        }
         this.exchangeUserOption = await getInsideReceiverOption()
         this.deptTypeOption = getDeptTypeOption()
         this.deptStatusOption = getDeptStatusOption()
@@ -322,10 +364,6 @@ export default {
             }
         }
 
-        let respStandarAccount = await this.$store.dispatch('bankAccount/getStandarAccount', {})
-        if (respStandarAccount && !respStandarAccount.error) {
-            this.standarAccount = respStandarAccount.data.data
-        }
     }
 };
 </script>
