@@ -58,6 +58,16 @@ const actions = {
                 })
         })
     },
+    getAllHistoryAdmin({ commit }, payload) {
+        return new Promise((resolve, reject) => {
+            getAllHistoryAdmin(JSON.stringify(payload.q), payload.limit, payload.offset)
+                .then((response) => {
+                    resolve(response)
+                }).catch(err => {
+                    reject(err)
+                })
+        })
+    },
 }
 
 export default {
