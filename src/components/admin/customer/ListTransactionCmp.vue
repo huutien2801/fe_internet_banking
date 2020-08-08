@@ -33,6 +33,34 @@
             <div class="col-lg-12" style="margin-bottom: 20px">
                 <button class="btn btn-outline-success" @click="onFilterTransaction">LỌC</button>
             </div>
+            <div class="col-12" style="margin-bottom: 20px">
+                        <label for="">Tổng giao dịch: </label>
+                        <currency-input class="ipt-balance" :value="sumTotal" disabled v-currency="{
+                                currency: {
+                                    suffix:' VNĐ'
+                                },
+                                valueAsInteger: false,
+                                distractionFree: true,
+                                precision: 1,
+                                autoDecimalMode: true,
+                                valueRange: { min: 0 },
+                                allowNegative: false
+                            }" />
+            </div>
+            <div class="col-12" style="margin-bottom: 20px">
+                        <label for="">Tổng giao dịch trong tháng: </label>
+                        <currency-input class="ipt-balance" :value="sumMonth" disabled v-currency="{
+                                currency: {
+                                    suffix:' VNĐ'
+                                },
+                                valueAsInteger: false,
+                                distractionFree: true,
+                                precision: 1,
+                                autoDecimalMode: true,
+                                valueRange: { min: 0 },
+                                allowNegative: false
+                            }" />
+            </div>
         </div>
     </div>
 
@@ -83,6 +111,8 @@ export default {
             toDate: '',
             partnerOption: [],
             partnerValue: null,
+            sumTotal: 0,
+            sumMonth: 0,
         };
     },
     methods: {
@@ -133,14 +163,14 @@ export default {
 
             if (respTransaction && !respTransaction.error) {
                 this.listTransaction = respTransaction.data.data
-                this.total = respTransaction.data.resCount;
+                this.total = respTransaction.data.total;
                 this.sumMonth = respTransaction.data.sumMonth;
                 this.sumTotal = respTransaction.data.sumTotal;
 
-                if (respTransaction.data.resCount % this.limit == 0) {
-                    this.lastIndex = respTransaction.data.resCount / this.limit;
+                if (respTransaction.data.total % this.limit == 0) {
+                    this.lastIndex = respTransaction.data.total / this.limit;
                 } else {
-                    this.lastIndex = parseInt(respTransaction.data.resCount / this.limit) + 1;
+                    this.lastIndex = parseInt(respTransaction.data.total / this.limit) + 1;
                 }
             }
         }
@@ -175,6 +205,8 @@ export default {
         if (res && !res.error) {
             this.listTransaction = res.data.data;
             this.total = res.data.total;
+            this.sumTotal = res.data.sumTotal;
+            this.sumMonth = res.data.sumMonth;
 
             if (res.data.total % this.limit == 0) {
                 this.lastIndex = res.data.total / this.limit;
