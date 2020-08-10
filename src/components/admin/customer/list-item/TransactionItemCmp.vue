@@ -1,32 +1,38 @@
 <template>
 <tr>
-    <th scope="row text-center" style="vertical-align: middle">1</th>
-    <td style="vertical-align: middle" class="text-center">VBBank</td>
     <td style="vertical-align: middle" class="text-center">
-        <p>Ngân hàng ngoại thương Quốc tế</p>
+        {{historyObj.partner_code}}
     </td>
     <td style="vertical-align: middle" class="text-center">
-        <p>2000000</p>
+        {{historyObj.partner_name}}
     </td>
-    <td class="text-center text-wrap" style="vertical-align: middle">
-        <p>23/01/2019</p>
+    <td style="vertical-align: middle" class="text-center">
+        {{historyObj.sender_account_number}}
     </td>
-    <td class="text-center" style="vertical-align: middle">
-        <div class="dropdown">
-            <button class="btn btn-outline-info" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <button class="dropdown-item">Cập nhật</button>
-                <button class="dropdown-item">Xóa</button>
-            </div>
-        </div>
+    <td style="vertical-align: middle" class="text-center">
+        {{historyObj.receiver_account_number}}
+    </td>
+    <td style="vertical-align: middle" class="text-center">
+        {{historyObj.sender_full_name}}
+    </td>
+    <td style="vertical-align: middle" class="text-center">
+        {{historyObj.receiver_full_name}}
+    </td>
+    <td style="vertical-align: middle" class="text-center">
+        {{historyObj.money}}
+    </td>
+    <td style="vertical-align: middle" class="text-center">
+        {{historyObj.created_date}}
     </td>
 </tr>
 </template>
 
 <script>
-export default {};
+export default {
+    props: {
+        historyObj: Object
+    }
+};
 </script>
 
 <style scoped>
