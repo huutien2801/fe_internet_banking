@@ -48,7 +48,7 @@
                             }" />
             </div>
             <div class="col-12" style="margin-bottom: 20px">
-                        <label for="">Tổng giao dịch trong tháng: </label>
+                        <label for="">Tổng giao dịch trong tháng {{ new Date().getMonth() + 1 }}: </label>
                         <currency-input class="ipt-balance" :value="sumMonth" disabled v-currency="{
                                 currency: {
                                     suffix:' VNĐ'
@@ -113,6 +113,7 @@ export default {
             partnerValue: null,
             sumTotal: 0,
             sumMonth: 0,
+            currentMonth: new Date().toLocaleString,
         };
     },
     methods: {
