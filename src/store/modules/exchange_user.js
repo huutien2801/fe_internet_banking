@@ -18,7 +18,7 @@ const mutations = {
 const actions = {
     addUserToList({ commit }, payload) {
         return new Promise((resolve, reject) => {
-            addUserToList(payload.body)
+            addUserToList(payload.userId, payload.body)
                 .then((response) => {
                     resolve(response)
                 }).catch(err => {
@@ -28,7 +28,7 @@ const actions = {
     },
     showList({ commit }, payload) {
         return new Promise((resolve, reject) => {
-            showList(JSON.stringify(payload.q), payload.limit,payload.offset)
+            showList(payload.userId, payload.limit, payload.offset)
                 .then((response) => {
                     resolve(response)
                 }).catch(err => {
