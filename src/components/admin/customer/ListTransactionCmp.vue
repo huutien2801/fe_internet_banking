@@ -236,4 +236,11 @@ export default {
 .sub-title {
     font-size: 15px;
 }
+
+.ipt-balance {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid gray;
+    text-align: right;
+}
 </style>

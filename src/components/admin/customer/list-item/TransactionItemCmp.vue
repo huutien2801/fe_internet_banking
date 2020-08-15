@@ -22,7 +22,7 @@
         {{historyObj.money}}
     </td>
     <td style="vertical-align: middle" class="text-center">
-        {{historyObj.send_date}}
+        {{historyObj.send_date | moment("DD/MM/YYYY HH:mm:ss")}}
     </td>
 </tr>
 </template>

@@ -68,12 +68,6 @@
                                                 <i class="fas fa-exchange-alt"></i> &#160; Danh sách giao dịch
                                             </router-link>
                                         </div>
-
-                                        <div class="col-lg-12">
-                                            <router-link to="/admin/customer" class="btn btn-outline-dark btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseOne">
-                                                <i class="fas fa-chart-pie"></i> &#160; Thống kê
-                                            </router-link>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
