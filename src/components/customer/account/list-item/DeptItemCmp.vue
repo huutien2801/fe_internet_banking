@@ -140,7 +140,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" @click="onGetOTPConfirm">Thanh toán</button>
+                    <button type="button" class="btn btn-primary" @click="onGetOTPConfirm" data-dismiss="modal">Thanh toán</button>
                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Đóng</button>
                 </div>
             </div>
@@ -258,8 +258,10 @@ export default {
         onPayRemind: async function () {
             let userSt = JSON.parse(window.localStorage.getItem("USER"));
             let payloadConfirmOTP = {
-                email: userSt.USER.email,
-                OTP: this.OTP
+                body: {
+                    email: userSt.USER.email,
+                    OTP: this.OTP
+                }
             }
             const res = await this.$store.dispatch("otp/confirmOTP", payloadConfirmOTP);
             if (res && !res.error) {

@@ -60,7 +60,7 @@
                             </span>
                             <!--<button @click="resetRecaptcha"> Reset ReCAPTCHA </button>-->
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
@@ -161,9 +161,9 @@ export default {
             email: "",
             password: "",
             username: "",
-            newPassword:"",
-            confirmPassword:"",
-            PIN:"",
+            newPassword: "",
+            confirmPassword: "",
+            PIN: "",
             isWrongFormatEmail: false,
             isWrongFormatPwd: false,
             isEmptyPwd: false,
@@ -185,7 +185,7 @@ export default {
                 this.isWrongCatcha = false;
             }
 
-            if(this.isWrongCatcha == true){
+            if (this.isWrongCatcha == true) {
                 alert("Captcha bị sai. Vui lòng thực hiện lại")
                 return
             }
@@ -305,9 +305,9 @@ export default {
         resetRecaptcha() {
             this.$refs.recaptcha.reset(); // Direct call reset method
         },
-        async onForgotPassword(){
+        async onForgotPassword() {
             let payload = {
-                email:this.email
+                email: this.email
             }
             const res = await this.$store.dispatch("otp/createOTPMail", payload);
             if (res && !res.error) {
@@ -315,33 +315,35 @@ export default {
                 document.getElementById('update-pwd').style.display = 'block'
             }
         },
-        async onResetPassword(){
-            if (this.isConfirmOTP){
-                if (this.newPassword != this.confirmPassword){
+        async onResetPassword() {
+            if (this.isConfirmOTP) {
+                if (this.newPassword != this.confirmPassword) {
                     alert('Xác nhận mật khẩu sai. Vui lòng nhập lại')
                 } else {
                     let payload = {
-                        email:this.email,
-                        newPassword:this.newPassword
+                        email: this.email,
+                        newPassword: this.newPassword
                     }
                     const res = await this.$store.dispatch("userRole/resetPassword", payload);
-                    if (res && !res.error){
+                    if (res && !res.error) {
                         alert('Cập nhật mật khẩu thành công. Đăng nhập lại để vào hệ thống');
                         $('#forgotPassword').modal('hide');
                     }
                 }
-                
-            }else {
+
+            } else {
                 alert('Bạn phải xác nhận mã OTP trước');
             }
         },
-        async onConfirmPin(){
+        async onConfirmPin() {
             let payload = {
-                email:this.email,
-                OTP:this.PIN
+                body: {
+                    email: this.email,
+                    OTP: this.PIN
+                }
             }
             const res = await this.$store.dispatch("otp/confirmOTP", payload);
-            if (res && !res.error){
+            if (res && !res.error) {
                 document.getElementById('confirm-button').style.display = 'none';
                 document.getElementById('tick-button').style.display = 'inline-block';
                 this.isConfirmOTP = true;
