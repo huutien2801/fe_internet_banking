@@ -15,14 +15,8 @@
     </div>
 
     <div class="col-lg-12" style="margin-top:20px">
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 20px">
-                <multiselect v-model="statusValue" :options="statusOptions" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo trạng thái" label="text" track-by="id" :preselect-first="false" @select="onSelectCategoryJob($event)" @remove="onRemoveGender($event)" />
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 20px">
-                <multiselect v-model="sortValue" :options="sortOptions" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo thời gian" label="text" track-by="id" :preselect-first="false" @select="onSelectCategoryJob($event)" @remove="onRemoveGender($event)" />
-            </div>
-            <div class="col-lg-6 text-right">
+        <div class="row" style="margin-bottom:20px">
+            <div class="col-lg-12 text-right">
                 <button class="btn btn-outline-info" data-toggle="modal" data-target="#addEmployeeModal">
                     <i class="fas fa-plus-circle"></i>
                     Thêm nhân viên

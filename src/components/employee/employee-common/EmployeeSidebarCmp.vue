@@ -114,9 +114,10 @@
 export default {
     data: function () {
         return {
-            imgAva: "https://images.complex.com/images/fl_lossy,q_auto/knaro2lesld9cfvpdbmp/steve-jobs-wearing-new-balance-991",
+            imgAva: "https://luanantiensi.com/wp-content/uploads/2018/03/bank-03-800x445.jpg",
+
             title: "Hello",
-             user: {}
+            user: {}
         };
     },
     methods: {
@@ -258,5 +259,7 @@ export default {
 .user-sidebar {
     background-color: #0d262e;
     padding: 20px;
+    min-height: 700px;
+
 }
 </style>

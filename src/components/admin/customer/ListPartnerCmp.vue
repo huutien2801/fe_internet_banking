@@ -14,19 +14,7 @@
         </div>
     </div>
 
-    <div class="col-lg-12" style="margin-top:20px">
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 20px">
-                <multiselect v-model="statusValue" :options="statusOptions" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo trạng thái" label="text" track-by="id" :preselect-first="false" @select="onSelectCategoryJob($event)" @remove="onRemoveGender($event)" />
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12" style="margin-bottom: 20px">
-                <multiselect v-model="sortValue" :options="sortOptions" :max="1" :multiple="true" :close-on-select="true" :clear-on-select="true" :preserve-search="true" :show-labels="false" placeholder="Lọc theo thời gian" label="text" track-by="id" :preselect-first="false" @select="onSelectCategoryJob($event)" @remove="onRemoveGender($event)" />
-            </div>
-
-        </div>
-    </div>
-
-    <div class="col-lg-12 table-responsive-md">
+    <div class="col-lg-12 table-responsive-md" style="margin-top:20px">
         <table class="table table-hover">
             <thead>
                 <tr>

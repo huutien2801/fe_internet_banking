@@ -4,9 +4,7 @@
         <div class="col-lg-12">
             <span class="user-info" style="font-size:20px;color: orange">Khách hàng - {{user.full_name}}</span>
             <span class="user-info">{{user.dob | moment("DD/MM/YYYY")}}</span>
-            <div class="progress" style="margin-top:10px">
-                <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 50%">75%</div>
-            </div>
+            
         </div>
         <div class="col-lg-12 thumbnail">
             <div class="thumb">
@@ -146,7 +144,7 @@
 export default {
     data: function () {
         return {
-            imgAva: "https://images.complex.com/images/fl_lossy,q_auto/knaro2lesld9cfvpdbmp/steve-jobs-wearing-new-balance-991",
+            imgAva: "https://luanantiensi.com/wp-content/uploads/2018/03/bank-03-800x445.jpg",
             title: "Hello",
             user: {}
 
@@ -291,5 +289,7 @@ export default {
 .user-sidebar {
     background-color: #0d262e;
     padding: 20px;
+    min-height: 700px;
+
 }
 </style>

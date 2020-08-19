@@ -34,8 +34,8 @@
                 <button class="btn btn-outline-success" @click="onFilterTransaction">LỌC</button>
             </div>
             <div class="col-12" style="margin-bottom: 20px">
-                        <label for="">Tổng giao dịch: </label>
-                        <currency-input class="ipt-balance" :value="sumTotal" disabled v-currency="{
+                <label for="">Tổng giao dịch: </label>
+                <currency-input class="ipt-balance" :value="sumTotal" disabled v-currency="{
                                 currency: {
                                     suffix:' VNĐ'
                                 },
@@ -48,8 +48,8 @@
                             }" />
             </div>
             <div class="col-12" style="margin-bottom: 20px">
-                        <label for="">Tổng giao dịch trong tháng {{ new Date().getMonth() + 1 }}: </label>
-                        <currency-input class="ipt-balance" :value="sumMonth" disabled v-currency="{
+                <label for="">Tổng giao dịch trong tháng {{ new Date().getMonth() + 1 }}: </label>
+                <currency-input class="ipt-balance" :value="sumMonth" disabled v-currency="{
                                 currency: {
                                     suffix:' VNĐ'
                                 },
@@ -79,7 +79,7 @@
                 </tr>
             </thead>
             <tbody>
-                <TransactionItemCmp v-for="transaction in listTransaction" :key="transaction.exchange_money_id" :historyObj="transaction"/>
+                <TransactionItemCmp v-for="transaction in listTransaction" :key="transaction.exchange_money_id" :historyObj="transaction" />
             </tbody>
         </table>
     </div>
@@ -164,6 +164,16 @@ export default {
 
             if (respTransaction && !respTransaction.error) {
                 this.listTransaction = respTransaction.data.data
+                if (this.listTransaction.length > 0) {
+                    this.listTransaction.forEach(transation => {
+                        let partnerInfo = this.partnerOption.find(item => {
+                            return item.id == transation.partner_code
+                        })
+                        if (partnerInfo) {
+                            transation.partner_name = partnerInfo.text
+                        }
+                    })
+                }
                 this.total = respTransaction.data.total;
                 this.sumMonth = respTransaction.data.sumMonth;
                 this.sumTotal = respTransaction.data.sumTotal;
@@ -197,14 +207,22 @@ export default {
             q.end = this.toDate
         }
 
-        
-
         payload.q = q
 
         const res = await this.$store.dispatch("exchangeMoney/getAllHistoryAdmin", payload);
 
         if (res && !res.error) {
             this.listTransaction = res.data.data;
+            if (this.listTransaction.length > 0) {
+                this.listTransaction.forEach(transation => {
+                    let partnerInfo = this.partnerOption.find(item => {
+                        return item.id == transation.partner_code
+                    })
+                    if (partnerInfo) {
+                        transation.partner_name = partnerInfo.text
+                    }
+                })
+            }
             this.total = res.data.total;
             this.sumTotal = res.data.sumTotal;
             this.sumMonth = res.data.sumMonth;

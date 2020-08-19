@@ -218,7 +218,7 @@ export default {
                 } else {
                     this.lastIndex = parseInt(respReceiver.data.total / this.limit) + 1;
                 }
-            }else{
+            } else {
                 this.listReceiver = []
                 this.lastIndex = 0
             }
@@ -264,6 +264,21 @@ export default {
             let respCreateReceiver = await this.$store.dispatch("exchangeUser/addUserToList", payload)
             let addReceiverModal = document.getElementById('addReceiverModal')
             if (respCreateReceiver && !respCreateReceiver.error) {
+                let payload = {
+                    q: {},
+                    limit: this.limit,
+                    offset: (this.index - 1) * this.limit
+                }
+                let respReceiver = await this.$store.dispatch("exchangeUser/showList", payload)
+                if (respReceiver && !respReceiver.error) {
+                    this.listReceiver = respReceiver.data.users
+
+                    if (respReceiver.data.total % this.limit == 0) {
+                        this.lastIndex = respReceiver.data.total / this.limit;
+                    } else {
+                        this.lastIndex = parseInt(respReceiver.data.total / this.limit) + 1;
+                    }
+                }
                 alert("Thêm người nhận thành công")
             } else {
                 alert("Thêm người nhận thất bại. Vui lòng thử lại sau")

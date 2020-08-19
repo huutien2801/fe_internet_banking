@@ -2,11 +2,9 @@
 <div class="container user-sidebar">
     <div class="row">
         <div class="col-lg-12">
-            <span class="user-info" style="font-size:20px;color: orange">Hửu Tiền</span>
-            <span class="user-info">22 tuổi</span>
-            <div class="progress" style="margin-top:10px">
-                <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 50%">75%</div>
-            </div>
+            <span class="user-info" style="font-size:20px;color: orange">Admin</span>
+            <span class="user-info">Ngân hàng 3TBank</span>
+         
         </div>
         <div class="col-lg-12 thumbnail">
             <div class="thumb">
@@ -72,32 +70,7 @@
                                 </div>
                             </div>
                         </div>
-                          <div class="card">
-                            <div class="card-header" id="headingOne">
-                                <button class="btn btn-light btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseOne">
-                                    <i class="fas fa-info-circle"></i>
-                                    &#160; Cá nhân
-                                </button>
-                            </div>
-
-                            <div id="collapseThree" class="collapse child-menu" aria-labelledby="headingOne" data-parent="#accordionExample">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <router-link to="/admin/transation" class="btn btn-outline-dark btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseOne">
-                                                <i class="fas fa-sign-out-alt"></i>&#160; Đăng xuất
-                                            </router-link>
-                                        </div>
-
-                                        <div class="col-lg-12">
-                                            <router-link to="/admin/customer" class="btn btn-outline-dark btn-sidebar btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseOne">
-                                                <i class="fas fa-cog"></i> &#160; Đổi mật khẩu
-                                            </router-link>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    
                     </div>
                 </div>
             </div>
@@ -110,7 +83,7 @@
 export default {
     data: function () {
         return {
-            imgAva: "https://images.complex.com/images/fl_lossy,q_auto/knaro2lesld9cfvpdbmp/steve-jobs-wearing-new-balance-991",
+            imgAva: "https://luanantiensi.com/wp-content/uploads/2018/03/bank-03-800x445.jpg",
             title: "Hello"
         };
     },
@@ -247,5 +220,6 @@ export default {
 .user-sidebar {
     background-color: #0d262e;
     padding: 20px;
+    min-height: 700px;
 }
 </style>

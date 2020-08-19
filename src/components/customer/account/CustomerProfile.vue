@@ -1,7 +1,6 @@
 <template>
-<div class="row">
+<div class="row" style="margin-right:3px">
     <div class="col-lg-12">
-        <div class="container">
             <div class="row container-account">
                 <div class="col-lg-1" style="padding-right:0px">
                     <i class="fas fa-user-circle icon-title"></i>
@@ -13,10 +12,8 @@
                     </div>
                 </div>
             </div>
-        </div>
     </div>
     <div class="col-lg-12" style="margin-top:20px">
-        <div class="container">
             <div class="row container-account">
                 <div class="col-lg-12" style="border-bottom: 1px solid #ebebeb">
                     <h5>THÔNG TIN CÁ NHÂN</h5>
@@ -98,7 +95,6 @@
                         Đổi mật khẩu
                     </button>
                 </div>
-            </div>
         </div>
     </div>
 
